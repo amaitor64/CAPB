@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Logigramme Coupure Générale BT/HT",
-  "short_name": "BT/HT",
-  "description": "Application mobile du logigramme de coupure générale BT/HT.",
+  "name": "Situation d'urgence CAPB",
+  "short_name": "Urgence CAPB",
+  "description": "Consignes d'urgence CAPB : coupure de courant HT/BT, coupure BT et procédure incendie.",
   "lang": "fr",
   "start_url": "./index.html",
   "scope": "./",
@@ -15,13 +15,13 @@
   "icons": [
     {
       "src": "icons/favicon.png?v=2",
-      "sizes": "192x192",
+      "sizes": "472x472",
       "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "icons/favicon.png?v=2",
-      "sizes": "512x512",
+      "sizes": "472x472",
       "type": "image/png",
       "purpose": "any maskable"
     }
