@@ -179,6 +179,7 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
       <div class="contact-card"><div class="contact-name">Pierre SOUBLES</div><div class="contact-role">Responsable Reseaux</div><a href="tel:0624254811">06.24.25.48.11</a></div>
       <div class="contact-card"><div class="contact-name">Jean-Lucien DOYHENARD</div><div class="contact-role">Adjoint-Responsable Reseaux</div><a href="tel:0624254815">06.24.25.48.15</a></div>
       <div class="contact-card"><div class="contact-name">Depannage ENEDIS</div><a href="https://www.enedis.fr/panne-et-interruption" target="_blank" rel="noopener noreferrer">Site ENEDIS panne et interruption</a><br><a href="tel:0972675064">09.72.67.50.64</a></div>
+      <div class="contact-card"><div class="contact-name">Pompiers / secours</div><a href="tel:18">18</a><br><a href="tel:112">112</a></div>
     </div></div>
   </div>
 </div>
@@ -205,7 +206,7 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
         controls:{type:'Action',cls:'blue',title:'Controles finaux',desc:'Verifier superviseur, parametrage, deversement et bypass A2/A5.',buttons:['b_controls']},
         end:{type:'Fin',cls:'green',title:'Installation en fonctionnement normal',desc:'Fin du processus.',buttons:[]}
       },
-      transitions:{launchBtn:{to:'verify',label:'Cliquer pour lancer',variant:'primary'},b_verify:{to:'local',label:'Oui',variant:'yes'},b_local:{to:'origin',label:'Oui',variant:'yes'},b_origin:{to:'d1',label:'Oui',variant:'yes'},b_d1_yes:{to:'ok1',label:'Oui',variant:'yes'},b_d1_no:{to:'no1',label:'Non',variant:'no'},b_ok1:{to:'controls',label:'Oui',variant:'yes'},b_no1_yes:{to:'ok2',label:'Personnel du pole Maintenance',variant:'yes'},b_no1_no:{to:'no2',label:'Non',variant:'no'},b_ok2_yes:{to:'d3',label:'Oui',variant:'yes'},b_ok2_no:{to:'enedis',label:'Non',variant:'no'},b_d3_yes:{to:'controls',label:'Oui',variant:'yes'},b_d3_no:{to:'no3',label:'Non',variant:'no'},b_controls:{to:'end',label:'Oui',variant:'yes'}},
+      transitions:{launchBtn:{to:'verify',label:'Cliquer pour lancer',variant:'primary'},b_verify:{to:'local',label:'Oui',variant:'yes'},b_local:{to:'origin',label:'Oui',variant:'yes'},b_origin:{to:'d1',label:'Oui',variant:'yes'},b_d1_yes:{to:'ok1',label:'Oui',variant:'yes'},b_d1_no:{to:'no1',label:'Non',variant:'no'},b_ok1:{to:'controls',label:'Oui',variant:'yes'},b_no1_yes:{to:'ok2',label:'Oui',variant:'yes'},b_no1_no:{to:'no2',label:'Non',variant:'no'},b_ok2_yes:{to:'d3',label:'Oui',variant:'yes'},b_ok2_no:{to:'enedis',label:'Non',variant:'no'},b_d3_yes:{to:'controls',label:'Oui',variant:'yes'},b_d3_no:{to:'no3',label:'Non',variant:'no'},b_controls:{to:'end',label:'Oui',variant:'yes'}},
       order:['start','verify','local','origin','d1','ok1','no1','ok2','no2','enedis','d3','no3','controls','end'],
       markers:{start:'D',verify:'1',local:'2',origin:'3',d1:'?',ok1:'OK',no1:'?',ok2:'OK',no2:'!',enedis:'!',d3:'?',no3:'!',controls:'4',end:'F'}
     },
@@ -218,7 +219,7 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
         waitEnedis:{type:'NON',cls:'red',title:'Attente du retour ENEDIS',desc:'Si une panne de secteur est confirmée, attendre le retour ENEDIS avant toute autre action locale.',buttons:[]},
         meter:{type:'Action',cls:'blue',title:'Vérification du comptage ENEDIS',desc:'Déplacer un agent habilité BS ou BE minimum pour vérifier le comptage ENEDIS.',buttons:['bt_meter']},
         linkyStatus:{type:'Décision',cls:'orange',title:'Compteur Linky en dépassement ?',desc:'Ce contrôle ne concerne que le tarif bleu. Vérifier si le compteur Linky signale un dépassement.',buttons:['bt_linky_over_yes','bt_linky_over_no']},
-        safeShutdown:{type:'Action',cls:'blue',title:'Mise en sécurité avant réarmement',desc:'Couper l’interrupteur général de l’armoire et mettre tout le système de pompage à l’arrêt avant toute opération sur le comptage ou le disjoncteur ENEDIS.',buttons:['bt_safe_shutdown']},
+        safeShutdown:{type:'Action',cls:'blue',title:'Mise hors tension si possible',desc:'Si la situation le permet, mettre l’installation hors tension. Couper l’interrupteur général de l’armoire et mettre tout le système de pompage à l’arrêt avant toute opération sur le comptage ou le disjoncteur ENEDIS.',buttons:['bt_safe_shutdown']},
         rearmLinky:{type:'Action',cls:'blue',title:'Réarmement du compteur Linky',desc:'Si le Linky est en dépassement, appuyer sur le bouton + pour le réarmer.',buttons:['bt_rearm_linky']},
         breakerStatus:{type:'Décision',cls:'orange',title:'Disjoncteur ENEDIS sur ON et courant toujours non présent ?',desc:'Si le Linky n’est pas en dépassement, que le disjoncteur ENEDIS est sur ON et que le courant reste absent, passer à l’intervention maintenance. Sinon, remettre le disjoncteur ENEDIS sur ON.',buttons:['bt_breaker_on_yes','bt_breaker_on_no']},
         breakerOn:{type:'Action',cls:'blue',title:'Mettre le disjoncteur ENEDIS sur ON',desc:'Avant de remettre le disjoncteur ENEDIS sur ON, ouvrir l’interrupteur général de l’armoire, puis remettre le disjoncteur ENEDIS sur ON.',buttons:['bt_breaker_on']},
@@ -235,20 +236,21 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
       viewId:'detailIncendie', flowId:'flowIncendie',
       steps:{
         start:{type:'Début',cls:'red',title:"Déclenchement de l'alarme incendie",desc:'Constater le déclenchement de l’alarme ou la présence de fumées / flammes.',buttons:['f_start']},
-        alert:{type:'Action',cls:'blue',title:'Alerter immédiatement',desc:'Déclencher l’alerte interne, prévenir les secours externes si nécessaire et transmettre le lieu précis du sinistre.',buttons:['f_alert']},
+        alert:{type:'Action',cls:'blue',title:'Alerter immédiatement',desc:'Déclencher l’alerte interne, appeler les pompiers ou les secours au 18 / 112, et transmettre le lieu précis du sinistre.',buttons:['f_alert']},
+        electrical:{type:'Action',cls:'blue',title:'Mettre les installations à l’arrêt si possible',desc:'En présence d’un poste HT, appuyer sur l’arrêt d’urgence. Faire de même pour les panneaux photovoltaïques si le site en est équipé, sans se mettre en danger.',buttons:['f_electrical']},
         rescue:{type:'Décision',cls:'orange',title:'Une personne est-elle en danger immédiat à proximité ?',desc:'Évaluer rapidement si un secours immédiat est possible sans se mettre en danger.',buttons:['f_rescue_yes','f_rescue_no']},
         savePerson:{type:'Action',cls:'blue',title:'Secourir sans se mettre en danger',desc:'Mettre la personne à l’abri si cela est possible sans risque, appliquer les premiers gestes de secours et alerter un sauveteur secouriste.',buttons:['f_save_done']},
-        extinguish:{type:'Décision',cls:'orange',title:'Le départ de feu est-il limité et maîtrisable ?',desc:'N’intervenir sur le feu qu’avec un extincteur adapté, si la zone est praticable et si une issue de repli est garantie.',buttons:['f_fire_yes','f_fire_no']},
-        extinguishAction:{type:'Action',cls:'blue',title:'Tenter une première extinction',desc:'Utiliser le moyen de première intervention adapté sans retarder l’évacuation.',buttons:['f_ext_done']},
+        extinguish:{type:'Décision',cls:'orange',title:'Le départ de feu est-il limité et maîtrisable ?',desc:'N’intervenir sur le feu qu’avec un extincteur adapté, si la zone est praticable, si une issue de repli est garantie et en tenant compte de la présence éventuelle de produits chimiques.',buttons:['f_fire_yes','f_fire_no']},
+        extinguishAction:{type:'Action',cls:'blue',title:'Tenter une première extinction',desc:'Utiliser le moyen de première intervention adapté sans retarder l’évacuation, en restant attentif aux risques liés aux produits chimiques présents sur le site.',buttons:['f_ext_done']},
         evacuate:{type:'Action',cls:'blue',title:'Lancer l’évacuation',desc:'Faire évacuer calmement selon le plan d’évacuation, fermer les portes sans les verrouiller et ne jamais utiliser les ascenseurs.',buttons:['f_evac']},
         assembly:{type:'Action',cls:'blue',title:'Rejoindre le point de rassemblement',desc:'Diriger tout le personnel et les visiteurs vers le point de rassemblement défini pour le site.',buttons:['f_assembly']},
-        check:{type:'Action',cls:'blue',title:'Contrôler les présences',desc:'Vérifier les effectifs, signaler les personnes manquantes, les blessés et la zone concernée aux secours.',buttons:['f_check']},
-        access:{type:'Action',cls:'blue',title:'Accueillir et guider les secours',desc:'Faciliter l’accès au site, fournir le plan d’évacuation, les risques particuliers et les informations utiles aux intervenants.',buttons:['f_access']},
+        check:{type:'Action',cls:'blue',title:'Contrôler les présences',desc:'Vérifier les effectifs, signaler les personnes manquantes, les blessés, la présence éventuelle de produits chimiques et la zone concernée aux secours.',buttons:['f_check']},
+        access:{type:'Action',cls:'blue',title:'Accueillir et guider les secours',desc:'Faciliter l’accès au site, fournir le plan d’évacuation, les risques particuliers, la présence de produits chimiques et les informations utiles aux intervenants.',buttons:['f_access']},
         end:{type:'Fin',cls:'green',title:'Attente des consignes des secours',desc:'Rester au point de rassemblement et ne réintégrer le site qu’après autorisation.',buttons:[]}
       },
-      transitions:{f_start:{to:'alert',label:'Oui',variant:'yes'},f_alert:{to:'rescue',label:'Oui',variant:'yes'},f_rescue_yes:{to:'savePerson',label:'Oui',variant:'yes'},f_rescue_no:{to:'extinguish',label:'Non',variant:'no'},f_save_done:{to:'extinguish',label:'Oui',variant:'yes'},f_fire_yes:{to:'extinguishAction',label:'Oui',variant:'yes'},f_fire_no:{to:'evacuate',label:'Non',variant:'no'},f_ext_done:{to:'evacuate',label:'Oui',variant:'yes'},f_evac:{to:'assembly',label:'Oui',variant:'yes'},f_assembly:{to:'check',label:'Oui',variant:'yes'},f_check:{to:'access',label:'Oui',variant:'yes'},f_access:{to:'end',label:'Oui',variant:'yes'}},
-      order:['start','alert','rescue','savePerson','extinguish','extinguishAction','evacuate','assembly','check','access','end'],
-      markers:{start:'!',alert:'1',rescue:'?',savePerson:'S',extinguish:'?',extinguishAction:'E',evacuate:'2',assembly:'3',check:'4',access:'5',end:'F'}
+      transitions:{f_start:{to:'alert',label:'Oui',variant:'yes'},f_alert:{to:'electrical',label:'Oui',variant:'yes'},f_electrical:{to:'rescue',label:'Oui',variant:'yes'},f_rescue_yes:{to:'savePerson',label:'Oui',variant:'yes'},f_rescue_no:{to:'extinguish',label:'Non',variant:'no'},f_save_done:{to:'extinguish',label:'Oui',variant:'yes'},f_fire_yes:{to:'extinguishAction',label:'Oui',variant:'yes'},f_fire_no:{to:'evacuate',label:'Non',variant:'no'},f_ext_done:{to:'evacuate',label:'Oui',variant:'yes'},f_evac:{to:'assembly',label:'Oui',variant:'yes'},f_assembly:{to:'check',label:'Oui',variant:'yes'},f_check:{to:'access',label:'Oui',variant:'yes'},f_access:{to:'end',label:'Oui',variant:'yes'}},
+      order:['start','alert','electrical','rescue','savePerson','extinguish','extinguishAction','evacuate','assembly','check','access','end'],
+      markers:{start:'!',alert:'1',electrical:'A',rescue:'?',savePerson:'S',extinguish:'?',extinguishAction:'E',evacuate:'2',assembly:'3',check:'4',access:'5',end:'F'}
     }
   };
   const states = Object.fromEntries(Object.keys(definitions).filter(key => definitions[key].steps).map(key => [key,{current:'start',history:['start'],revealed:new Set(['start'])}]));
@@ -308,36 +310,9 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
     if(key === activeKey) updateTracking();
   }
 
-  function openConsigne(key){
-    activeKey = key;
-    setView(key);
-    redraw(key);
-    updateTracking();
-  }
-
-  function go(key, buttonId){
-    const def = definitions[key];
-    const state = states[key];
-    const t = def.transitions[buttonId];
-    if(!t || !def.steps[t.to]) return;
-    state.current = t.to;
-    state.history.push(state.current);
-    state.revealed.add(state.current);
-    redraw(key);
-    const node = $(key+'-'+state.current);
-    if(node) setTimeout(() => node.scrollIntoView({behavior:'smooth',block:'center'}), 30);
-  }
-
-  function backStep(){
-    if(!activeKey) return;
-    const state = states[activeKey];
-    if(state.history.length <= 1) return;
-    state.history.pop();
-    state.current = state.history[state.history.length - 1];
-    state.revealed = new Set(state.history);
-    redraw(activeKey);
-  }
-
+  function openConsigne(key){ activeKey = key; setView(key); redraw(key); updateTracking(); }
+  function go(key, buttonId){ const def = definitions[key]; const state = states[key]; const t = def.transitions[buttonId]; if(!t || !def.steps[t.to]) return; state.current = t.to; state.history.push(state.current); state.revealed.add(state.current); redraw(key); const node = $(key+'-'+state.current); if(node) setTimeout(() => node.scrollIntoView({behavior:'smooth',block:'center'}), 30); }
+  function backStep(){ if(!activeKey) return; const state = states[activeKey]; if(state.history.length <= 1) return; state.history.pop(); state.current = state.history[state.history.length - 1]; state.revealed = new Set(state.history); redraw(activeKey); }
   function openHome(){ activeKey = null; setView('home'); updateTracking(); }
   function openPopup(id){ const p=$(id); p.classList.add('open'); p.setAttribute('aria-hidden','false'); }
   function closePopup(id){ const p=$(id); p.classList.remove('open'); p.setAttribute('aria-hidden','true'); }
@@ -363,22 +338,8 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
     $('btnContacts').addEventListener('click', () => openPopup('contactsPopup'));
   }
 
-  renderFlow('vert');
-  renderFlow('bleu');
-  renderFlow('incendie');
-  bind();
-  redraw('vert');
-  redraw('bleu');
-  redraw('incendie');
-  openHome();
-
-  if('serviceWorker' in navigator){
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./service-worker.js').catch(error => {
-        console.log('Service worker non enregistre', error);
-      });
-    });
-  }
+  renderFlow('vert'); renderFlow('bleu'); renderFlow('incendie'); bind(); redraw('vert'); redraw('bleu'); redraw('incendie'); openHome();
+  if('serviceWorker' in navigator){ window.addEventListener('load', () => { navigator.serviceWorker.register('./service-worker.js').catch(error => { console.log('Service worker non enregistre', error); }); }); }
 })();
 </script>
 </body>
