@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Logigramme Coupure Générale BT/HT</title>
-<meta name="description" content="Application mobile du logigramme de coupure générale BT/HT.">
+<title>Situation d'urgence</title>
+<meta name="description" content="Consignes d'urgence pour coupure de courant sur installations HT/BT et BT.">
 <meta name="theme-color" content="#1f7ae0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Logigramme BT/HT">
+<meta name="apple-mobile-web-app-title" content="Situation d'urgence">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <style>
@@ -24,7 +24,6 @@
   --ink:#123047;
   --muted:#5d7486;
   --border:#cfe0ee;
-  --surface:#f4f8fb;
   --card:#ffffff;
   --shadow:0 12px 30px rgba(18,48,71,.08);
 }
@@ -45,7 +44,7 @@ header{
 }
 header h1{
   margin:0 0 10px;
-  font-size:16px;
+  font-size:18px;
   line-height:1.3;
   text-align:center;
   letter-spacing:.02em;
@@ -63,11 +62,31 @@ header h1{
   color:var(--ink);
   font-weight:700;
 }
-.toolbar button:hover{background:#f6fbff}
 .page{
-  width:min(960px,100%);
+  width:min(1040px,100%);
   margin:0 auto;
   padding:18px 14px calc(160px + env(safe-area-inset-bottom));
+}
+.tabbar{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:18px;
+}
+.tab{
+  text-align:left;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid var(--border);
+  background:#fff;
+  box-shadow:var(--shadow);
+}
+.tab strong{display:block;font-size:15px;line-height:1.35}
+.tab span{display:block;margin-top:6px;font-size:12px;line-height:1.45;color:var(--muted)}
+.tab.active{
+  border-color:var(--blue);
+  background:linear-gradient(135deg,#f3f9ff 0%,#ffffff 100%);
+  box-shadow:0 0 0 3px rgba(31,122,224,.12),var(--shadow);
 }
 .hero{
   background:linear-gradient(135deg,#0f5aa8 0%,#4f9fea 100%);
@@ -76,7 +95,9 @@ header h1{
   padding:18px;
   box-shadow:var(--shadow);
 }
-.hero p{margin:8px 0 0;line-height:1.5}
+.hero p{margin:8px 0 0;line-height:1.55}
+.pane{display:none}
+.pane.active{display:block}
 .flow{
   margin-top:18px;
   display:grid;
@@ -105,11 +126,7 @@ header h1{
 .step.blue{background:linear-gradient(180deg,#ffffff 0%,var(--blue-soft) 100%)}
 .step.orange{background:linear-gradient(180deg,#ffffff 0%,var(--orange-soft) 100%)}
 .step.red{background:linear-gradient(180deg,#ffffff 0%,var(--red-soft) 100%)}
-.step-head{
-  display:flex;
-  align-items:flex-start;
-  gap:12px;
-}
+.step-head{display:flex;align-items:flex-start;gap:12px}
 .marker{
   flex:0 0 34px;
   width:34px;
@@ -154,6 +171,21 @@ header h1{
 .flow-btn.primary{border-color:var(--blue);color:var(--blue)}
 .flow-btn.yes{border-color:var(--green);color:var(--green)}
 .flow-btn.no{border-color:var(--red);color:var(--red)}
+.info-grid{
+  margin-top:18px;
+  display:grid;
+  gap:14px;
+}
+.info-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+.info-card h2{margin:0 0 10px;font-size:20px}
+.info-card p{margin:0;color:var(--muted);line-height:1.55}
+.info-card strong{display:block;margin-bottom:8px}
 .aside{
   position:fixed;
   left:0;
@@ -164,7 +196,7 @@ header h1{
   background:linear-gradient(180deg,rgba(244,248,251,0) 0%,rgba(244,248,251,.92) 18%,rgba(244,248,251,.98) 100%);
 }
 .panel{
-  width:min(960px,100%);
+  width:min(1040px,100%);
   margin:0 auto;
   background:rgba(255,255,255,.96);
   border:1px solid var(--border);
@@ -232,16 +264,16 @@ header h1{
 .contact-role{color:var(--muted)}
 .empty-state{margin-top:10px;color:var(--muted);font-size:14px}
 @media (max-width:700px){
-  header h1{font-size:14px}
+  header h1{font-size:16px}
   .toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .page{padding-top:14px}
-  .step h2{font-size:18px}
+  .tabbar{grid-template-columns:1fr}
+  .step h2,.info-card h2{font-size:18px}
 }
 </style>
 </head>
 <body>
 <header>
-  <h1>CONSIGNE DE COUPURE GÉNÉRALE DE COURANT BT/HT</h1>
+  <h1>Situation d'urgence</h1>
   <div class="toolbar">
     <button id="btnBack" type="button">↩ Retour</button>
     <button id="btnRestart" type="button">Recommencer</button>
@@ -252,15 +284,45 @@ header h1{
 </header>
 
 <main class="page">
-  <section class="hero" aria-label="Présentation">
-    <strong>Logigramme mobile installable</strong>
-    <p>Navigation guidée pas à pas pour la coupure générale BT/HT, utilisable sur téléphone et en mode application.</p>
+  <nav class="tabbar" aria-label="Choix de consigne">
+    <button id="tabVert" class="tab active" type="button" data-tab="vert" aria-pressed="true">
+      <strong>Consigne coupure de courant tarif vert</strong>
+      <span>Coupure générale sur une installation HT / BT (site avec un poste de transformation HT)</span>
+    </button>
+    <button id="tabBleu" class="tab" type="button" data-tab="bleu" aria-pressed="false">
+      <strong>Consigne coupure de courant tarif bleu ou jaune</strong>
+      <span>Coupure générale sur une installation BT (site avec un comptage BT)</span>
+    </button>
+  </nav>
+
+  <section id="paneVert" class="pane active" aria-labelledby="tabVert">
+    <section class="hero" aria-label="Présentation tarif vert">
+      <strong>Procédure pour site avec poste de transformation HT</strong>
+      <p>Cette consigne guide les actions à suivre lors d'une coupure générale sur une installation HT / BT. Le logigramme ci-dessous conserve le parcours existant et son suivi pas à pas.</p>
+    </section>
+    <section class="flow" id="flow" aria-live="polite"></section>
   </section>
 
-  <section class="flow" id="flow" aria-live="polite"></section>
+  <section id="paneBleu" class="pane" aria-labelledby="tabBleu">
+    <section class="hero" aria-label="Présentation tarif bleu ou jaune">
+      <strong>Procédure pour site avec comptage BT</strong>
+      <p>Cette section est dédiée à la coupure générale sur une installation BT. Elle est désormais séparée du tarif vert pour permettre un second logigramme ou une consigne spécifique.</p>
+    </section>
+    <section class="info-grid">
+      <article class="info-card">
+        <strong>Commentaire</strong>
+        <h2>Consigne coupure de courant tarif bleu ou jaune</h2>
+        <p>Coupure générale sur une installation BT (site avec un comptage BT).</p>
+      </article>
+      <article class="info-card">
+        <strong>État actuel</strong>
+        <p>Le logigramme de cette consigne n'est pas encore renseigné dans l'application. L'onglet est prêt à accueillir une procédure BT dédiée sans mélanger les cas HT / BT et BT.</p>
+      </article>
+    </section>
+  </section>
 </main>
 
-<div class="aside">
+<div id="statusAside" class="aside">
   <section class="panel" aria-label="Suivi courant">
     <div id="badge" class="badge green">Début</div>
     <h3 id="title">Panne d’électricité détectée</h3>
@@ -329,7 +391,7 @@ header h1{
     local:{type:"Action",cls:"blue",title:"Se rendre au local TGBT",desc:"Déplacement vers le local TGBT du site.",buttons:["b_local"]},
     origin:{type:"Action",cls:"blue",title:"Identifier l’origine",desc:"Identifier le disjoncteur ou l’organe de sécurité concerné.",buttons:["b_origin"]},
     d1:{type:"Décision",cls:"orange",title:"Courant présent dans les TGBT ?",desc:"Choisir Oui ou Non directement dans le logigramme.",buttons:["b_d1_yes","b_d1_no"]},
-    ok1:{type:"OK",cls:"green",title:"Relance équipements concernés",desc:"Après validation, aller directement aux CONTRÔLES FINAUX.",buttons:["b_ok1"]},
+    ok1:{type:"OK",cls:"green",title:"Relance équipements concernés",desc:"Après validation, aller directement aux contrôles finaux.",buttons:["b_ok1"]},
     no1:{type:"Décision",cls:"orange",title:"Aller au local HT / Habilitation H2V-HC disponible ?",desc:"Vérifier la disponibilité d’une personne habilitée H2V-HC et se rendre au local HT.",buttons:["b_no1_yes","b_no1_no"]},
     ok2:{type:"OK",cls:"green",title:"Vérification et dépannage HT",desc:"Suite au diagnostic et/ou dépannage, remettre en service.",buttons:["b_ok2_yes","b_ok2_no"]},
     no2:{type:"NON",cls:"red",title:"Faire venir un agent habilité",desc:"Faire venir un agent habilité et reprendre l’étape Aller au local HT.",buttons:[]},
@@ -341,13 +403,13 @@ header h1{
   };
 
   const transitions = {
-    launchBtn:{to:"verify",label:"CLIQUER POUR LANCER",variant:"primary"},
+    launchBtn:{to:"verify",label:"Cliquer pour lancer",variant:"primary"},
     b_verify:{to:"local",label:"Oui",variant:"yes"},
     b_local:{to:"origin",label:"Oui",variant:"yes"},
     b_origin:{to:"d1",label:"Oui",variant:"yes"},
     b_d1_yes:{to:"ok1",label:"Oui",variant:"yes"},
     b_d1_no:{to:"no1",label:"Non",variant:"no"},
-    b_ok1:{to:"Oui",label:"Oui",variant:"yes",aliasTo:"controls"},
+    b_ok1:{to:"controls",label:"Oui",variant:"yes"},
     b_no1_yes:{to:"ok2",label:"Personnel du pôle Maintenance",variant:"yes"},
     b_no1_no:{to:"no2",label:"Non",variant:"no"},
     b_ok2_yes:{to:"d3",label:"Oui",variant:"yes"},
@@ -361,17 +423,17 @@ header h1{
   const markerLabels = {
     start:"D", verify:"1", local:"2", origin:"3", d1:"?", ok1:"OK", no1:"?", ok2:"OK", no2:"!", enedis:"!", d3:"?", no3:"!", controls:"4", end:"F"
   };
+  const tabStates = {
+    vert:{title:"Panne d’électricité détectée",desc:"Point de départ du processus.",badge:"Début",badgeClass:"green"},
+    bleu:{title:"Consigne tarif bleu ou jaune",desc:"Section dédiée à la coupure générale sur une installation BT avec comptage BT.",badge:"Information",badgeClass:"blue"}
+  };
 
   let current = "start";
   let history = ["start"];
   let revealed = new Set(["start"]);
+  let activeTab = "vert";
 
   const $ = id => document.getElementById(id);
-
-  function destinationFor(buttonId){
-    const transition = transitions[buttonId];
-    return transition.aliasTo || transition.to;
-  }
 
   function buildFlow(){
     const flow = $("flow");
@@ -395,20 +457,36 @@ header h1{
     }).join("");
   }
 
-  function updatePanel(){
-    const step = steps[current] || steps.start;
-    [["badge", step.type], ["popup-badge", step.type]].forEach(([id, text]) => {
-      const node = $(id);
-      if(node){
-        node.className = 'badge ' + step.cls;
-        node.textContent = text;
-      }
-    });
-    [["title", step.title], ["popup-title", step.title], ["desc", step.desc], ["popup-desc", step.desc]].forEach(([id, text]) => {
-      const node = $(id);
-      if(node) node.textContent = text;
-    });
-    $("historyText").textContent = 'Parcours: ' + history.map(id => steps[id].title).join(' → ');
+  function updateStatusPanel(){
+    if(activeTab === "vert"){
+      const step = steps[current] || steps.start;
+      [["badge", step.type], ["popup-badge", step.type]].forEach(([id, text]) => {
+        const node = $(id);
+        if(node){
+          node.className = 'badge ' + step.cls;
+          node.textContent = text;
+        }
+      });
+      [["title", step.title], ["popup-title", step.title], ["desc", step.desc], ["popup-desc", step.desc]].forEach(([id, text]) => {
+        const node = $(id);
+        if(node) node.textContent = text;
+      });
+      $("historyText").textContent = 'Parcours: ' + history.map(id => steps[id].title).join(' → ');
+      $("statusAside").classList.remove('hidden');
+      return;
+    }
+
+    const state = tabStates.bleu;
+    $("badge").className = 'badge ' + state.badgeClass;
+    $("badge").textContent = state.badge;
+    $("title").textContent = state.title;
+    $("desc").textContent = state.desc;
+    $("popup-badge").className = 'badge ' + state.badgeClass;
+    $("popup-badge").textContent = state.badge;
+    $("popup-title").textContent = state.title;
+    $("popup-desc").textContent = state.desc;
+    $("historyText").textContent = 'Aucun parcours actif dans cet onglet pour le moment.';
+    $("statusAside").classList.remove('hidden');
   }
 
   function redraw(){
@@ -420,15 +498,18 @@ header h1{
       node.querySelectorAll('[data-action]').forEach(button => button.classList.add('hidden'));
     });
 
-    (steps[current].buttons || []).forEach(buttonId => {
-      const button = document.querySelector('[data-action="' + buttonId + '"]');
-      if(button) button.classList.remove('hidden');
-    });
+    if(activeTab === 'vert'){
+      (steps[current].buttons || []).forEach(buttonId => {
+        const button = document.querySelector('[data-action="' + buttonId + '"]');
+        if(button) button.classList.remove('hidden');
+      });
+    }
 
-    updatePanel();
+    updateStatusPanel();
   }
 
   function scrollCurrent(){
+    if(activeTab !== 'vert') return;
     const node = $(current);
     if(!node) return;
     setTimeout(() => {
@@ -441,9 +522,10 @@ header h1{
   }
 
   function go(buttonId){
-    const next = destinationFor(buttonId);
-    if(!next || !steps[next]) return;
-    current = next;
+    if(activeTab !== 'vert') return;
+    const transition = transitions[buttonId];
+    if(!transition || !steps[transition.to]) return;
+    current = transition.to;
     history.push(current);
     revealed.add(current);
     redraw();
@@ -451,6 +533,7 @@ header h1{
   }
 
   function back(){
+    if(activeTab !== 'vert') return;
     if(history.length <= 1) return;
     history.pop();
     current = history[history.length - 1];
@@ -460,11 +543,23 @@ header h1{
   }
 
   function restart(){
+    if(activeTab !== 'vert') return;
     current = 'start';
     history = ['start'];
     revealed = new Set(['start']);
     redraw();
     scrollCurrent();
+  }
+
+  function setActiveTab(tabId){
+    activeTab = tabId;
+    ['vert','bleu'].forEach(id => {
+      const isActive = id === tabId;
+      $('tab' + id.charAt(0).toUpperCase() + id.slice(1)).classList.toggle('active', isActive);
+      $('tab' + id.charAt(0).toUpperCase() + id.slice(1)).setAttribute('aria-pressed', String(isActive));
+      $('pane' + id.charAt(0).toUpperCase() + id.slice(1)).classList.toggle('active', isActive);
+    });
+    redraw();
   }
 
   function openPopup(id){
@@ -507,6 +602,8 @@ header h1{
     $('btnLegend').addEventListener('click', () => openPopup('legendPopup'));
     $('btnTracking').addEventListener('click', () => openPopup('trackingPopup'));
     $('btnContacts').addEventListener('click', () => openPopup('contactsPopup'));
+    $('tabVert').addEventListener('click', () => setActiveTab('vert'));
+    $('tabBleu').addEventListener('click', () => setActiveTab('bleu'));
   }
 
   buildFlow();
