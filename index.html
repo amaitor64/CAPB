@@ -118,7 +118,7 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
   <section id="paneBleu" class="pane" aria-labelledby="tabBleu">
     <section class="hero" aria-label="Présentation tarif bleu ou jaune">
       <strong>Procedure pour site avec comptage BT</strong>
-      <p>Cette consigne suit la verification secteur ENEDIS, le controle du compteur Linky et du disjoncteur ENEDIS, puis une intervention maintenance si le site reste sans courant.</p>
+      <p>Cette consigne suit la verification secteur ENEDIS, le controle du compteur Linky et du disjoncteur ENEDIS, puis le rearmement securise avec remise en route progressive des pompes.</p>
     </section>
     <section class="flow" id="flowBleu" aria-live="polite"></section>
   </section>
@@ -228,23 +228,36 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
         sector:{type:'Decision',cls:'orange',title:'Panne sur le secteur du site ?',desc:'Determiner si la coupure provient du reseau ENEDIS du secteur.',buttons:['bt_sector_yes','bt_sector_no']},
         waitEnedis:{type:'NON',cls:'red',title:'Attente retour ENEDIS',desc:'Si une panne secteur est confirmee, attendre le retour ENEDIS avant toute autre action locale.',buttons:[]},
         meter:{type:'Action',cls:'blue',title:'Verification comptage ENEDIS',desc:'Deplacer un agent pour verifier le comptage ENEDIS.',buttons:['bt_meter']},
-        linky:{type:'Decision',cls:'orange',title:'Compteur Linky sans depassement et disjoncteur ENEDIS sur ON ?',desc:'Verifier que le compteur Linky n est pas en depassement et que le disjoncteur ENEDIS est bien en position ON.',buttons:['bt_linky_yes','bt_linky_no']},
-        maintenance:{type:'Action',cls:'blue',title:'Intervention service maintenance',desc:'Deplacer un agent du service maintenance pour intervention, diagnostic, reparation et remise sous tension si possible.',buttons:['bt_maintenance']},
-        process:{type:'NON',cls:'red',title:'Alerter responsable process',desc:'Si la remise sous tension n est pas possible, alerter le responsable process.',buttons:[]},
-        end:{type:'Fin',cls:'green',title:'Remise sous tension effectuee',desc:'Le courant est retabli apres intervention ou verification.',buttons:[]}
+        linkyStatus:{type:'Decision',cls:'orange',title:'Compteur Linky en depassement ?',desc:'Ce controle ne concerne que le tarif bleu. Verifier si le compteur Linky signale un depassement.',buttons:['bt_linky_over_yes','bt_linky_over_no']},
+        safeShutdown:{type:'Action',cls:'blue',title:'Mise en securite avant rearmement',desc:'Couper l interrupteur general de l armoire et mettre tout le systeme de pompage a l arret avant toute operation sur le comptage ou le disjoncteur ENEDIS.',buttons:['bt_safe_shutdown']},
+        rearmLinky:{type:'Action',cls:'blue',title:'Rearmement compteur Linky',desc:'Si le Linky est en depassement, appuyer sur le bouton + pour le rearmer.',buttons:['bt_rearm_linky']},
+        breakerStatus:{type:'Decision',cls:'orange',title:'Disjoncteur ENEDIS sur ON ?',desc:'Verifier la position du disjoncteur ENEDIS.',buttons:['bt_breaker_on_yes','bt_breaker_on_no']},
+        breakerOn:{type:'Action',cls:'blue',title:'Mettre le disjoncteur ENEDIS sur ON',desc:'Si le disjoncteur ENEDIS n est pas sur ON, le remettre sur ON.',buttons:['bt_breaker_on']},
+        restore:{type:'Action',cls:'blue',title:'Remise sous tension progressive',desc:'Apres reenclenchement, fermer l interrupteur general dans l armoire puis remettre les pompes une par une pour verifier si le probleme de disjonction ou de surcharge venait d elles.',buttons:['bt_restore_ok','bt_restore_ko']},
+        maintenance:{type:'Action',cls:'blue',title:'Intervention service maintenance',desc:'Si les verifications sont bonnes mais qu il n y a toujours pas de courant, deplacer un agent du service maintenance pour intervention, diagnostic, reparation et remise sous tension si possible.',buttons:['bt_maintenance_ok','bt_maintenance_ko']},
+        end:{type:'Fin',cls:'green',title:'Remise sous tension effectuee',desc:'Le courant est retabli apres verification, reenclenchement et remise en service progressive.',buttons:[]},
+        process:{type:'NON',cls:'red',title:'Alerter responsable process',desc:'Si la remise sous tension n est pas possible ou si le defaut persiste, alerter le responsable process.',buttons:[]}
       },
       transitions: {
         bt_launch:{to:'verify',label:'Cliquer pour lancer',variant:'primary'},
         bt_verify:{to:'sector',label:'Oui',variant:'yes'},
         bt_sector_yes:{to:'waitEnedis',label:'Oui',variant:'yes'},
         bt_sector_no:{to:'meter',label:'Non',variant:'no'},
-        bt_meter:{to:'linky',label:'Oui',variant:'yes'},
-        bt_linky_yes:{to:'maintenance',label:'Oui',variant:'yes'},
-        bt_linky_no:{to:'process',label:'Non',variant:'no'},
-        bt_maintenance:{to:'end',label:'Remise sous tension possible',variant:'yes'}
+        bt_meter:{to:'linkyStatus',label:'Oui',variant:'yes'},
+        bt_linky_over_yes:{to:'safeShutdown',label:'Oui',variant:'yes'},
+        bt_linky_over_no:{to:'breakerStatus',label:'Non',variant:'no'},
+        bt_safe_shutdown:{to:'rearmLinky',label:'Oui',variant:'yes'},
+        bt_rearm_linky:{to:'breakerStatus',label:'Oui',variant:'yes'},
+        bt_breaker_on_yes:{to:'maintenance',label:'Oui',variant:'yes'},
+        bt_breaker_on_no:{to:'breakerOn',label:'Non',variant:'no'},
+        bt_breaker_on:{to:'restore',label:'Oui',variant:'yes'},
+        bt_restore_ok:{to:'end',label:'Courant revenu',variant:'yes'},
+        bt_restore_ko:{to:'maintenance',label:'Toujours pas de courant',variant:'no'},
+        bt_maintenance_ok:{to:'end',label:'Remise sous tension possible',variant:'yes'},
+        bt_maintenance_ko:{to:'process',label:'Remise sous tension impossible',variant:'no'}
       },
-      order:['start','verify','sector','waitEnedis','meter','linky','maintenance','process','end'],
-      markers:{start:'D',verify:'1',sector:'?',waitEnedis:'!',meter:'2',linky:'?',maintenance:'3',process:'!',end:'F'}
+      order:['start','verify','sector','waitEnedis','meter','linkyStatus','safeShutdown','rearmLinky','breakerStatus','breakerOn','restore','maintenance','end','process'],
+      markers:{start:'D',verify:'1',sector:'?',waitEnedis:'!',meter:'2',linkyStatus:'?',safeShutdown:'S',rearmLinky:'+',breakerStatus:'?',breakerOn:'O',restore:'3',maintenance:'M',end:'F',process:'!'}
     }
   };
   const states = Object.fromEntries(Object.keys(definitions).map(key => [key, { current: 'start', history: ['start'], revealed: new Set(['start']) }]));
