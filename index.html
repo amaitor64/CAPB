@@ -23,7 +23,7 @@ header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdro
 header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;letter-spacing:.02em}
 .toolbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
 .toolbar button{min-height:42px;border:1px solid var(--border);border-radius:12px;background:#fff;color:var(--ink);font-weight:700}
-.page{width:min(1040px,100%);margin:0 auto;padding:18px 14px calc(160px + env(safe-area-inset-bottom))}
+.page{width:min(1040px,100%);margin:0 auto;padding:18px 14px calc(32px + env(safe-area-inset-bottom))}
 .tabbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:18px}
 .tab{text-align:left;padding:14px 16px;border-radius:18px;border:1px solid var(--border);background:#fff;box-shadow:var(--shadow)}
 .tab strong{display:block;font-size:15px;line-height:1.35}
@@ -61,10 +61,6 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
 .flow-btn.primary{border-color:var(--blue);color:var(--blue)}
 .flow-btn.yes{border-color:var(--green);color:var(--green)}
 .flow-btn.no{border-color:var(--red);color:var(--red)}
-.aside{position:fixed;left:0;right:0;bottom:0;z-index:15;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(244,248,251,0) 0%,rgba(244,248,251,.92) 18%,rgba(244,248,251,.98) 100%)}
-.panel{width:min(1040px,100%);margin:0 auto;background:rgba(255,255,255,.96);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:14px 16px}
-.panel h3{margin:10px 0 6px;font-size:18px}
-.panel p{margin:0;color:var(--muted);line-height:1.45}
 .popup-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(10,22,36,.48);z-index:30}
 .popup-backdrop.open{display:flex}
 .popup-card{width:min(720px,100%);max-height:min(82vh,760px);overflow:auto;background:#fff;border-radius:24px;box-shadow:0 22px 60px rgba(10,22,36,.24)}
@@ -124,13 +120,6 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
     <section class="flow" id="flowBleu" aria-live="polite"></section>
   </section>
 </main>
-<div id="statusAside" class="aside">
-  <section class="panel" aria-label="Suivi courant">
-    <div id="badge" class="badge green">Debut</div>
-    <h3 id="title">Panne d'electricite detectee</h3>
-    <p id="desc">Point de depart du processus.</p>
-  </section>
-</div>
 <div id="legendPopup" class="popup-backdrop" aria-hidden="true">
   <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="legendTitle">
     <div class="popup-header">
@@ -282,12 +271,17 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
         '</div><div class="actions">' + buttons + '</div></article>';
     }).join('');
   }
-  function updateStatusPanel(){
+  function updateTrackingPopup(){
     const def = definitions[activeTab];
     const state = states[activeTab];
     const step = def.steps[state.current];
-    [['badge', step.type], ['popup-badge', step.type]].forEach(([id, text]) => { const node = $(id); node.className = 'badge ' + step.cls; node.textContent = text; });
-    [['title', step.title], ['popup-title', step.title], ['desc', step.desc], ['popup-desc', step.desc]].forEach(([id, text]) => { $(id).textContent = text; });
+    [['popup-badge', step.type], ['popup-title', step.title], ['popup-desc', step.desc]].forEach(([id, text]) => {
+      const node = $(id);
+      if (id === 'popup-badge') {
+        node.className = 'badge ' + step.cls;
+      }
+      node.textContent = text;
+    });
     $('historyText').textContent = 'Parcours: ' + state.history.map(id => def.steps[id].title).join(' → ');
   }
   function redraw(tabId){
@@ -303,7 +297,7 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
       const button = document.querySelector('[data-tab="' + tabId + '"][data-action="' + buttonId + '"]');
       if (button) button.classList.remove('hidden');
     });
-    if (tabId === activeTab) updateStatusPanel();
+    if (tabId === activeTab) updateTrackingPopup();
   }
   function scrollCurrent(){
     const state = states[activeTab];
