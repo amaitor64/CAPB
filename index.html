@@ -1,119 +1,243 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Logigramme Coupure Générale BT/HT</title>
-<style>
-:root{
-  --blue:#1f7ae0;--green:#1e9f4f;--red:#d73636;--orange:#e0a22b;
-  --blueFill:#eaf4ff;--greenFill:#eaf9ef;--redFill:#fff0f0;--orangeFill:#fff3d8;
-}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#111827;overflow:hidden}
-header{
-  position:fixed;top:0;left:0;right:0;z-index:10000;
-  background:#fff;border-bottom:1px solid #dbe4ef;box-shadow:0 2px 10px rgba(0,0,0,.14);
-  padding:8px 10px;
-}
-header h1{margin:0 0 8px;text-align:center;font-size:18px;line-height:1.2}
-.toolbar{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
-button{
-  border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#111827;
-  padding:8px 12px;font-weight:800;cursor:pointer;font-size:13px;
-}
-button:hover{background:#f1f5f9}
-#btnBack{background:#d73636;color:#fff;border:none}
-#btnRestart{background:#fff}
-.main{
-  height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:92px;padding-bottom:40vh;
-  background:#fff;-webkit-overflow-scrolling:touch;
-}
-svg{display:block;width:100vw;max-width:100vw;height:auto;margin:0 auto}
-.node .shape{stroke-width:3}
-.node.hidden{display:none}
-.node.active .shape{stroke:#111827!important;stroke-width:5;filter:drop-shadow(0 0 10px rgba(31,122,224,.35))}
-.connector{opacity:.08;transition:.2s}
-.connector.visible{opacity:1}
-.flow-btn.hidden{display:none}
-.flow-btn button{
-  width:100%;height:100%;border-radius:999px;border:2px solid;font-weight:900;
-  box-shadow:0 2px 5px rgba(0,0,0,.18);font-size:15px;padding:0;
-}
-.flow-btn .yes{background:var(--greenFill);border-color:var(--green)}
-.flow-btn .no{background:var(--redFill);border-color:var(--red)}
-text{font-size:15px;font-weight:700;fill:#111827;pointer-events:none}
-.small{font-size:13px;font-weight:500}
-.tiny{font-size:12px;font-weight:500}
-.panel{
-  position:fixed;left:10px;right:10px;bottom:0;z-index:9000;background:#fff;border-top:2px solid #dbe4ef;
-  padding:10px;box-shadow:0 -3px 12px rgba(0,0,0,.18);max-height:34vh;overflow:auto;
-}
-.badge{display:inline-block;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:bold;margin-bottom:6px}
-.green{background:var(--greenFill);color:#166534}.blue{background:var(--blueFill);color:#1d4ed8}
-.orange{background:var(--orangeFill);color:#92400e}.red{background:var(--redFill);color:#991b1b}
-.panel h3{margin:2px 0 6px;font-size:16px}.panel p{margin:0;font-size:13px;line-height:1.35}
-.popup-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:20000;align-items:center;justify-content:center;padding:16px}
-.popup-backdrop.open{display:flex}
-.popup-card{background:#fff;width:min(92vw,560px);max-height:82vh;overflow:auto;border-radius:16px;box-shadow:0 12px 32px rgba(0,0,0,.28);border:1px solid #dbe4ef}
-.popup-header{position:sticky;top:0;background:#fff;border-bottom:1px solid #e5e7eb;padding:12px 14px;display:flex;gap:10px;align-items:center}
-.popup-header h2{flex:1;margin:0;font-size:18px}.popup-body{padding:14px;line-height:1.45}
-.contact-card{border:1px solid #dbe4ef;border-radius:12px;padding:10px;margin-bottom:10px;background:#fff}
-.contact-name{font-weight:800}.contact-role{font-size:13px;color:#475569;margin:4px 0}
-.contact-card a{color:#1f7ae0;font-weight:800;text-decoration:none}
-.legend-row{display:flex;align-items:center;gap:8px;margin:10px 0}
-.legend-shape{width:26px;height:18px;border-radius:4px;display:inline-block;border:2px solid}
-.legend-start{background:var(--greenFill);border-color:var(--green);border-radius:50%}
-.legend-action{background:var(--blueFill);border-color:var(--blue)}
-.legend-no{background:var(--redFill);border-color:var(--red)}
-.legend-decision{background:var(--orangeFill);border-color:var(--orange);transform:rotate(45deg);width:18px;height:18px;margin:0 5px}
-@media(max-width:700px){
-  header h1{font-size:14px}
-  button{font-size:11px;padding:7px 7px}
-  .main{padding-top:112px}
-  text{font-size:13px}.small{font-size:11px}.tiny{font-size:10px}
-  .node rect,.node ellipse,.node polygon{transform-box:fill-box;transform-origin:center;transform:scale(.9)}
-  .panel{max-height:38vh}
-}
-</style>
-
-<link rel="manifest" href="manifest.webmanifest">
+<meta name="description" content="Application mobile du logigramme de coupure générale BT/HT.">
 <meta name="theme-color" content="#1f7ae0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Logigramme BT/HT">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-<style id="pwa-mobile-app-style">
-html,body{
-  overscroll-behavior:none;
+<style>
+:root{
+  --blue:#1f7ae0;
+  --blue-soft:#eaf4ff;
+  --green:#2c9b5f;
+  --green-soft:#e8f7ef;
+  --orange:#d88b18;
+  --orange-soft:#fff3d8;
+  --red:#c43c3c;
+  --red-soft:#fff0f0;
+  --ink:#123047;
+  --muted:#5d7486;
+  --border:#cfe0ee;
+  --surface:#f4f8fb;
+  --card:#ffffff;
+  --shadow:0 12px 30px rgba(18,48,71,.08);
 }
-body{
-  -webkit-user-select:none;
-  user-select:none;
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;overscroll-behavior:none;background:linear-gradient(180deg,#f9fcff 0%,#edf5fb 100%);color:var(--ink);font-family:Verdana,Geneva,Tahoma,sans-serif}
+body{-webkit-user-select:none;user-select:none}
+a{color:var(--blue)}
+button{font:inherit;-webkit-tap-highlight-color:transparent}
+.hidden{display:none !important}
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(207,224,238,.9);
+  padding:calc(12px + env(safe-area-inset-top)) 14px 12px;
 }
-button{
-  -webkit-tap-highlight-color:transparent;
+header h1{
+  margin:0 0 10px;
+  font-size:16px;
+  line-height:1.3;
+  text-align:center;
+  letter-spacing:.02em;
 }
-@media(max-width:700px){
-  header{
-    padding-top:calc(8px + env(safe-area-inset-top)) !important;
-  }
-  .main{
-    padding-top:132px !important;
-    padding-bottom:calc(43vh + env(safe-area-inset-bottom)) !important;
-  }
-  .panel{
-    padding-bottom:calc(10px + env(safe-area-inset-bottom)) !important;
-  }
-  .toolbar button{
-    min-height:42px !important;
-  }
-  .flow-btn button{
-    min-height:38px !important;
-  }
+.toolbar{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px;
+}
+.toolbar button{
+  min-height:42px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff;
+  color:var(--ink);
+  font-weight:700;
+}
+.toolbar button:hover{background:#f6fbff}
+.page{
+  width:min(960px,100%);
+  margin:0 auto;
+  padding:18px 14px calc(160px + env(safe-area-inset-bottom));
+}
+.hero{
+  background:linear-gradient(135deg,#0f5aa8 0%,#4f9fea 100%);
+  color:#fff;
+  border-radius:24px;
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+.hero p{margin:8px 0 0;line-height:1.5}
+.flow{
+  margin-top:18px;
+  display:grid;
+  gap:14px;
+}
+.step{
+  position:relative;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:16px 16px 14px;
+  box-shadow:var(--shadow);
+}
+.step::before{
+  content:"";
+  position:absolute;
+  left:32px;
+  top:-15px;
+  width:2px;
+  height:15px;
+  background:#b8cddd;
+}
+.step:first-child::before{display:none}
+.step.active{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,122,224,.12),var(--shadow)}
+.step.green{background:linear-gradient(180deg,#ffffff 0%,var(--green-soft) 100%)}
+.step.blue{background:linear-gradient(180deg,#ffffff 0%,var(--blue-soft) 100%)}
+.step.orange{background:linear-gradient(180deg,#ffffff 0%,var(--orange-soft) 100%)}
+.step.red{background:linear-gradient(180deg,#ffffff 0%,var(--red-soft) 100%)}
+.step-head{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+}
+.marker{
+  flex:0 0 34px;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:12px;
+  font-weight:900;
+  color:#fff;
+}
+.step.green .marker{background:var(--green)}
+.step.blue .marker{background:var(--blue)}
+.step.orange .marker{background:var(--orange)}
+.step.red .marker{background:var(--red)}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+.badge.green{background:var(--green-soft);color:var(--green)}
+.badge.blue{background:var(--blue-soft);color:var(--blue)}
+.badge.orange{background:var(--orange-soft);color:var(--orange)}
+.badge.red{background:var(--red-soft);color:var(--red)}
+.step h2{margin:10px 0 6px;font-size:20px;line-height:1.2}
+.step p{margin:0;color:var(--muted);line-height:1.45}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.flow-btn{
+  min-height:42px;
+  padding:10px 16px;
+  border-radius:999px;
+  border:2px solid transparent;
+  font-weight:800;
+  background:#fff;
+  color:var(--ink);
+}
+.flow-btn.primary{border-color:var(--blue);color:var(--blue)}
+.flow-btn.yes{border-color:var(--green);color:var(--green)}
+.flow-btn.no{border-color:var(--red);color:var(--red)}
+.aside{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:15;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,rgba(244,248,251,0) 0%,rgba(244,248,251,.92) 18%,rgba(244,248,251,.98) 100%);
+}
+.panel{
+  width:min(960px,100%);
+  margin:0 auto;
+  background:rgba(255,255,255,.96);
+  border:1px solid var(--border);
+  border-radius:20px;
+  box-shadow:var(--shadow);
+  padding:14px 16px;
+}
+.panel h3{margin:10px 0 6px;font-size:18px}
+.panel p{margin:0;color:var(--muted);line-height:1.45}
+.popup-backdrop{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(10,22,36,.48);
+  z-index:30;
+}
+.popup-backdrop.open{display:flex}
+.popup-card{
+  width:min(720px,100%);
+  max-height:min(82vh,760px);
+  overflow:auto;
+  background:#fff;
+  border-radius:24px;
+  box-shadow:0 22px 60px rgba(10,22,36,.24);
+}
+.popup-header{
+  position:sticky;
+  top:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px 18px;
+  border-bottom:1px solid #e6eef5;
+  background:#fff;
+}
+.popup-header h2{margin:0;font-size:18px}
+.popup-header button{
+  border:1px solid var(--border);
+  border-radius:12px;
+  min-height:40px;
+  padding:0 14px;
+  background:#fff;
+  font-weight:700;
+}
+.popup-body{padding:18px}
+.legend-list,.contacts-list{display:grid;gap:12px}
+.legend-row,.contact-card{
+  border:1px solid #e6eef5;
+  border-radius:18px;
+  background:#fbfdff;
+  padding:14px;
+}
+.legend-row{display:flex;align-items:center;gap:12px}
+.legend-shape{display:inline-block;flex:0 0 18px;width:18px;height:18px}
+.legend-start{border-radius:50%;background:var(--green)}
+.legend-action{border-radius:6px;background:var(--blue)}
+.legend-decision{background:var(--orange);transform:rotate(45deg)}
+.legend-no{border-radius:6px;background:var(--red)}
+.contact-card{display:grid;gap:6px}
+.contact-name{font-weight:800}
+.contact-role{color:var(--muted)}
+.empty-state{margin-top:10px;color:var(--muted);font-size:14px}
+@media (max-width:700px){
+  header h1{font-size:14px}
+  .toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .page{padding-top:14px}
+  .step h2{font-size:18px}
 }
 </style>
-
 </head>
 <body>
 <header>
@@ -121,178 +245,78 @@ button{
   <div class="toolbar">
     <button id="btnBack" type="button">↩ Retour</button>
     <button id="btnRestart" type="button">Recommencer</button>
-    <button type="button" onclick="openPopup('legendPopup')">Légende</button>
-    <button type="button" onclick="openPopup('trackingPopup')">Suivi</button>
-    <button type="button" onclick="openPopup('contactsPopup')">Contacts</button>
+    <button id="btnLegend" type="button">Légende</button>
+    <button id="btnTracking" type="button">Suivi</button>
+    <button id="btnContacts" type="button">Contacts</button>
   </div>
 </header>
 
-<div class="main" id="scrollArea">
-<svg viewBox="0 0 1400 1900">
-<defs>
-<marker id="arrowB" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#1f7ae0"/></marker>
-<marker id="arrowG" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#1e9f4f"/></marker>
-<marker id="arrowR" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#d73636"/></marker>
-</defs>
+<main class="page">
+  <section class="hero" aria-label="Présentation">
+    <strong>Logigramme mobile installable</strong>
+    <p>Navigation guidée pas à pas pour la coupure générale BT/HT, utilisable sur téléphone et en mode application.</p>
+  </section>
 
-<g fill="none" stroke-width="3">
-<path id="c_start_verify" class="connector" d="M700 100 V150" stroke="#1f7ae0" marker-end="url(#arrowB)"/>
-<path id="c_verify_local" class="connector" d="M700 220 V270" stroke="#1f7ae0" marker-end="url(#arrowB)"/>
-<path id="c_local_origin" class="connector" d="M700 340 V390" stroke="#1f7ae0" marker-end="url(#arrowB)"/>
-<path id="c_origin_d1" class="connector" d="M700 460 V520" stroke="#1f7ae0" marker-end="url(#arrowB)"/>
-<path id="c_d1_ok1" class="connector" d="M700 650 V665" stroke="#1e9f4f" marker-end="url(#arrowG)"/>
-<path id="c_d1_no1" class="connector" d="M700 650 V665" stroke="#d73636" marker-end="url(#arrowR)"/>
-<path id="c_ok1_controls" class="connector" d="M700 760 V1600" stroke="#1e9f4f" marker-end="url(#arrowG)"/>
-<path id="c_no1_ok2" class="connector" d="M700 865 V940" stroke="#1e9f4f" marker-end="url(#arrowG)"/>
-<path id="c_no1_no2" class="connector" d="M700 865 V940" stroke="#d73636" marker-end="url(#arrowR)"/>
-<path id="c_ok2_d3" class="connector" d="M700 1045 V1120" stroke="#1e9f4f" marker-end="url(#arrowG)"/>
-<path id="c_ok2_enedis" class="connector" d="M700 1090 V1125" stroke="#d73636" marker-end="url(#arrowR)"/>
-<path id="c_d3_controls" class="connector" d="M700 1510 V1600" stroke="#1e9f4f" marker-end="url(#arrowG)"/>
-<path id="c_d3_no3" class="connector" d="M700 1510 V1600" stroke="#d73636" marker-end="url(#arrowR)"/>
-<path id="c_controls_end" class="connector" d="M700 1695 V1775" stroke="#1f7ae0" marker-end="url(#arrowB)"/>
-</g>
+  <section class="flow" id="flow" aria-live="polite"></section>
+</main>
 
-<g id="start" class="node">
-<ellipse class="shape" cx="700" cy="70" rx="270" ry="30" fill="#eaf9ef" stroke="#1e9f4f"/>
-<text x="700" y="76" text-anchor="middle">DÉBUT - Panne d’électricité détectée</text>
-</g>
-<foreignObject id="launchBtn" class="flow-btn" x="585" y="110" width="230" height="40"><button xmlns="http://www.w3.org/1999/xhtml" class="yes" type="button">CLIQUER POUR LANCER</button></foreignObject>
-
-<g id="verify" class="node hidden">
-<rect class="shape" x="420" y="155" width="560" height="65" rx="10" fill="#eaf4ff" stroke="#1f7ae0"/>
-<text x="700" y="183" text-anchor="middle">Vérification : coupure locale</text>
-<text class="small" x="700" y="204" text-anchor="middle">application ENEDIS</text>
-</g>
-<foreignObject id="b_verify" class="flow-btn hidden" x="660" y="230" width="80" height="36"><button xmlns="http://www.w3.org/1999/xhtml" class="yes" type="button">Oui</button></foreignObject>
-
-<g id="local" class="node hidden">
-<rect class="shape" x="420" y="275" width="560" height="65" rx="10" fill="#eaf4ff" stroke="#1f7ae0"/>
-<text x="700" y="313" text-anchor="middle">Je me rends dans un local TGBT du site</text>
-</g>
-<foreignObject id="b_local" class="flow-btn hidden" x="660" y="350" width="80" height="36"><button xmlns="http://www.w3.org/1999/xhtml" class="yes" type="button">Oui</button></foreignObject>
-
-<g id="origin" class="node hidden">
-<rect class="shape" x="420" y="395" width="560" height="65" rx="10" fill="#eaf4ff" stroke="#1f7ae0"/>
-<text x="700" y="422" text-anchor="middle">J’identifie l’origine</text>
-<text class="small" x="700" y="443" text-anchor="middle">disjoncteur / organe de sécurité</text>
-</g>
-<foreignObject id="b_origin" class="flow-btn hidden" x="660" y="470" width="80" height="36"><button xmlns="http://www.w3.org/1999/xhtml" class="yes" type="button">Oui</button></foreignObject>
-
-<g id="d1" class="node hidden">
-<polygon class="shape" points="700,520 900,585 700,650 500,585" fill="#fff3d8" stroke="#e0a22b"/>
-<text x="700" y="578" text-anchor="middle">DÉCISION 1</text>
-<text class="small" x="700" y="600" text-anchor="middle">Courant présent dans les TGBT ?</text>
-</g>
-<foreignObject id="b_d1_yes" class="flow-btn hidden" x="520" y="610" width="82" height="38"><button xmlns="http://www.w3.org/1999/xhtml" class="yes" type="button">Oui</button></foreignObject>
-<foreignObject id="b_d1_no" class="flow-btn hidden" x="800" y="610" width="82" height="38"><button xmlns="http://www.w3.org/1999/xhtml" class="no" type="button">Non</button></foreignObject>
-
-<g id="ok1" class="node hidden">
-<rect class="shape" x="545" y="665" width="310" height="95" rx="10" fill="#eaf9ef" stroke="#1e9f4f"/>
-<text x="700" y="700" text-anchor="middle">OK</text>
-<text class="small" x="700" y="725" text-anchor="middle">Relance équipements concernés</text>
-</g>
-<foreignObject id="b_ok1" class="flow-btn hidden" x="650" y="775" width="100" height="40"><button xmlns="http://www.w3.org/1999/xhtml" class="yes" type="button">Oui</button></foreignObject>
-
-<g id="no1" class="node hidden">
-<rect class="shape" x="510" y="665" width="380" height="200" rx="10" fill="#fff3d8" stroke="#e0a22b"/>
-<text x="700" y="710" text-anchor="middle">Aller au local HT</text>
-<text class="small" x="700" y="740" text-anchor="middle">Habilitation H2V-HC disponible ?</text>
-<text class="small" x="700" y="770" text-anchor="middle">Vérifier la disponibilité d’une</text>
-<text class="small" x="700" y="795" text-anchor="middle">personne habilitée H2V-HC</text>
-<text class="small" x="700" y="820" text-anchor="middle">Personnel du pôle Maintenance</text>
-</g>
-<foreignObject id="b_no1_yes" class="flow-btn hidden" x="615" y="880" width="82" height="38"><button xmlns="http://www.w3.org/1999/xhtml" class="yes" type="button">Oui</button></foreignObject>
-<foreignObject id="b_no1_no" class="flow-btn hidden" x="705" y="880" width="82" height="38"><button xmlns="http://www.w3.org/1999/xhtml" class="no" type="button">Non</button></foreignObject>
-
-<g id="ok2" class="node hidden">
-<rect class="shape" x="485" y="945" width="430" height="100" rx="10" fill="#eaf9ef" stroke="#1e9f4f"/>
-<text x="700" y="980" text-anchor="middle">Vérification et dépannage HT</text>
-<text class="tiny" x="700" y="1005" text-anchor="middle">Suite au diagnostic et/ou dépannage remettre en service</text>
-</g>
-<foreignObject id="b_ok2_yes" class="flow-btn hidden" x="610" y="1060" width="80" height="36"><button xmlns="http://www.w3.org/1999/xhtml" class="yes" type="button">Oui</button></foreignObject>
-<foreignObject id="b_ok2_no" class="flow-btn hidden" x="710" y="1060" width="80" height="36"><button xmlns="http://www.w3.org/1999/xhtml" class="no" type="button">Non</button></foreignObject>
-
-<g id="no2" class="node hidden">
-<rect class="shape" x="550" y="945" width="300" height="100" rx="10" fill="#fff0f0" stroke="#d73636"/>
-<text x="700" y="982" text-anchor="middle">Faire venir agent habilité</text>
-<text class="small" x="700" y="1010" text-anchor="middle">Reprendre “Aller au local HT”</text>
-</g>
-
-<g id="enedis" class="node hidden">
-<rect class="shape" x="520" y="1125" width="360" height="90" rx="10" fill="#fff0f0" stroke="#d73636"/>
-<text x="700" y="1165" text-anchor="middle">Prendre contact avec ENEDIS</text>
-<text class="small" x="700" y="1192" text-anchor="middle">Contacter ENEDIS pour intervention</text>
-</g>
-
-<g id="d3" class="node hidden">
-<polygon class="shape" points="700,1180 900,1345 700,1510 500,1345" fill="#fff3d8" stroke="#e0a22b"/>
-<text x="700" y="1338" text-anchor="middle">DÉCISION 3</text>
-<text class="small" x="700" y="1362" text-anchor="middle">Courant revenu au TGBT ?</text>
-</g>
-<foreignObject id="b_d3_yes" class="flow-btn hidden" x="705" y="1525" width="82" height="38"><button xmlns="http://www.w3.org/1999/xhtml" class="yes" type="button">Oui</button></foreignObject>
-<foreignObject id="b_d3_no" class="flow-btn hidden" x="615" y="1525" width="82" height="38"><button xmlns="http://www.w3.org/1999/xhtml" class="no" type="button">Non</button></foreignObject>
-
-<g id="no3" class="node hidden">
-<rect class="shape" x="535" y="1600" width="330" height="90" rx="10" fill="#fff0f0" stroke="#d73636"/>
-<text x="700" y="1635" text-anchor="middle">NON</text>
-<text class="small" x="700" y="1660" text-anchor="middle">Informer Responsable Process</text>
-</g>
-
-<g id="controls" class="node hidden">
-<rect class="shape" x="420" y="1600" width="560" height="95" rx="10" fill="#eaf4ff" stroke="#1f7ae0"/>
-<text x="700" y="1635" text-anchor="middle">CONTRÔLES FINAUX</text>
-<text class="tiny" x="700" y="1660" text-anchor="middle">Superviseur, paramétrage, déversement, bypass A2/A5</text>
-</g>
-<foreignObject id="b_controls" class="flow-btn hidden" x="660" y="1710" width="80" height="36"><button xmlns="http://www.w3.org/1999/xhtml" class="yes" type="button">Oui</button></foreignObject>
-
-<g id="end" class="node hidden">
-<ellipse class="shape" cx="700" cy="1810" rx="300" ry="34" fill="#eaf9ef" stroke="#1e9f4f"/>
-<text x="700" y="1816" text-anchor="middle">FIN - Installation en fonctionnement normal</text>
-</g>
-</svg>
+<div class="aside">
+  <section class="panel" aria-label="Suivi courant">
+    <div id="badge" class="badge green">Début</div>
+    <h3 id="title">Panne d’électricité détectée</h3>
+    <p id="desc">Point de départ du processus.</p>
+  </section>
 </div>
 
-<div class="panel">
-  <div id="badge" class="badge green">Début</div>
-  <h3 id="title">Panne d’électricité détectée</h3>
-  <p id="desc">Point de départ du processus.</p>
-</div>
-
-<div id="legendPopup" class="popup-backdrop" onclick="closePopupOnBackdrop(event,'legendPopup')">
-  <div class="popup-card">
-    <div class="popup-header"><h2>Légende</h2><button onclick="closePopup('legendPopup')">Fermer</button></div>
+<div id="legendPopup" class="popup-backdrop" aria-hidden="true">
+  <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="legendTitle">
+    <div class="popup-header">
+      <h2 id="legendTitle">Légende</h2>
+      <button type="button" data-close="legendPopup">Fermer</button>
+    </div>
     <div class="popup-body">
-      <div class="legend-row"><span class="legend-shape legend-start"></span><span>Début / fin / validation OK</span></div>
-      <div class="legend-row"><span class="legend-shape legend-action"></span><span>Action ou contrôle à réaliser</span></div>
-      <div class="legend-row"><span class="legend-shape legend-decision"></span><span>Décision avec choix Oui / Non</span></div>
-      <div class="legend-row"><span class="legend-shape legend-no"></span><span>Branche NON / anomalie / intervention</span></div>
+      <div class="legend-list">
+        <div class="legend-row"><span class="legend-shape legend-start"></span><span>Début / fin / validation OK</span></div>
+        <div class="legend-row"><span class="legend-shape legend-action"></span><span>Action ou contrôle à réaliser</span></div>
+        <div class="legend-row"><span class="legend-shape legend-decision"></span><span>Décision avec choix Oui / Non</span></div>
+        <div class="legend-row"><span class="legend-shape legend-no"></span><span>Branche NON / anomalie / intervention</span></div>
+      </div>
     </div>
   </div>
 </div>
 
-<div id="trackingPopup" class="popup-backdrop" onclick="closePopupOnBackdrop(event,'trackingPopup')">
-  <div class="popup-card">
-    <div class="popup-header"><h2>Suivi</h2><button onclick="closePopup('trackingPopup')">Fermer</button></div>
+<div id="trackingPopup" class="popup-backdrop" aria-hidden="true">
+  <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="trackingTitle">
+    <div class="popup-header">
+      <h2 id="trackingTitle">Suivi</h2>
+      <button type="button" data-close="trackingPopup">Fermer</button>
+    </div>
     <div class="popup-body">
       <div id="popup-badge" class="badge green">Début</div>
       <h3 id="popup-title">Panne d’électricité détectée</h3>
       <p id="popup-desc">Point de départ du processus.</p>
+      <p class="empty-state" id="historyText"></p>
     </div>
   </div>
 </div>
 
-<div id="contactsPopup" class="popup-backdrop" onclick="closePopupOnBackdrop(event,'contactsPopup')">
-  <div class="popup-card">
-    <div class="popup-header"><h2>Contacts</h2><button onclick="closePopup('contactsPopup')">Fermer</button></div>
+<div id="contactsPopup" class="popup-backdrop" aria-hidden="true">
+  <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="contactsTitle">
+    <div class="popup-header">
+      <h2 id="contactsTitle">Contacts</h2>
+      <button type="button" data-close="contactsPopup">Fermer</button>
+    </div>
     <div class="popup-body">
-      <div class="contact-card"><div class="contact-name">Laurent MELCHIOR</div><div class="contact-role">Responsable régie exploitation<br>Adjoint chef de secteur</div><a href="tel:0622727350">06.22.72.73.50</a></div>
-      <div class="contact-card"><div class="contact-name">Régine LARREDE</div><div class="contact-role">Responsable Process</div><a href="tel:0620003139">06.20.00.31.39</a></div>
-      <div class="contact-card"><div class="contact-name">Gilles LADEVESE</div><div class="contact-role">Adjoint-Responsable Process</div><a href="tel:0623441509">06.23.44.15.09</a></div>
-      <div class="contact-card"><div class="contact-name">Jérôme TURNACO</div><div class="contact-role">Responsable Maintenance</div><a href="tel:0629194522">06.29.19.45.22</a></div>
-      <div class="contact-card"><div class="contact-name">Ramuntxo DABBADIE</div><div class="contact-role">Adjoint-responsable Maintenance</div><a href="tel:0620003098">06.20.00.30.98</a></div>
-      <div class="contact-card"><div class="contact-name">Pierre SOUBLES</div><div class="contact-role">Responsable Réseaux</div><a href="tel:0624254811">06.24.25.48.11</a></div>
-      <div class="contact-card"><div class="contact-name">Jean-Lucien DOYHENARD</div><div class="contact-role">Adjoint-Responsable Reseaux</div><a href="tel:0624254815">06.24.25.48.15</a></div>
-      <div class="contact-card"><div class="contact-name">Dépannage ENEDIS</div><a href="https://www.enedis.fr/panne-et-interruption" target="_blank">Site ENEDIS panne et interruption</a><br><a href="tel:0972675064">09.72.67.50.64</a></div>
+      <div class="contacts-list">
+        <div class="contact-card"><div class="contact-name">Laurent MELCHIOR</div><div class="contact-role">Responsable régie exploitation<br>Adjoint chef de secteur</div><a href="tel:0622727350">06.22.72.73.50</a></div>
+        <div class="contact-card"><div class="contact-name">Régine LARREDE</div><div class="contact-role">Responsable Process</div><a href="tel:0620003139">06.20.00.31.39</a></div>
+        <div class="contact-card"><div class="contact-name">Gilles LADEVESE</div><div class="contact-role">Adjoint-Responsable Process</div><a href="tel:0623441509">06.23.44.15.09</a></div>
+        <div class="contact-card"><div class="contact-name">Jérôme TURNACO</div><div class="contact-role">Responsable Maintenance</div><a href="tel:0629194522">06.29.19.45.22</a></div>
+        <div class="contact-card"><div class="contact-name">Ramuntxo DABBADIE</div><div class="contact-role">Adjoint-responsable Maintenance</div><a href="tel:0620003098">06.20.00.30.98</a></div>
+        <div class="contact-card"><div class="contact-name">Pierre SOUBLES</div><div class="contact-role">Responsable Réseaux</div><a href="tel:0624254811">06.24.25.48.11</a></div>
+        <div class="contact-card"><div class="contact-name">Jean-Lucien DOYHENARD</div><div class="contact-role">Adjoint-Responsable Reseaux</div><a href="tel:0624254815">06.24.25.48.15</a></div>
+        <div class="contact-card"><div class="contact-name">Dépannage ENEDIS</div><a href="https://www.enedis.fr/panne-et-interruption" target="_blank" rel="noopener noreferrer">Site ENEDIS panne et interruption</a><br><a href="tel:0972675064">09.72.67.50.64</a></div>
+      </div>
     </div>
   </div>
 </div>
@@ -317,133 +341,186 @@ button{
   };
 
   const transitions = {
-    launchBtn:{to:"verify",connector:"c_start_verify"},
-    b_verify:{to:"local",connector:"c_verify_local"},
-    b_local:{to:"origin",connector:"c_local_origin"},
-    b_origin:{to:"d1",connector:"c_origin_d1"},
-    b_d1_yes:{to:"ok1",connector:"c_d1_ok1"},
-    b_d1_no:{to:"no1",connector:"c_d1_no1"},
-    b_ok1:{to:"controls",connector:"c_ok1_controls"},
-    b_no1_yes:{to:"ok2",connector:"c_no1_ok2"},
-    b_no1_no:{to:"no2",connector:"c_no1_no2"},
-    b_ok2_yes:{to:"d3",connector:"c_ok2_d3"},
-    b_ok2_no:{to:"enedis",connector:"c_ok2_enedis"},
-    b_d3_yes:{to:"controls",connector:"c_d3_controls"},
-    b_d3_no:{to:"no3",connector:"c_d3_no3"},
-    b_controls:{to:"end",connector:"c_controls_end"}
+    launchBtn:{to:"verify",label:"CLIQUER POUR LANCER",variant:"primary"},
+    b_verify:{to:"local",label:"Oui",variant:"yes"},
+    b_local:{to:"origin",label:"Oui",variant:"yes"},
+    b_origin:{to:"d1",label:"Oui",variant:"yes"},
+    b_d1_yes:{to:"ok1",label:"Oui",variant:"yes"},
+    b_d1_no:{to:"no1",label:"Non",variant:"no"},
+    b_ok1:{to:"Oui",label:"Oui",variant:"yes",aliasTo:"controls"},
+    b_no1_yes:{to:"ok2",label:"Personnel du pôle Maintenance",variant:"yes"},
+    b_no1_no:{to:"no2",label:"Non",variant:"no"},
+    b_ok2_yes:{to:"d3",label:"Oui",variant:"yes"},
+    b_ok2_no:{to:"enedis",label:"Non",variant:"no"},
+    b_d3_yes:{to:"controls",label:"Oui",variant:"yes"},
+    b_d3_no:{to:"no3",label:"Non",variant:"no"},
+    b_controls:{to:"end",label:"Oui",variant:"yes"}
+  };
+
+  const stepOrder = ["start","verify","local","origin","d1","ok1","no1","ok2","no2","enedis","d3","no3","controls","end"];
+  const markerLabels = {
+    start:"D", verify:"1", local:"2", origin:"3", d1:"?", ok1:"OK", no1:"?", ok2:"OK", no2:"!", enedis:"!", d3:"?", no3:"!", controls:"4", end:"F"
   };
 
   let current = "start";
   let history = ["start"];
-  let connectorHistory = [];
   let revealed = new Set(["start"]);
 
   const $ = id => document.getElementById(id);
 
-  function setHidden(el, hidden){
-    if(!el) return;
-    el.classList.toggle("hidden", hidden);
+  function destinationFor(buttonId){
+    const transition = transitions[buttonId];
+    return transition.aliasTo || transition.to;
+  }
+
+  function buildFlow(){
+    const flow = $("flow");
+    flow.innerHTML = stepOrder.map(id => {
+      const step = steps[id];
+      const buttons = (step.buttons || []).map(buttonId => {
+        const transition = transitions[buttonId];
+        return '<button class="flow-btn ' + transition.variant + ' hidden" data-action="' + buttonId + '" type="button">' + transition.label + '</button>';
+      }).join("");
+      return '<article id="' + id + '" class="step ' + step.cls + ' hidden">' +
+        '<div class="step-head">' +
+          '<div class="marker">' + markerLabels[id] + '</div>' +
+          '<div>' +
+            '<div class="badge ' + step.cls + '">' + step.type + '</div>' +
+            '<h2>' + step.title + '</h2>' +
+            '<p>' + step.desc + '</p>' +
+          '</div>' +
+        '</div>' +
+        '<div class="actions">' + buttons + '</div>' +
+      '</article>';
+    }).join("");
+  }
+
+  function updatePanel(){
+    const step = steps[current] || steps.start;
+    [["badge", step.type], ["popup-badge", step.type]].forEach(([id, text]) => {
+      const node = $(id);
+      if(node){
+        node.className = 'badge ' + step.cls;
+        node.textContent = text;
+      }
+    });
+    [["title", step.title], ["popup-title", step.title], ["desc", step.desc], ["popup-desc", step.desc]].forEach(([id, text]) => {
+      const node = $(id);
+      if(node) node.textContent = text;
+    });
+    $("historyText").textContent = 'Parcours: ' + history.map(id => steps[id].title).join(' → ');
   }
 
   function redraw(){
-    document.querySelectorAll(".node").forEach(n=>{
-      setHidden(n, !revealed.has(n.id));
-      n.classList.toggle("active", n.id === current);
+    stepOrder.forEach(id => {
+      const node = $(id);
+      if(!node) return;
+      node.classList.toggle('hidden', !revealed.has(id));
+      node.classList.toggle('active', id === current);
+      node.querySelectorAll('[data-action]').forEach(button => button.classList.add('hidden'));
     });
 
-    document.querySelectorAll(".flow-btn").forEach(b=>setHidden(b, true));
-    (steps[current].buttons || []).forEach(id=>setHidden($(id), false));
-
-    document.querySelectorAll(".connector").forEach(c=>c.classList.remove("visible"));
-    connectorHistory.forEach(id=>{ const c=$(id); if(c) c.classList.add("visible"); });
+    (steps[current].buttons || []).forEach(buttonId => {
+      const button = document.querySelector('[data-action="' + buttonId + '"]');
+      if(button) button.classList.remove('hidden');
+    });
 
     updatePanel();
   }
 
-  function updatePanel(){
-    const s = steps[current] || steps.start;
-    const items = [
-      ["badge", s.type], ["popup-badge", s.type],
-    ];
-    items.forEach(([id,text])=>{
-      const n=$(id);
-      if(n){ n.className = "badge " + s.cls; n.textContent = text; }
-    });
-    [["title",s.title],["popup-title",s.title],["desc",s.desc],["popup-desc",s.desc]].forEach(([id,text])=>{
-      const n=$(id); if(n) n.textContent = text;
-    });
-  }
-
   function scrollCurrent(){
-    const n = $(current);
-    if(!n) return;
-    setTimeout(()=>{ try{ n.scrollIntoView({behavior:"smooth", block:"center"}); }catch(e){ n.scrollIntoView(); } }, 30);
+    const node = $(current);
+    if(!node) return;
+    setTimeout(() => {
+      try {
+        node.scrollIntoView({behavior:'smooth', block:'center'});
+      } catch (error) {
+        node.scrollIntoView();
+      }
+    }, 30);
   }
 
-  function go(id){
-    const t = transitions[id];
-    if(!t) return false;
-    current = t.to;
+  function go(buttonId){
+    const next = destinationFor(buttonId);
+    if(!next || !steps[next]) return;
+    current = next;
     history.push(current);
     revealed.add(current);
-    if(t.connector) connectorHistory.push(t.connector);
     redraw();
     scrollCurrent();
-    return false;
   }
 
   function back(){
-    if(history.length <= 1) return false;
+    if(history.length <= 1) return;
     history.pop();
-    connectorHistory.pop();
-    current = history[history.length-1];
+    current = history[history.length - 1];
     revealed = new Set(history);
     redraw();
     scrollCurrent();
-    return false;
   }
 
   function restart(){
-    current = "start";
-    history = ["start"];
-    connectorHistory = [];
-    revealed = new Set(["start"]);
+    current = 'start';
+    history = ['start'];
+    revealed = new Set(['start']);
     redraw();
     scrollCurrent();
-    return false;
   }
 
-  window.openPopup = id => { const p=$(id); if(p) p.classList.add("open"); };
-  window.closePopup = id => { const p=$(id); if(p) p.classList.remove("open"); };
-  window.closePopupOnBackdrop = (evt,id) => { if(evt.target && evt.target.id === id) window.closePopup(id); };
+  function openPopup(id){
+    const popup = $(id);
+    if(!popup) return;
+    popup.classList.add('open');
+    popup.setAttribute('aria-hidden', 'false');
+  }
+
+  function closePopup(id){
+    const popup = $(id);
+    if(!popup) return;
+    popup.classList.remove('open');
+    popup.setAttribute('aria-hidden', 'true');
+  }
 
   function bind(){
-    Object.keys(transitions).forEach(id=>{
-      const node = $(id);
-      if(!node) return;
-      node.addEventListener("click", e=>{ e.preventDefault(); e.stopPropagation(); go(id); });
-      node.addEventListener("touchend", e=>{ e.preventDefault(); e.stopPropagation(); go(id); });
+    document.addEventListener('click', event => {
+      const actionButton = event.target.closest('[data-action]');
+      if(actionButton){
+        event.preventDefault();
+        go(actionButton.dataset.action);
+        return;
+      }
+
+      const closeButton = event.target.closest('[data-close]');
+      if(closeButton){
+        closePopup(closeButton.dataset.close);
+        return;
+      }
+
+      const popup = event.target.closest('.popup-backdrop');
+      if(popup && event.target === popup){
+        closePopup(popup.id);
+      }
     });
-    $("btnBack").addEventListener("click", e=>{ e.preventDefault(); back(); });
-    $("btnBack").addEventListener("touchend", e=>{ e.preventDefault(); back(); });
-    $("btnRestart").addEventListener("click", e=>{ e.preventDefault(); restart(); });
-    $("btnRestart").addEventListener("touchend", e=>{ e.preventDefault(); restart(); });
+
+    $('btnBack').addEventListener('click', back);
+    $('btnRestart').addEventListener('click', restart);
+    $('btnLegend').addEventListener('click', () => openPopup('legendPopup'));
+    $('btnTracking').addEventListener('click', () => openPopup('trackingPopup'));
+    $('btnContacts').addEventListener('click', () => openPopup('contactsPopup'));
   }
 
+  buildFlow();
   bind();
   redraw();
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js').catch(error => {
+        console.log('Service worker non enregistré', error);
+      });
+    });
+  }
 })();
 </script>
-
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function(){
-    navigator.serviceWorker.register("./service-worker.js").catch(function(err){
-      console.log("Service worker non enregistré", err);
-    });
-  });
-}
-</script>
-
 </body>
 </html>
