@@ -35,8 +35,10 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
 .tab.active{box-shadow:0 0 0 3px rgba(31,122,224,.12),var(--shadow);transform:translateY(-1px)}
 .tab-vert.active{box-shadow:0 0 0 3px rgba(44,155,95,.22),var(--shadow)}
 .tab-bleu.active{box-shadow:0 0 0 3px rgba(31,122,224,.18),var(--shadow)}
-.hero{background:linear-gradient(135deg,#0f5aa8 0%,#4f9fea 100%);color:#fff;border-radius:24px;padding:18px;box-shadow:var(--shadow)}
+.hero{color:#fff;border-radius:24px;padding:18px;box-shadow:var(--shadow)}
 .hero p{margin:8px 0 0;line-height:1.55}
+.hero-vert{background:linear-gradient(135deg,#2f9d62 0%,#7bd59d 100%)}
+.hero-bleu{background:linear-gradient(135deg,#f0c54a 0 48%,#1f7ae0 52% 100%)}
 .pane{display:none}
 .pane.active{display:block}
 .flow{margin-top:18px;display:grid;gap:14px}
@@ -112,14 +114,14 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
     </button>
   </nav>
   <section id="paneVert" class="pane active" aria-labelledby="tabVert">
-    <section class="hero" aria-label="Présentation tarif vert">
+    <section class="hero hero-vert" aria-label="Présentation tarif vert">
       <strong>Procedure pour site avec poste de transformation HT</strong>
       <p>Cette consigne guide les actions a suivre lors d'une coupure generale sur une installation HT / BT.</p>
     </section>
     <section class="flow" id="flowVert" aria-live="polite"></section>
   </section>
   <section id="paneBleu" class="pane" aria-labelledby="tabBleu">
-    <section class="hero" aria-label="Présentation tarif bleu ou jaune">
+    <section class="hero hero-bleu" aria-label="Présentation tarif bleu ou jaune">
       <strong>Procedure pour site avec comptage BT</strong>
       <p>Cette consigne suit la verification secteur ENEDIS, le controle du compteur Linky et du disjoncteur ENEDIS, puis le rearmement securise avec remise en route progressive des pompes.</p>
     </section>
