@@ -1,0 +1,23 @@
+{
+  "name": "Logigramme Coupure Générale BT/HT",
+  "short_name": "BT/HT",
+  "description": "Application mobile du logigramme de coupure générale BT/HT.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#1f7ae0",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
