@@ -69,9 +69,6 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
 .flow-btn.primary{border-color:var(--blue);color:var(--blue)}
 .flow-btn.yes{border-color:var(--green);color:var(--green)}
 .flow-btn.no{border-color:var(--red);color:var(--red)}
-.info-card{margin-top:18px;background:#fff;border:1px solid var(--border);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
-.info-card h2{margin:0 0 10px;font-size:20px}
-.info-card p{margin:0;color:var(--muted);line-height:1.55}
 .popup-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(10,22,36,.48);z-index:30}
 .popup-backdrop.open{display:flex}
 .popup-card{width:min(720px,100%);max-height:min(82vh,760px);overflow:auto;background:#fff;border-radius:24px;box-shadow:0 22px 60px rgba(10,22,36,.24)}
@@ -91,7 +88,7 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
 .contact-name{font-weight:800}
 .contact-role{color:var(--muted)}
 .empty-state{margin-top:10px;color:var(--muted);font-size:14px}
-@media (max-width:700px){header h1{font-size:16px}.toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}.home-grid{grid-template-columns:1fr}.hero-title h2{font-size:24px}.step h2,.info-card h2{font-size:18px}.detail-head{flex-direction:column;align-items:stretch}}
+@media (max-width:700px){header h1{font-size:16px}.toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}.home-grid{grid-template-columns:1fr}.hero-title h2{font-size:24px}.step h2{font-size:18px}.detail-head{flex-direction:column;align-items:stretch}}
 </style>
 </head>
 <body>
@@ -127,40 +124,22 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
     </div>
   </section>
 
-  <section id="detailVert" class="view" aria-label="Procedure tarif vert">
-    <div class="detail-head">
-      <button type="button" data-open-home="true">← Retour à l'accueil</button>
-    </div>
-    <section class="procedure-card theme-vert">
-      <strong>Procédure pour site avec poste de transformation HT</strong>
-      <p>Cette consigne guide les actions à suivre lors d'une coupure générale sur une installation HT / BT.</p>
-    </section>
+  <section id="detailVert" class="view" aria-label="Procédure tarif vert">
+    <div class="detail-head"><button type="button" data-open-home="true">← Retour à l'accueil</button></div>
+    <section class="procedure-card theme-vert"><strong>Procédure pour site avec poste de transformation HT</strong><p>Cette consigne guide les actions à suivre lors d'une coupure générale sur une installation HT / BT.</p></section>
     <section class="flow" id="flowVert" aria-live="polite"></section>
   </section>
 
-  <section id="detailBleu" class="view" aria-label="Procedure tarif bleu ou jaune">
-    <div class="detail-head">
-      <button type="button" data-open-home="true">← Retour à l'accueil</button>
-    </div>
-    <section class="procedure-card theme-bleu">
-      <strong>Procédure pour site avec comptage BT</strong>
-      <p>Cette consigne suit la vérification du secteur ENEDIS, le contrôle du compteur Linky et du disjoncteur ENEDIS, puis le réarmement sécurisé avec remise en route progressive des pompes.</p>
-    </section>
+  <section id="detailBleu" class="view" aria-label="Procédure tarif bleu ou jaune">
+    <div class="detail-head"><button type="button" data-open-home="true">← Retour à l'accueil</button></div>
+    <section class="procedure-card theme-bleu"><strong>Procédure pour site avec comptage BT</strong><p>Cette consigne suit la vérification du secteur ENEDIS, le contrôle du compteur Linky et du disjoncteur ENEDIS, puis le réarmement sécurisé avec remise en route progressive des pompes.</p></section>
     <section class="flow" id="flowBleu" aria-live="polite"></section>
   </section>
 
-  <section id="detailIncendie" class="view" aria-label="Procedure incendie">
-    <div class="detail-head">
-      <button type="button" data-open-home="true">← Retour à l'accueil</button>
-    </div>
-    <section class="procedure-card theme-rouge">
-      <strong>Procédure en cas d'incendie</strong>
-      <p>Cette consigne est réservée à la gestion d'un départ de feu ou d'un incendie sur le site.</p>
-    </section>
-    <section class="info-card">
-      <h2>Procédure à compléter</h2>
-      <p>La carte incendie est créée. Cette page dédiée est prête à recevoir la procédure détaillée et le logigramme correspondant.</p>
-    </section>
+  <section id="detailIncendie" class="view" aria-label="Procédure incendie">
+    <div class="detail-head"><button type="button" data-open-home="true">← Retour à l'accueil</button></div>
+    <section class="procedure-card theme-rouge"><strong>Procédure en cas d'incendie</strong><p>Procédure type pour un site en domaine privé, depuis le déclenchement de l'alarme jusqu'au point de rassemblement.</p></section>
+    <section class="flow" id="flowIncendie" aria-live="polite"></section>
   </section>
 </main>
 
@@ -209,8 +188,7 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
   const enedisLink = { href: 'https://www.enedis.fr/panne-et-interruption', label: 'Ouvrir le site ENEDIS panne et interruption' };
   const definitions = {
     vert: {
-      viewId:'detailVert',
-      flowId:'flowVert',
+      viewId:'detailVert', flowId:'flowVert',
       steps:{
         start:{type:'Debut',cls:'green',title:"Panne d'electricite detectee",desc:'Point de depart du processus.',buttons:['launchBtn']},
         verify:{type:'Action',cls:'blue',title:'Verification ENEDIS',desc:"Informer le responsable et verifier si la coupure est locale ou generale via le site ENEDIS.",link:enedisLink,buttons:['b_verify']},
@@ -232,8 +210,7 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
       markers:{start:'D',verify:'1',local:'2',origin:'3',d1:'?',ok1:'OK',no1:'?',ok2:'OK',no2:'!',enedis:'!',d3:'?',no3:'!',controls:'4',end:'F'}
     },
     bleu:{
-      viewId:'detailBleu',
-      flowId:'flowBleu',
+      viewId:'detailBleu', flowId:'flowBleu',
       steps:{
         start:{type:'Début',cls:'green',title:"Panne d'électricité détectée",desc:'Point de départ du processus BT.',buttons:['bt_launch']},
         verify:{type:'Action',cls:'blue',title:'Vérification depuis le site ENEDIS',desc:'Vérifier sur le site ENEDIS les pannes en cours sur le secteur du site.',link:enedisLink,buttons:['bt_verify']},
@@ -254,7 +231,25 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
       order:['start','verify','sector','waitEnedis','meter','linkyStatus','safeShutdown','rearmLinky','breakerStatus','breakerOn','restore','maintenance','end','process'],
       markers:{start:'D',verify:'1',sector:'?',waitEnedis:'!',meter:'2',linkyStatus:'?',safeShutdown:'S',rearmLinky:'+',breakerStatus:'?',breakerOn:'O',restore:'3',maintenance:'M',end:'F',process:'!'}
     },
-    incendie:{viewId:'detailIncendie'}
+    incendie:{
+      viewId:'detailIncendie', flowId:'flowIncendie',
+      steps:{
+        start:{type:'Début',cls:'red',title:"Déclenchement de l'alarme incendie",desc:'Constater le déclenchement de l’alarme ou la présence de fumées / flammes.',buttons:['f_start']},
+        alert:{type:'Action',cls:'blue',title:'Alerter immédiatement',desc:'Déclencher l’alerte interne, prévenir les secours externes si nécessaire et transmettre le lieu précis du sinistre.',buttons:['f_alert']},
+        rescue:{type:'Décision',cls:'orange',title:'Une personne est-elle en danger immédiat à proximité ?',desc:'Évaluer rapidement si un secours immédiat est possible sans se mettre en danger.',buttons:['f_rescue_yes','f_rescue_no']},
+        savePerson:{type:'Action',cls:'blue',title:'Secourir sans se mettre en danger',desc:'Mettre la personne à l’abri si cela est possible sans risque, appliquer les premiers gestes de secours et alerter un sauveteur secouriste.',buttons:['f_save_done']},
+        extinguish:{type:'Décision',cls:'orange',title:'Le départ de feu est-il limité et maîtrisable ?',desc:'N’intervenir sur le feu qu’avec un extincteur adapté, si la zone est praticable et si une issue de repli est garantie.',buttons:['f_fire_yes','f_fire_no']},
+        extinguishAction:{type:'Action',cls:'blue',title:'Tenter une première extinction',desc:'Utiliser le moyen de première intervention adapté sans retarder l’évacuation.',buttons:['f_ext_done']},
+        evacuate:{type:'Action',cls:'blue',title:'Lancer l’évacuation',desc:'Faire évacuer calmement selon le plan d’évacuation, fermer les portes sans les verrouiller et ne jamais utiliser les ascenseurs.',buttons:['f_evac']},
+        assembly:{type:'Action',cls:'blue',title:'Rejoindre le point de rassemblement',desc:'Diriger tout le personnel et les visiteurs vers le point de rassemblement défini pour le site.',buttons:['f_assembly']},
+        check:{type:'Action',cls:'blue',title:'Contrôler les présences',desc:'Vérifier les effectifs, signaler les personnes manquantes, les blessés et la zone concernée aux secours.',buttons:['f_check']},
+        access:{type:'Action',cls:'blue',title:'Accueillir et guider les secours',desc:'Faciliter l’accès au site, fournir le plan d’évacuation, les risques particuliers et les informations utiles aux intervenants.',buttons:['f_access']},
+        end:{type:'Fin',cls:'green',title:'Attente des consignes des secours',desc:'Rester au point de rassemblement et ne réintégrer le site qu’après autorisation.',buttons:[]}
+      },
+      transitions:{f_start:{to:'alert',label:'Oui',variant:'yes'},f_alert:{to:'rescue',label:'Oui',variant:'yes'},f_rescue_yes:{to:'savePerson',label:'Oui',variant:'yes'},f_rescue_no:{to:'extinguish',label:'Non',variant:'no'},f_save_done:{to:'extinguish',label:'Oui',variant:'yes'},f_fire_yes:{to:'extinguishAction',label:'Oui',variant:'yes'},f_fire_no:{to:'evacuate',label:'Non',variant:'no'},f_ext_done:{to:'evacuate',label:'Oui',variant:'yes'},f_evac:{to:'assembly',label:'Oui',variant:'yes'},f_assembly:{to:'check',label:'Oui',variant:'yes'},f_check:{to:'access',label:'Oui',variant:'yes'},f_access:{to:'end',label:'Oui',variant:'yes'}},
+      order:['start','alert','rescue','savePerson','extinguish','extinguishAction','evacuate','assembly','check','access','end'],
+      markers:{start:'!',alert:'1',rescue:'?',savePerson:'S',extinguish:'?',extinguishAction:'E',evacuate:'2',assembly:'3',check:'4',access:'5',end:'F'}
+    }
   };
   const states = Object.fromEntries(Object.keys(definitions).filter(key => definitions[key].steps).map(key => [key,{current:'start',history:['start'],revealed:new Set(['start'])}]));
   let activeKey = null;
@@ -262,7 +257,6 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
 
   function renderFlow(key){
     const def = definitions[key];
-    if(!def.flowId) return;
     $(def.flowId).innerHTML = def.order.map(id => {
       const step = def.steps[id];
       const buttons = (step.buttons||[]).map(buttonId => {
@@ -280,12 +274,12 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
   }
 
   function updateTracking(){
-    if(!activeKey || !definitions[activeKey].steps){
+    if(!activeKey){
       $('popup-badge').className = 'badge green';
       $('popup-badge').textContent = 'Début';
-      $('popup-title').textContent = activeKey === 'incendie' ? "Consigne incendie ouverte" : 'Aucune consigne ouverte';
-      $('popup-desc').textContent = activeKey === 'incendie' ? "La procédure incendie est en attente de son contenu détaillé." : 'Ouvrir une consigne depuis la page d’accueil.';
-      $('historyText').textContent = activeKey === 'incendie' ? 'Aucun logigramme actif pour cette consigne.' : 'Aucun parcours actif.';
+      $('popup-title').textContent = 'Aucune consigne ouverte';
+      $('popup-desc').textContent = 'Ouvrir une consigne depuis la page d’accueil.';
+      $('historyText').textContent = 'Aucun parcours actif.';
       return;
     }
     const def = definitions[activeKey];
@@ -300,7 +294,6 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
 
   function redraw(key){
     const def = definitions[key];
-    if(!def.steps) return;
     const state = states[key];
     def.order.forEach(id => {
       const node = $(key+'-'+id);
@@ -318,7 +311,7 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
   function openConsigne(key){
     activeKey = key;
     setView(key);
-    if(definitions[key].steps) redraw(key);
+    redraw(key);
     updateTracking();
   }
 
@@ -336,7 +329,7 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
   }
 
   function backStep(){
-    if(!activeKey || !definitions[activeKey].steps) return;
+    if(!activeKey) return;
     const state = states[activeKey];
     if(state.history.length <= 1) return;
     state.history.pop();
@@ -345,12 +338,7 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
     redraw(activeKey);
   }
 
-  function openHome(){
-    activeKey = null;
-    setView('home');
-    updateTracking();
-  }
-
+  function openHome(){ activeKey = null; setView('home'); updateTracking(); }
   function openPopup(id){ const p=$(id); p.classList.add('open'); p.setAttribute('aria-hidden','false'); }
   function closePopup(id){ const p=$(id); p.classList.remove('open'); p.setAttribute('aria-hidden','true'); }
 
@@ -377,9 +365,11 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
 
   renderFlow('vert');
   renderFlow('bleu');
+  renderFlow('incendie');
   bind();
   redraw('vert');
   redraw('bleu');
+  redraw('incendie');
   openHome();
 
   if('serviceWorker' in navigator){
