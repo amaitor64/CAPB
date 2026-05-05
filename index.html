@@ -33,93 +33,23 @@ body{-webkit-user-select:none;user-select:none}
 a{color:var(--blue)}
 button{font:inherit;-webkit-tap-highlight-color:transparent}
 .hidden{display:none !important}
-header{
-  position:sticky;
-  top:0;
-  z-index:20;
-  background:rgba(255,255,255,.94);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(207,224,238,.9);
-  padding:calc(12px + env(safe-area-inset-top)) 14px 12px;
-}
-header h1{
-  margin:0 0 10px;
-  font-size:18px;
-  line-height:1.3;
-  text-align:center;
-  letter-spacing:.02em;
-}
-.toolbar{
-  display:grid;
-  grid-template-columns:repeat(5,minmax(0,1fr));
-  gap:8px;
-}
-.toolbar button{
-  min-height:42px;
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:#fff;
-  color:var(--ink);
-  font-weight:700;
-}
-.page{
-  width:min(1040px,100%);
-  margin:0 auto;
-  padding:18px 14px calc(160px + env(safe-area-inset-bottom));
-}
-.tabbar{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
-  margin-bottom:18px;
-}
-.tab{
-  text-align:left;
-  padding:14px 16px;
-  border-radius:18px;
-  border:1px solid var(--border);
-  background:#fff;
-  box-shadow:var(--shadow);
-}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid rgba(207,224,238,.9);padding:calc(12px + env(safe-area-inset-top)) 14px 12px}
+header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;letter-spacing:.02em}
+.toolbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.toolbar button{min-height:42px;border:1px solid var(--border);border-radius:12px;background:#fff;color:var(--ink);font-weight:700}
+.page{width:min(1040px,100%);margin:0 auto;padding:18px 14px calc(160px + env(safe-area-inset-bottom))}
+.tabbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.tab{text-align:left;padding:14px 16px;border-radius:18px;border:1px solid var(--border);background:#fff;box-shadow:var(--shadow)}
 .tab strong{display:block;font-size:15px;line-height:1.35}
 .tab span{display:block;margin-top:6px;font-size:12px;line-height:1.45;color:var(--muted)}
-.tab.active{
-  border-color:var(--blue);
-  background:linear-gradient(135deg,#f3f9ff 0%,#ffffff 100%);
-  box-shadow:0 0 0 3px rgba(31,122,224,.12),var(--shadow);
-}
-.hero{
-  background:linear-gradient(135deg,#0f5aa8 0%,#4f9fea 100%);
-  color:#fff;
-  border-radius:24px;
-  padding:18px;
-  box-shadow:var(--shadow);
-}
+.tab.active{border-color:var(--blue);background:linear-gradient(135deg,#f3f9ff 0%,#ffffff 100%);box-shadow:0 0 0 3px rgba(31,122,224,.12),var(--shadow)}
+.hero{background:linear-gradient(135deg,#0f5aa8 0%,#4f9fea 100%);color:#fff;border-radius:24px;padding:18px;box-shadow:var(--shadow)}
 .hero p{margin:8px 0 0;line-height:1.55}
 .pane{display:none}
 .pane.active{display:block}
-.flow{
-  margin-top:18px;
-  display:grid;
-  gap:14px;
-}
-.step{
-  position:relative;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:16px 16px 14px;
-  box-shadow:var(--shadow);
-}
-.step::before{
-  content:"";
-  position:absolute;
-  left:32px;
-  top:-15px;
-  width:2px;
-  height:15px;
-  background:#b8cddd;
-}
+.flow{margin-top:18px;display:grid;gap:14px}
+.step{position:relative;background:var(--card);border:1px solid var(--border);border-radius:22px;padding:16px 16px 14px;box-shadow:var(--shadow)}
+.step::before{content:"";position:absolute;left:32px;top:-15px;width:2px;height:15px;background:#b8cddd}
 .step:first-child::before{display:none}
 .step.active{border-color:var(--blue);box-shadow:0 0 0 3px rgba(31,122,224,.12),var(--shadow)}
 .step.green{background:linear-gradient(180deg,#ffffff 0%,var(--green-soft) 100%)}
@@ -127,31 +57,12 @@ header h1{
 .step.orange{background:linear-gradient(180deg,#ffffff 0%,var(--orange-soft) 100%)}
 .step.red{background:linear-gradient(180deg,#ffffff 0%,var(--red-soft) 100%)}
 .step-head{display:flex;align-items:flex-start;gap:12px}
-.marker{
-  flex:0 0 34px;
-  width:34px;
-  height:34px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  font-size:12px;
-  font-weight:900;
-  color:#fff;
-}
+.marker{flex:0 0 34px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:900;color:#fff}
 .step.green .marker{background:var(--green)}
 .step.blue .marker{background:var(--blue)}
 .step.orange .marker{background:var(--orange)}
 .step.red .marker{background:var(--red)}
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.02em;
-}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.02em}
 .badge.green{background:var(--green-soft);color:var(--green)}
 .badge.blue{background:var(--blue-soft);color:var(--blue)}
 .badge.orange{background:var(--orange-soft);color:var(--orange)}
@@ -159,100 +70,23 @@ header h1{
 .step h2{margin:10px 0 6px;font-size:20px;line-height:1.2}
 .step p{margin:0;color:var(--muted);line-height:1.45}
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-.flow-btn{
-  min-height:42px;
-  padding:10px 16px;
-  border-radius:999px;
-  border:2px solid transparent;
-  font-weight:800;
-  background:#fff;
-  color:var(--ink);
-}
+.flow-btn{min-height:42px;padding:10px 16px;border-radius:999px;border:2px solid transparent;font-weight:800;background:#fff;color:var(--ink)}
 .flow-btn.primary{border-color:var(--blue);color:var(--blue)}
 .flow-btn.yes{border-color:var(--green);color:var(--green)}
 .flow-btn.no{border-color:var(--red);color:var(--red)}
-.info-grid{
-  margin-top:18px;
-  display:grid;
-  gap:14px;
-}
-.info-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:18px;
-  box-shadow:var(--shadow);
-}
-.info-card h2{margin:0 0 10px;font-size:20px}
-.info-card p{margin:0;color:var(--muted);line-height:1.55}
-.info-card strong{display:block;margin-bottom:8px}
-.aside{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
-  z-index:15;
-  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
-  background:linear-gradient(180deg,rgba(244,248,251,0) 0%,rgba(244,248,251,.92) 18%,rgba(244,248,251,.98) 100%);
-}
-.panel{
-  width:min(1040px,100%);
-  margin:0 auto;
-  background:rgba(255,255,255,.96);
-  border:1px solid var(--border);
-  border-radius:20px;
-  box-shadow:var(--shadow);
-  padding:14px 16px;
-}
+.aside{position:fixed;left:0;right:0;bottom:0;z-index:15;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(244,248,251,0) 0%,rgba(244,248,251,.92) 18%,rgba(244,248,251,.98) 100%)}
+.panel{width:min(1040px,100%);margin:0 auto;background:rgba(255,255,255,.96);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:14px 16px}
 .panel h3{margin:10px 0 6px;font-size:18px}
 .panel p{margin:0;color:var(--muted);line-height:1.45}
-.popup-backdrop{
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-  background:rgba(10,22,36,.48);
-  z-index:30;
-}
+.popup-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(10,22,36,.48);z-index:30}
 .popup-backdrop.open{display:flex}
-.popup-card{
-  width:min(720px,100%);
-  max-height:min(82vh,760px);
-  overflow:auto;
-  background:#fff;
-  border-radius:24px;
-  box-shadow:0 22px 60px rgba(10,22,36,.24);
-}
-.popup-header{
-  position:sticky;
-  top:0;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:16px 18px;
-  border-bottom:1px solid #e6eef5;
-  background:#fff;
-}
+.popup-card{width:min(720px,100%);max-height:min(82vh,760px);overflow:auto;background:#fff;border-radius:24px;box-shadow:0 22px 60px rgba(10,22,36,.24)}
+.popup-header{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid #e6eef5;background:#fff}
 .popup-header h2{margin:0;font-size:18px}
-.popup-header button{
-  border:1px solid var(--border);
-  border-radius:12px;
-  min-height:40px;
-  padding:0 14px;
-  background:#fff;
-  font-weight:700;
-}
+.popup-header button{border:1px solid var(--border);border-radius:12px;min-height:40px;padding:0 14px;background:#fff;font-weight:700}
 .popup-body{padding:18px}
 .legend-list,.contacts-list{display:grid;gap:12px}
-.legend-row,.contact-card{
-  border:1px solid #e6eef5;
-  border-radius:18px;
-  background:#fbfdff;
-  padding:14px;
-}
+.legend-row,.contact-card{border:1px solid #e6eef5;border-radius:18px;background:#fbfdff;padding:14px}
 .legend-row{display:flex;align-items:center;gap:12px}
 .legend-shape{display:inline-block;flex:0 0 18px;width:18px;height:18px}
 .legend-start{border-radius:50%;background:var(--green)}
@@ -263,12 +97,7 @@ header h1{
 .contact-name{font-weight:800}
 .contact-role{color:var(--muted)}
 .empty-state{margin-top:10px;color:var(--muted);font-size:14px}
-@media (max-width:700px){
-  header h1{font-size:16px}
-  .toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .tabbar{grid-template-columns:1fr}
-  .step h2,.info-card h2{font-size:18px}
-}
+@media (max-width:700px){header h1{font-size:16px}.toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}.tabbar{grid-template-columns:1fr}.step h2{font-size:18px}}
 </style>
 </head>
 <body>
@@ -287,60 +116,50 @@ header h1{
   <nav class="tabbar" aria-label="Choix de consigne">
     <button id="tabVert" class="tab active" type="button" data-tab="vert" aria-pressed="true">
       <strong>Consigne coupure de courant tarif vert</strong>
-      <span>Coupure générale sur une installation HT / BT (site avec un poste de transformation HT)</span>
+      <span>Coupure generale sur une installation HT / BT (site avec un poste de transformation HT)</span>
     </button>
     <button id="tabBleu" class="tab" type="button" data-tab="bleu" aria-pressed="false">
       <strong>Consigne coupure de courant tarif bleu ou jaune</strong>
-      <span>Coupure générale sur une installation BT (site avec un comptage BT)</span>
+      <span>Coupure generale sur une installation BT (site avec un comptage BT)</span>
     </button>
   </nav>
 
   <section id="paneVert" class="pane active" aria-labelledby="tabVert">
     <section class="hero" aria-label="Présentation tarif vert">
-      <strong>Procédure pour site avec poste de transformation HT</strong>
-      <p>Cette consigne guide les actions à suivre lors d'une coupure générale sur une installation HT / BT. Le logigramme ci-dessous conserve le parcours existant et son suivi pas à pas.</p>
+      <strong>Procedure pour site avec poste de transformation HT</strong>
+      <p>Cette consigne guide les actions a suivre lors d'une coupure generale sur une installation HT / BT.</p>
     </section>
-    <section class="flow" id="flow" aria-live="polite"></section>
+    <section class="flow" id="flowVert" aria-live="polite"></section>
   </section>
 
   <section id="paneBleu" class="pane" aria-labelledby="tabBleu">
     <section class="hero" aria-label="Présentation tarif bleu ou jaune">
-      <strong>Procédure pour site avec comptage BT</strong>
-      <p>Cette section est dédiée à la coupure générale sur une installation BT. Elle est désormais séparée du tarif vert pour permettre un second logigramme ou une consigne spécifique.</p>
+      <strong>Procedure pour site avec comptage BT</strong>
+      <p>Cette consigne est adaptee aux installations BT sans poste HT, avec un parcours distinct pour isoler l'origine de la coupure et organiser la remise en service.</p>
     </section>
-    <section class="info-grid">
-      <article class="info-card">
-        <strong>Commentaire</strong>
-        <h2>Consigne coupure de courant tarif bleu ou jaune</h2>
-        <p>Coupure générale sur une installation BT (site avec un comptage BT).</p>
-      </article>
-      <article class="info-card">
-        <strong>État actuel</strong>
-        <p>Le logigramme de cette consigne n'est pas encore renseigné dans l'application. L'onglet est prêt à accueillir une procédure BT dédiée sans mélanger les cas HT / BT et BT.</p>
-      </article>
-    </section>
+    <section class="flow" id="flowBleu" aria-live="polite"></section>
   </section>
 </main>
 
 <div id="statusAside" class="aside">
   <section class="panel" aria-label="Suivi courant">
     <div id="badge" class="badge green">Début</div>
-    <h3 id="title">Panne d’électricité détectée</h3>
-    <p id="desc">Point de départ du processus.</p>
+    <h3 id="title">Panne d'electricite detectee</h3>
+    <p id="desc">Point de depart du processus.</p>
   </section>
 </div>
 
 <div id="legendPopup" class="popup-backdrop" aria-hidden="true">
   <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="legendTitle">
     <div class="popup-header">
-      <h2 id="legendTitle">Légende</h2>
+      <h2 id="legendTitle">Legende</h2>
       <button type="button" data-close="legendPopup">Fermer</button>
     </div>
     <div class="popup-body">
       <div class="legend-list">
-        <div class="legend-row"><span class="legend-shape legend-start"></span><span>Début / fin / validation OK</span></div>
-        <div class="legend-row"><span class="legend-shape legend-action"></span><span>Action ou contrôle à réaliser</span></div>
-        <div class="legend-row"><span class="legend-shape legend-decision"></span><span>Décision avec choix Oui / Non</span></div>
+        <div class="legend-row"><span class="legend-shape legend-start"></span><span>Debut / fin / validation OK</span></div>
+        <div class="legend-row"><span class="legend-shape legend-action"></span><span>Action ou controle a realiser</span></div>
+        <div class="legend-row"><span class="legend-shape legend-decision"></span><span>Decision avec choix Oui / Non</span></div>
         <div class="legend-row"><span class="legend-shape legend-no"></span><span>Branche NON / anomalie / intervention</span></div>
       </div>
     </div>
@@ -355,8 +174,8 @@ header h1{
     </div>
     <div class="popup-body">
       <div id="popup-badge" class="badge green">Début</div>
-      <h3 id="popup-title">Panne d’électricité détectée</h3>
-      <p id="popup-desc">Point de départ du processus.</p>
+      <h3 id="popup-title">Panne d'electricite detectee</h3>
+      <p id="popup-desc">Point de depart du processus.</p>
       <p class="empty-state" id="historyText"></p>
     </div>
   </div>
@@ -370,14 +189,14 @@ header h1{
     </div>
     <div class="popup-body">
       <div class="contacts-list">
-        <div class="contact-card"><div class="contact-name">Laurent MELCHIOR</div><div class="contact-role">Responsable régie exploitation<br>Adjoint chef de secteur</div><a href="tel:0622727350">06.22.72.73.50</a></div>
-        <div class="contact-card"><div class="contact-name">Régine LARREDE</div><div class="contact-role">Responsable Process</div><a href="tel:0620003139">06.20.00.31.39</a></div>
+        <div class="contact-card"><div class="contact-name">Laurent MELCHIOR</div><div class="contact-role">Responsable regie exploitation<br>Adjoint chef de secteur</div><a href="tel:0622727350">06.22.72.73.50</a></div>
+        <div class="contact-card"><div class="contact-name">Regine LARREDE</div><div class="contact-role">Responsable Process</div><a href="tel:0620003139">06.20.00.31.39</a></div>
         <div class="contact-card"><div class="contact-name">Gilles LADEVESE</div><div class="contact-role">Adjoint-Responsable Process</div><a href="tel:0623441509">06.23.44.15.09</a></div>
-        <div class="contact-card"><div class="contact-name">Jérôme TURNACO</div><div class="contact-role">Responsable Maintenance</div><a href="tel:0629194522">06.29.19.45.22</a></div>
+        <div class="contact-card"><div class="contact-name">Jerome TURNACO</div><div class="contact-role">Responsable Maintenance</div><a href="tel:0629194522">06.29.19.45.22</a></div>
         <div class="contact-card"><div class="contact-name">Ramuntxo DABBADIE</div><div class="contact-role">Adjoint-responsable Maintenance</div><a href="tel:0620003098">06.20.00.30.98</a></div>
-        <div class="contact-card"><div class="contact-name">Pierre SOUBLES</div><div class="contact-role">Responsable Réseaux</div><a href="tel:0624254811">06.24.25.48.11</a></div>
+        <div class="contact-card"><div class="contact-name">Pierre SOUBLES</div><div class="contact-role">Responsable Reseaux</div><a href="tel:0624254811">06.24.25.48.11</a></div>
         <div class="contact-card"><div class="contact-name">Jean-Lucien DOYHENARD</div><div class="contact-role">Adjoint-Responsable Reseaux</div><a href="tel:0624254815">06.24.25.48.15</a></div>
-        <div class="contact-card"><div class="contact-name">Dépannage ENEDIS</div><a href="https://www.enedis.fr/panne-et-interruption" target="_blank" rel="noopener noreferrer">Site ENEDIS panne et interruption</a><br><a href="tel:0972675064">09.72.67.50.64</a></div>
+        <div class="contact-card"><div class="contact-name">Depannage ENEDIS</div><a href="https://www.enedis.fr/panne-et-interruption" target="_blank" rel="noopener noreferrer">Site ENEDIS panne et interruption</a><br><a href="tel:0972675064">09.72.67.50.64</a></div>
       </div>
     </div>
   </div>
@@ -385,67 +204,99 @@ header h1{
 
 <script>
 (function(){
-  const steps = {
-    start:{type:"Début",cls:"green",title:"Panne d’électricité détectée",desc:"Point de départ du processus.",buttons:["launchBtn"]},
-    verify:{type:"Action",cls:"blue",title:"Vérification ENEDIS",desc:"Informer le responsable et vérifier si la coupure est locale ou générale via l’application ENEDIS.",buttons:["b_verify"]},
-    local:{type:"Action",cls:"blue",title:"Se rendre au local TGBT",desc:"Déplacement vers le local TGBT du site.",buttons:["b_local"]},
-    origin:{type:"Action",cls:"blue",title:"Identifier l’origine",desc:"Identifier le disjoncteur ou l’organe de sécurité concerné.",buttons:["b_origin"]},
-    d1:{type:"Décision",cls:"orange",title:"Courant présent dans les TGBT ?",desc:"Choisir Oui ou Non directement dans le logigramme.",buttons:["b_d1_yes","b_d1_no"]},
-    ok1:{type:"OK",cls:"green",title:"Relance équipements concernés",desc:"Après validation, aller directement aux contrôles finaux.",buttons:["b_ok1"]},
-    no1:{type:"Décision",cls:"orange",title:"Aller au local HT / Habilitation H2V-HC disponible ?",desc:"Vérifier la disponibilité d’une personne habilitée H2V-HC et se rendre au local HT.",buttons:["b_no1_yes","b_no1_no"]},
-    ok2:{type:"OK",cls:"green",title:"Vérification et dépannage HT",desc:"Suite au diagnostic et/ou dépannage, remettre en service.",buttons:["b_ok2_yes","b_ok2_no"]},
-    no2:{type:"NON",cls:"red",title:"Faire venir un agent habilité",desc:"Faire venir un agent habilité et reprendre l’étape Aller au local HT.",buttons:[]},
-    enedis:{type:"NON",cls:"red",title:"Prendre contact avec ENEDIS",desc:"Contacter ENEDIS pour intervention ou assistance.",buttons:[]},
-    d3:{type:"Décision",cls:"orange",title:"Courant revenu au TGBT ?",desc:"Vérifier si le courant est revenu au TGBT après relance.",buttons:["b_d3_yes","b_d3_no"]},
-    no3:{type:"NON",cls:"red",title:"Informer Responsable Process et/ou Maintenance",desc:"Informer le Responsable Process et/ou le Responsable Maintenance.",buttons:[]},
-    controls:{type:"Action",cls:"blue",title:"Contrôles finaux",desc:"Vérifier superviseur, paramétrage, déversement et bypass A2/A5.",buttons:["b_controls"]},
-    end:{type:"Fin",cls:"green",title:"Installation en fonctionnement normal",desc:"Fin du processus.",buttons:[]}
+  const definitions = {
+    vert: {
+      flowId: 'flowVert',
+      intro: { title: "Panne d'electricite detectee", desc: 'Point de depart du processus.' },
+      steps: {
+        start:{type:'Debut',cls:'green',title:"Panne d'electricite detectee",desc:'Point de depart du processus.',buttons:['launchBtn']},
+        verify:{type:'Action',cls:'blue',title:'Verification ENEDIS',desc:"Informer le responsable et verifier si la coupure est locale ou generale via l'application ENEDIS.",buttons:['b_verify']},
+        local:{type:'Action',cls:'blue',title:'Se rendre au local TGBT',desc:'Deplacement vers le local TGBT du site.',buttons:['b_local']},
+        origin:{type:'Action',cls:'blue',title:"Identifier l'origine",desc:"Identifier le disjoncteur ou l'organe de securite concerne.",buttons:['b_origin']},
+        d1:{type:'Decision',cls:'orange',title:'Courant present dans les TGBT ?',desc:'Choisir Oui ou Non directement dans le logigramme.',buttons:['b_d1_yes','b_d1_no']},
+        ok1:{type:'OK',cls:'green',title:'Relance equipements concernes',desc:'Apres validation, aller directement aux controles finaux.',buttons:['b_ok1']},
+        no1:{type:'Decision',cls:'orange',title:'Aller au local HT / Habilitation H2V-HC disponible ?',desc:"Verifier la disponibilite d'une personne habilitee H2V-HC et se rendre au local HT.",buttons:['b_no1_yes','b_no1_no']},
+        ok2:{type:'OK',cls:'green',title:'Verification et depannage HT',desc:'Suite au diagnostic et/ou depannage, remettre en service.',buttons:['b_ok2_yes','b_ok2_no']},
+        no2:{type:'NON',cls:'red',title:'Faire venir un agent habilite',desc:"Faire venir un agent habilite et reprendre l'etape Aller au local HT.",buttons:[]},
+        enedis:{type:'NON',cls:'red',title:'Prendre contact avec ENEDIS',desc:'Contacter ENEDIS pour intervention ou assistance.',buttons:[]},
+        d3:{type:'Decision',cls:'orange',title:'Courant revenu au TGBT ?',desc:'Verifier si le courant est revenu au TGBT apres relance.',buttons:['b_d3_yes','b_d3_no']},
+        no3:{type:'NON',cls:'red',title:'Informer Responsable Process et/ou Maintenance',desc:'Informer le Responsable Process et/ou le Responsable Maintenance.',buttons:[]},
+        controls:{type:'Action',cls:'blue',title:'Controles finaux',desc:'Verifier superviseur, parametrage, deversement et bypass A2/A5.',buttons:['b_controls']},
+        end:{type:'Fin',cls:'green',title:'Installation en fonctionnement normal',desc:'Fin du processus.',buttons:[]}
+      },
+      transitions: {
+        launchBtn:{to:'verify',label:'Cliquer pour lancer',variant:'primary'},
+        b_verify:{to:'local',label:'Oui',variant:'yes'},
+        b_local:{to:'origin',label:'Oui',variant:'yes'},
+        b_origin:{to:'d1',label:'Oui',variant:'yes'},
+        b_d1_yes:{to:'ok1',label:'Oui',variant:'yes'},
+        b_d1_no:{to:'no1',label:'Non',variant:'no'},
+        b_ok1:{to:'controls',label:'Oui',variant:'yes'},
+        b_no1_yes:{to:'ok2',label:'Personnel du pole Maintenance',variant:'yes'},
+        b_no1_no:{to:'no2',label:'Non',variant:'no'},
+        b_ok2_yes:{to:'d3',label:'Oui',variant:'yes'},
+        b_ok2_no:{to:'enedis',label:'Non',variant:'no'},
+        b_d3_yes:{to:'controls',label:'Oui',variant:'yes'},
+        b_d3_no:{to:'no3',label:'Non',variant:'no'},
+        b_controls:{to:'end',label:'Oui',variant:'yes'}
+      },
+      order:['start','verify','local','origin','d1','ok1','no1','ok2','no2','enedis','d3','no3','controls','end'],
+      markers:{start:'D',verify:'1',local:'2',origin:'3',d1:'?',ok1:'OK',no1:'?',ok2:'OK',no2:'!',enedis:'!',d3:'?',no3:'!',controls:'4',end:'F'}
+    },
+    bleu: {
+      flowId: 'flowBleu',
+      intro: { title: 'Coupure generale sur installation BT', desc: 'Procedure dediee a un site avec comptage BT.' },
+      steps: {
+        start:{type:'Debut',cls:'green',title:"Panne d'electricite detectee",desc:'Point de depart du processus BT.',buttons:['bt_launch']},
+        verify:{type:'Action',cls:'blue',title:'Verification ENEDIS',desc:"Informer le responsable et verifier si la coupure est locale ou generale via l'application ENEDIS.",buttons:['bt_verify']},
+        board:{type:'Action',cls:'blue',title:'Se rendre au tableau general BT',desc:'Rejoindre le tableau general basse tension du site.',buttons:['bt_board']},
+        origin:{type:'Action',cls:'blue',title:"Identifier l'origine",desc:'Identifier le disjoncteur general, la protection ou le dispositif de securite concerne.',buttons:['bt_origin']},
+        power:{type:'Decision',cls:'orange',title:'Courant present au tableau general BT ?',desc:'Verifier si le tableau general BT est alimente.',buttons:['bt_power_yes','bt_power_no']},
+        restart:{type:'Action',cls:'blue',title:'Relancer les equipements concernes',desc:'Reenclencher ou relancer uniquement les equipements necessaires de maniere controlee.',buttons:['bt_restart']},
+        contact:{type:'NON',cls:'red',title:'Contacter ENEDIS',desc:"Si l'alimentation generale n'est pas revenue, demander une intervention ou une confirmation de coupure reseau.",buttons:[]},
+        trip:{type:'Decision',cls:'orange',title:'Disjoncteur general declenche ?',desc:'Verifier si le disjoncteur general BT est declenche.',buttons:['bt_trip_yes','bt_trip_no']},
+        reset:{type:'Action',cls:'blue',title:'Rearmement du disjoncteur general',desc:'Supprimer la cause apparente si possible puis rearmer le disjoncteur general BT.',buttons:['bt_reset']},
+        returnPower:{type:'Decision',cls:'orange',title:'Le courant revient-il ?',desc:"Verifier le retour de l'alimentation apres rearmement.",buttons:['bt_return_yes','bt_return_no']},
+        maintenance:{type:'NON',cls:'red',title:'Informer Responsable Process et/ou Maintenance',desc:'Si le courant ne revient pas ou si la cause est incertaine, informer les responsables et faire intervenir le service competent.',buttons:[]},
+        controls:{type:'Action',cls:'blue',title:'Controles finaux',desc:'Verifier les alarmes, les parametres et la remise en service progressive des installations BT.',buttons:['bt_controls']},
+        end:{type:'Fin',cls:'green',title:'Installation BT en fonctionnement normal',desc:'Fin du processus.',buttons:[]}
+      },
+      transitions: {
+        bt_launch:{to:'verify',label:'Cliquer pour lancer',variant:'primary'},
+        bt_verify:{to:'board',label:'Oui',variant:'yes'},
+        bt_board:{to:'origin',label:'Oui',variant:'yes'},
+        bt_origin:{to:'power',label:'Oui',variant:'yes'},
+        bt_power_yes:{to:'restart',label:'Oui',variant:'yes'},
+        bt_power_no:{to:'trip',label:'Non',variant:'no'},
+        bt_restart:{to:'controls',label:'Oui',variant:'yes'},
+        bt_trip_yes:{to:'reset',label:'Oui',variant:'yes'},
+        bt_trip_no:{to:'contact',label:'Non',variant:'no'},
+        bt_reset:{to:'returnPower',label:'Oui',variant:'yes'},
+        bt_return_yes:{to:'controls',label:'Oui',variant:'yes'},
+        bt_return_no:{to:'maintenance',label:'Non',variant:'no'},
+        bt_controls:{to:'end',label:'Oui',variant:'yes'}
+      },
+      order:['start','verify','board','origin','power','restart','trip','reset','returnPower','contact','maintenance','controls','end'],
+      markers:{start:'D',verify:'1',board:'2',origin:'3',power:'?',restart:'OK',trip:'?',reset:'R',returnPower:'?',contact:'!',maintenance:'!',controls:'4',end:'F'}
+    }
   };
 
-  const transitions = {
-    launchBtn:{to:"verify",label:"Cliquer pour lancer",variant:"primary"},
-    b_verify:{to:"local",label:"Oui",variant:"yes"},
-    b_local:{to:"origin",label:"Oui",variant:"yes"},
-    b_origin:{to:"d1",label:"Oui",variant:"yes"},
-    b_d1_yes:{to:"ok1",label:"Oui",variant:"yes"},
-    b_d1_no:{to:"no1",label:"Non",variant:"no"},
-    b_ok1:{to:"controls",label:"Oui",variant:"yes"},
-    b_no1_yes:{to:"ok2",label:"Personnel du pôle Maintenance",variant:"yes"},
-    b_no1_no:{to:"no2",label:"Non",variant:"no"},
-    b_ok2_yes:{to:"d3",label:"Oui",variant:"yes"},
-    b_ok2_no:{to:"enedis",label:"Non",variant:"no"},
-    b_d3_yes:{to:"controls",label:"Oui",variant:"yes"},
-    b_d3_no:{to:"no3",label:"Non",variant:"no"},
-    b_controls:{to:"end",label:"Oui",variant:"yes"}
-  };
-
-  const stepOrder = ["start","verify","local","origin","d1","ok1","no1","ok2","no2","enedis","d3","no3","controls","end"];
-  const markerLabels = {
-    start:"D", verify:"1", local:"2", origin:"3", d1:"?", ok1:"OK", no1:"?", ok2:"OK", no2:"!", enedis:"!", d3:"?", no3:"!", controls:"4", end:"F"
-  };
-  const tabStates = {
-    vert:{title:"Panne d’électricité détectée",desc:"Point de départ du processus.",badge:"Début",badgeClass:"green"},
-    bleu:{title:"Consigne tarif bleu ou jaune",desc:"Section dédiée à la coupure générale sur une installation BT avec comptage BT.",badge:"Information",badgeClass:"blue"}
-  };
-
-  let current = "start";
-  let history = ["start"];
-  let revealed = new Set(["start"]);
-  let activeTab = "vert";
-
+  const states = Object.fromEntries(Object.keys(definitions).map(key => [key, { current: 'start', history: ['start'], revealed: new Set(['start']) }]));
+  let activeTab = 'vert';
   const $ = id => document.getElementById(id);
 
-  function buildFlow(){
-    const flow = $("flow");
-    flow.innerHTML = stepOrder.map(id => {
-      const step = steps[id];
+  function renderFlow(tabId) {
+    const def = definitions[tabId];
+    const flow = $(def.flowId);
+    flow.innerHTML = def.order.map(id => {
+      const step = def.steps[id];
       const buttons = (step.buttons || []).map(buttonId => {
-        const transition = transitions[buttonId];
-        return '<button class="flow-btn ' + transition.variant + ' hidden" data-action="' + buttonId + '" type="button">' + transition.label + '</button>';
-      }).join("");
-      return '<article id="' + id + '" class="step ' + step.cls + ' hidden">' +
+        const transition = def.transitions[buttonId];
+        return '<button class="flow-btn ' + transition.variant + ' hidden" data-tab="' + tabId + '" data-action="' + buttonId + '" type="button">' + transition.label + '</button>';
+      }).join('');
+      return '<article id="' + tabId + '-' + id + '" class="step ' + step.cls + ' hidden">' +
         '<div class="step-head">' +
-          '<div class="marker">' + markerLabels[id] + '</div>' +
+          '<div class="marker">' + def.markers[id] + '</div>' +
           '<div>' +
             '<div class="badge ' + step.cls + '">' + step.type + '</div>' +
             '<h2>' + step.title + '</h2>' +
@@ -454,149 +305,124 @@ header h1{
         '</div>' +
         '<div class="actions">' + buttons + '</div>' +
       '</article>';
-    }).join("");
+    }).join('');
   }
 
-  function updateStatusPanel(){
-    if(activeTab === "vert"){
-      const step = steps[current] || steps.start;
-      [["badge", step.type], ["popup-badge", step.type]].forEach(([id, text]) => {
-        const node = $(id);
-        if(node){
-          node.className = 'badge ' + step.cls;
-          node.textContent = text;
-        }
-      });
-      [["title", step.title], ["popup-title", step.title], ["desc", step.desc], ["popup-desc", step.desc]].forEach(([id, text]) => {
-        const node = $(id);
-        if(node) node.textContent = text;
-      });
-      $("historyText").textContent = 'Parcours: ' + history.map(id => steps[id].title).join(' → ');
-      $("statusAside").classList.remove('hidden');
-      return;
-    }
-
-    const state = tabStates.bleu;
-    $("badge").className = 'badge ' + state.badgeClass;
-    $("badge").textContent = state.badge;
-    $("title").textContent = state.title;
-    $("desc").textContent = state.desc;
-    $("popup-badge").className = 'badge ' + state.badgeClass;
-    $("popup-badge").textContent = state.badge;
-    $("popup-title").textContent = state.title;
-    $("popup-desc").textContent = state.desc;
-    $("historyText").textContent = 'Aucun parcours actif dans cet onglet pour le moment.';
-    $("statusAside").classList.remove('hidden');
-  }
-
-  function redraw(){
-    stepOrder.forEach(id => {
+  function updateStatusPanel() {
+    const def = definitions[activeTab];
+    const state = states[activeTab];
+    const step = def.steps[state.current];
+    [['badge', step.type], ['popup-badge', step.type]].forEach(([id, text]) => {
       const node = $(id);
-      if(!node) return;
-      node.classList.toggle('hidden', !revealed.has(id));
-      node.classList.toggle('active', id === current);
+      node.className = 'badge ' + step.cls;
+      node.textContent = text;
+    });
+    [['title', step.title], ['popup-title', step.title], ['desc', step.desc], ['popup-desc', step.desc]].forEach(([id, text]) => {
+      $(id).textContent = text;
+    });
+    $('historyText').textContent = 'Parcours: ' + state.history.map(id => def.steps[id].title).join(' → ');
+  }
+
+  function redraw(tabId) {
+    const def = definitions[tabId];
+    const state = states[tabId];
+    def.order.forEach(id => {
+      const node = $(tabId + '-' + id);
+      node.classList.toggle('hidden', !state.revealed.has(id));
+      node.classList.toggle('active', id === state.current && tabId === activeTab);
       node.querySelectorAll('[data-action]').forEach(button => button.classList.add('hidden'));
     });
-
-    if(activeTab === 'vert'){
-      (steps[current].buttons || []).forEach(buttonId => {
-        const button = document.querySelector('[data-action="' + buttonId + '"]');
-        if(button) button.classList.remove('hidden');
-      });
-    }
-
-    updateStatusPanel();
+    (def.steps[state.current].buttons || []).forEach(buttonId => {
+      const button = document.querySelector('[data-tab="' + tabId + '"][data-action="' + buttonId + '"]');
+      if (button) button.classList.remove('hidden');
+    });
+    if (tabId === activeTab) updateStatusPanel();
   }
 
-  function scrollCurrent(){
-    if(activeTab !== 'vert') return;
-    const node = $(current);
-    if(!node) return;
+  function scrollCurrent() {
+    const state = states[activeTab];
+    const node = $(activeTab + '-' + state.current);
+    if (!node) return;
     setTimeout(() => {
       try {
-        node.scrollIntoView({behavior:'smooth', block:'center'});
+        node.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } catch (error) {
         node.scrollIntoView();
       }
     }, 30);
   }
 
-  function go(buttonId){
-    if(activeTab !== 'vert') return;
-    const transition = transitions[buttonId];
-    if(!transition || !steps[transition.to]) return;
-    current = transition.to;
-    history.push(current);
-    revealed.add(current);
-    redraw();
+  function go(tabId, buttonId) {
+    const def = definitions[tabId];
+    const state = states[tabId];
+    const transition = def.transitions[buttonId];
+    if (!transition || !def.steps[transition.to]) return;
+    state.current = transition.to;
+    state.history.push(state.current);
+    state.revealed.add(state.current);
+    redraw(tabId);
+    if (tabId === activeTab) scrollCurrent();
+  }
+
+  function back() {
+    const state = states[activeTab];
+    if (state.history.length <= 1) return;
+    state.history.pop();
+    state.current = state.history[state.history.length - 1];
+    state.revealed = new Set(state.history);
+    redraw(activeTab);
     scrollCurrent();
   }
 
-  function back(){
-    if(activeTab !== 'vert') return;
-    if(history.length <= 1) return;
-    history.pop();
-    current = history[history.length - 1];
-    revealed = new Set(history);
-    redraw();
+  function restart() {
+    const state = states[activeTab];
+    state.current = 'start';
+    state.history = ['start'];
+    state.revealed = new Set(['start']);
+    redraw(activeTab);
     scrollCurrent();
   }
 
-  function restart(){
-    if(activeTab !== 'vert') return;
-    current = 'start';
-    history = ['start'];
-    revealed = new Set(['start']);
-    redraw();
-    scrollCurrent();
-  }
-
-  function setActiveTab(tabId){
+  function setActiveTab(tabId) {
     activeTab = tabId;
-    ['vert','bleu'].forEach(id => {
-      const isActive = id === tabId;
-      $('tab' + id.charAt(0).toUpperCase() + id.slice(1)).classList.toggle('active', isActive);
-      $('tab' + id.charAt(0).toUpperCase() + id.slice(1)).setAttribute('aria-pressed', String(isActive));
-      $('pane' + id.charAt(0).toUpperCase() + id.slice(1)).classList.toggle('active', isActive);
+    ['vert', 'bleu'].forEach(id => {
+      const active = id === tabId;
+      $('tab' + id.charAt(0).toUpperCase() + id.slice(1)).classList.toggle('active', active);
+      $('tab' + id.charAt(0).toUpperCase() + id.slice(1)).setAttribute('aria-pressed', String(active));
+      $('pane' + id.charAt(0).toUpperCase() + id.slice(1)).classList.toggle('active', active);
     });
-    redraw();
+    redraw('vert');
+    redraw('bleu');
   }
 
-  function openPopup(id){
+  function openPopup(id) {
     const popup = $(id);
-    if(!popup) return;
     popup.classList.add('open');
     popup.setAttribute('aria-hidden', 'false');
   }
 
-  function closePopup(id){
+  function closePopup(id) {
     const popup = $(id);
-    if(!popup) return;
     popup.classList.remove('open');
     popup.setAttribute('aria-hidden', 'true');
   }
 
-  function bind(){
+  function bind() {
     document.addEventListener('click', event => {
       const actionButton = event.target.closest('[data-action]');
-      if(actionButton){
+      if (actionButton) {
         event.preventDefault();
-        go(actionButton.dataset.action);
+        go(actionButton.dataset.tab, actionButton.dataset.action);
         return;
       }
-
       const closeButton = event.target.closest('[data-close]');
-      if(closeButton){
+      if (closeButton) {
         closePopup(closeButton.dataset.close);
         return;
       }
-
       const popup = event.target.closest('.popup-backdrop');
-      if(popup && event.target === popup){
-        closePopup(popup.id);
-      }
+      if (popup && event.target === popup) closePopup(popup.id);
     });
-
     $('btnBack').addEventListener('click', back);
     $('btnRestart').addEventListener('click', restart);
     $('btnLegend').addEventListener('click', () => openPopup('legendPopup'));
@@ -606,14 +432,16 @@ header h1{
     $('tabBleu').addEventListener('click', () => setActiveTab('bleu'));
   }
 
-  buildFlow();
+  renderFlow('vert');
+  renderFlow('bleu');
   bind();
-  redraw();
+  redraw('vert');
+  redraw('bleu');
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./service-worker.js').catch(error => {
-        console.log('Service worker non enregistré', error);
+        console.log('Service worker non enregistre', error);
       });
     });
   }
