@@ -1,12 +1,16 @@
-const CACHE_NAME = "logigramme-bt-ht-v4";
+const CACHE_NAME = "capb-urgence-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./icons/favicon.png?v=2",
+  "./icons/logo capb.png",
   "./pshtbt/",
   "./psbt/",
-  "./pi/"
+  "./pi/",
+  "./pshtbt/procedure-statique.html",
+  "./psbt/procedure-statique.html",
+  "./pi/procedure-statique.html"
 ];
 
 self.addEventListener("install", event => {
