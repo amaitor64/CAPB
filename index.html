@@ -46,6 +46,18 @@
       margin: 0 auto;
     }
 
+    .logo-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .site-logo {
+      display: block;
+      width: min(260px, 72vw);
+      height: auto;
+    }
+
     .hero {
       background: rgba(255,255,255,.88);
       backdrop-filter: blur(10px);
@@ -182,11 +194,17 @@
       .card { min-height: 220px; }
       .card h2 { font-size: 24px; }
       .lead { font-size: 16px; }
+      .logo-wrap { margin-bottom: 14px; }
+      .site-logo { width: min(220px, 78vw); }
     }
   </style>
 </head>
 <body>
   <main class="shell">
+    <div class="logo-wrap">
+      <img class="site-logo" src="icons/logo capb.png" alt="CAPB">
+    </div>
+
     <section class="hero">
       <span class="eyebrow">Procédures d'urgence</span>
       <h1>Situation d'urgence</h1>
@@ -217,7 +235,7 @@
     </section>
 
     <section class="footer-note">
-      Les adresses dédiées sont maintenant stables : <strong>/pshtbt/</strong>, <strong>/psbt/</strong> et <strong>/pi/</strong>.
+      Les adresses dédiées sont maintenant stables : <strong>/pshtbt/</strong>, <strong>/psbt/</strong> et <strong>/pi/</strong>.
     </section>
   </main>
 </body>
