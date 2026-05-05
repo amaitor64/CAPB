@@ -105,38 +105,38 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
   <section id="homeView" class="view active" aria-label="Accueil">
     <div class="hero-title">
       <h2>Situation d'urgence</h2>
-      <p>Choisir une consigne pour ouvrir sa procedure dediee et suivre le logigramme correspondant.</p>
+      <p>Choisir une consigne pour ouvrir sa procédure dédiée et suivre le logigramme correspondant.</p>
     </div>
     <div class="home-grid">
       <button id="cardVert" class="choice-card theme-vert" type="button">
         <strong>Consigne coupure de courant tarif vert</strong>
-        <span>Coupure generale sur une installation HT / BT, site avec un poste de transformation HT.</span>
+        <span>Coupure générale sur une installation HT / BT, site avec un poste de transformation HT.</span>
       </button>
       <button id="cardBleu" class="choice-card theme-bleu" type="button">
         <strong>Consigne coupure de courant tarif bleu ou jaune</strong>
-        <span>Coupure generale sur une installation BT, site avec un comptage BT.</span>
+        <span>Coupure générale sur une installation BT, site avec un comptage BT.</span>
       </button>
     </div>
   </section>
 
   <section id="detailVert" class="view" aria-label="Procedure tarif vert">
     <div class="detail-head">
-      <button type="button" data-open-home="true">← Retour a l'accueil</button>
+      <button type="button" data-open-home="true">← Retour à l'accueil</button>
     </div>
     <section class="procedure-card theme-vert">
-      <strong>Procedure pour site avec poste de transformation HT</strong>
-      <p>Cette consigne guide les actions a suivre lors d'une coupure generale sur une installation HT / BT.</p>
+      <strong>Procédure pour site avec poste de transformation HT</strong>
+      <p>Cette consigne guide les actions à suivre lors d'une coupure générale sur une installation HT / BT.</p>
     </section>
     <section class="flow" id="flowVert" aria-live="polite"></section>
   </section>
 
   <section id="detailBleu" class="view" aria-label="Procedure tarif bleu ou jaune">
     <div class="detail-head">
-      <button type="button" data-open-home="true">← Retour a l'accueil</button>
+      <button type="button" data-open-home="true">← Retour à l'accueil</button>
     </div>
     <section class="procedure-card theme-bleu">
-      <strong>Procedure pour site avec comptage BT</strong>
-      <p>Cette consigne suit la verification secteur ENEDIS, le controle du compteur Linky et du disjoncteur ENEDIS, puis le rearmement securise avec remise en route progressive des pompes.</p>
+      <strong>Procédure pour site avec comptage BT</strong>
+      <p>Cette consigne suit la vérification du secteur ENEDIS, le contrôle du compteur Linky et du disjoncteur ENEDIS, puis le réarmement sécurisé avec remise en route progressive des pompes.</p>
     </section>
     <section class="flow" id="flowBleu" aria-live="polite"></section>
   </section>
@@ -144,11 +144,11 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
 
 <div id="legendPopup" class="popup-backdrop" aria-hidden="true">
   <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="legendTitle">
-    <div class="popup-header"><h2 id="legendTitle">Legende</h2><button type="button" data-close="legendPopup">Fermer</button></div>
+    <div class="popup-header"><h2 id="legendTitle">Légende</h2><button type="button" data-close="legendPopup">Fermer</button></div>
     <div class="popup-body"><div class="legend-list">
-      <div class="legend-row"><span class="legend-shape legend-start"></span><span>Debut / fin / validation OK</span></div>
-      <div class="legend-row"><span class="legend-shape legend-action"></span><span>Action ou controle a realiser</span></div>
-      <div class="legend-row"><span class="legend-shape legend-decision"></span><span>Decision avec choix Oui / Non</span></div>
+      <div class="legend-row"><span class="legend-shape legend-start"></span><span>Début / fin / validation OK</span></div>
+      <div class="legend-row"><span class="legend-shape legend-action"></span><span>Action ou contrôle à réaliser</span></div>
+      <div class="legend-row"><span class="legend-shape legend-decision"></span><span>Décision avec choix Oui / Non</span></div>
       <div class="legend-row"><span class="legend-shape legend-no"></span><span>Branche NON / anomalie / intervention</span></div>
     </div></div>
   </div>
@@ -158,9 +158,9 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
   <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="trackingTitle">
     <div class="popup-header"><h2 id="trackingTitle">Suivi</h2><button type="button" data-close="trackingPopup">Fermer</button></div>
     <div class="popup-body">
-      <div id="popup-badge" class="badge green">Debut</div>
-      <h3 id="popup-title">Panne d'electricite detectee</h3>
-      <p id="popup-desc">Point de depart du processus.</p>
+      <div id="popup-badge" class="badge green">Début</div>
+      <h3 id="popup-title">Panne d'électricité détectée</h3>
+      <p id="popup-desc">Point de départ du processus.</p>
       <p class="empty-state" id="historyText"></p>
     </div>
   </div>
@@ -213,20 +213,20 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
       viewId:'detailBleu',
       flowId:'flowBleu',
       steps:{
-        start:{type:'Debut',cls:'green',title:"Panne d'electricite detectee",desc:'Point de depart du processus BT.',buttons:['bt_launch']},
-        verify:{type:'Action',cls:'blue',title:'Verification depuis le site ENEDIS',desc:'Verifier sur le site ENEDIS les pannes en cours sur le secteur du site.',link:enedisLink,buttons:['bt_verify']},
-        sector:{type:'Decision',cls:'orange',title:'Panne sur le secteur du site ?',desc:'Determiner si la coupure provient du reseau ENEDIS du secteur.',buttons:['bt_sector_yes','bt_sector_no']},
-        waitEnedis:{type:'NON',cls:'red',title:'Attente retour ENEDIS',desc:'Si une panne secteur est confirmee, attendre le retour ENEDIS avant toute autre action locale.',buttons:[]},
-        meter:{type:'Action',cls:'blue',title:'Verification comptage ENEDIS',desc:'Deplacer un agent habilite BS ou BE minimum pour verifier le comptage ENEDIS.',buttons:['bt_meter']},
-        linkyStatus:{type:'Decision',cls:'orange',title:'Compteur Linky en depassement ?',desc:'Ce controle ne concerne que le tarif bleu. Verifier si le compteur Linky signale un depassement.',buttons:['bt_linky_over_yes','bt_linky_over_no']},
-        safeShutdown:{type:'Action',cls:'blue',title:'Mise en securite avant rearmement',desc:'Couper l interrupteur general de l armoire et mettre tout le systeme de pompage a l arret avant toute operation sur le comptage ou le disjoncteur ENEDIS.',buttons:['bt_safe_shutdown']},
-        rearmLinky:{type:'Action',cls:'blue',title:'Rearmement compteur Linky',desc:'Si le Linky est en depassement, appuyer sur le bouton + pour le rearmer.',buttons:['bt_rearm_linky']},
-        breakerStatus:{type:'Decision',cls:'orange',title:'Disjoncteur ENEDIS sur ON et courant toujours non present ?',desc:'Si le Linky n est pas en depassement, que le disjoncteur ENEDIS est sur ON et que le courant reste absent, passer a l intervention maintenance. Sinon remettre le disjoncteur ENEDIS sur ON.',buttons:['bt_breaker_on_yes','bt_breaker_on_no']},
-        breakerOn:{type:'Action',cls:'blue',title:'Mettre le disjoncteur ENEDIS sur ON',desc:'Avant de remettre le disjoncteur ENEDIS sur ON, ouvrir l interrupteur general de l armoire, puis remettre le disjoncteur ENEDIS sur ON.',buttons:['bt_breaker_on']},
-        restore:{type:'Action',cls:'blue',title:'Remise sous tension progressive',desc:'Apres reenclenchement, fermer l interrupteur general dans l armoire puis remettre les pompes une par une pour verifier si le probleme de disjonction ou de surcharge venait d elles.',buttons:['bt_restore_ok','bt_restore_ko']},
-        maintenance:{type:'Action',cls:'blue',title:'Intervention service maintenance',desc:'Si le Linky n est pas en depassement, que le disjoncteur ENEDIS est sur ON et qu il n y a toujours pas de courant, deplacer un agent habilite BS ou BE minimum du service maintenance pour intervention, diagnostic, reparation et remise sous tension si possible.',buttons:['bt_maintenance_ok','bt_maintenance_ko']},
-        end:{type:'Fin',cls:'green',title:'Remise sous tension effectuee',desc:'Le courant est retabli apres verification, reenclenchement et remise en service progressive.',buttons:[]},
-        process:{type:'NON',cls:'red',title:'Alerter responsable process',desc:'Si la remise sous tension n est pas possible ou si le defaut persiste, alerter le responsable process.',buttons:[]}
+        start:{type:'Début',cls:'green',title:"Panne d'électricité détectée",desc:'Point de départ du processus BT.',buttons:['bt_launch']},
+        verify:{type:'Action',cls:'blue',title:'Vérification depuis le site ENEDIS',desc:'Vérifier sur le site ENEDIS les pannes en cours sur le secteur du site.',link:enedisLink,buttons:['bt_verify']},
+        sector:{type:'Décision',cls:'orange',title:'Panne sur le secteur du site ?',desc:'Déterminer si la coupure provient du réseau ENEDIS du secteur.',buttons:['bt_sector_yes','bt_sector_no']},
+        waitEnedis:{type:'NON',cls:'red',title:'Attente du retour ENEDIS',desc:'Si une panne de secteur est confirmée, attendre le retour ENEDIS avant toute autre action locale.',buttons:[]},
+        meter:{type:'Action',cls:'blue',title:'Vérification du comptage ENEDIS',desc:'Déplacer un agent habilité BS ou BE minimum pour vérifier le comptage ENEDIS.',buttons:['bt_meter']},
+        linkyStatus:{type:'Décision',cls:'orange',title:'Compteur Linky en dépassement ?',desc:'Ce contrôle ne concerne que le tarif bleu. Vérifier si le compteur Linky signale un dépassement.',buttons:['bt_linky_over_yes','bt_linky_over_no']},
+        safeShutdown:{type:'Action',cls:'blue',title:'Mise en sécurité avant réarmement',desc:'Couper l’interrupteur général de l’armoire et mettre tout le système de pompage à l’arrêt avant toute opération sur le comptage ou le disjoncteur ENEDIS.',buttons:['bt_safe_shutdown']},
+        rearmLinky:{type:'Action',cls:'blue',title:'Réarmement du compteur Linky',desc:'Si le Linky est en dépassement, appuyer sur le bouton + pour le réarmer.',buttons:['bt_rearm_linky']},
+        breakerStatus:{type:'Décision',cls:'orange',title:'Disjoncteur ENEDIS sur ON et courant toujours non présent ?',desc:'Si le Linky n’est pas en dépassement, que le disjoncteur ENEDIS est sur ON et que le courant reste absent, passer à l’intervention maintenance. Sinon, remettre le disjoncteur ENEDIS sur ON.',buttons:['bt_breaker_on_yes','bt_breaker_on_no']},
+        breakerOn:{type:'Action',cls:'blue',title:'Mettre le disjoncteur ENEDIS sur ON',desc:'Avant de remettre le disjoncteur ENEDIS sur ON, ouvrir l’interrupteur général de l’armoire, puis remettre le disjoncteur ENEDIS sur ON.',buttons:['bt_breaker_on']},
+        restore:{type:'Action',cls:'blue',title:'Remise sous tension progressive',desc:'Après réenclenchement, fermer l’interrupteur général dans l’armoire puis remettre les pompes une par une pour vérifier si le problème de disjonction ou de surcharge venait d’elles.',buttons:['bt_restore_ok','bt_restore_ko']},
+        maintenance:{type:'Action',cls:'blue',title:'Intervention du service maintenance',desc:'Si le Linky n’est pas en dépassement, que le disjoncteur ENEDIS est sur ON et qu’il n’y a toujours pas de courant, déplacer un agent habilité BS ou BE minimum du service maintenance pour intervention, diagnostic, réparation et remise sous tension si possible.',buttons:['bt_maintenance_ok','bt_maintenance_ko']},
+        end:{type:'Fin',cls:'green',title:'Remise sous tension effectuée',desc:'Le courant est rétabli après vérification, réenclenchement et remise en service progressive.',buttons:[]},
+        process:{type:'NON',cls:'red',title:'Alerter le responsable process',desc:'Si la remise sous tension n’est pas possible ou si le défaut persiste, alerter le responsable process.',buttons:[]}
       },
       transitions:{bt_launch:{to:'verify',label:'Cliquer pour lancer',variant:'primary'},bt_verify:{to:'sector',label:'Oui',variant:'yes'},bt_sector_yes:{to:'waitEnedis',label:'Oui',variant:'yes'},bt_sector_no:{to:'meter',label:'Non',variant:'no'},bt_meter:{to:'linkyStatus',label:'Oui',variant:'yes'},bt_linky_over_yes:{to:'safeShutdown',label:'Oui',variant:'yes'},bt_linky_over_no:{to:'breakerStatus',label:'Non',variant:'no'},bt_safe_shutdown:{to:'rearmLinky',label:'Oui',variant:'yes'},bt_rearm_linky:{to:'breakerStatus',label:'Oui',variant:'yes'},bt_breaker_on_yes:{to:'maintenance',label:'Oui',variant:'yes'},bt_breaker_on_no:{to:'breakerOn',label:'Non',variant:'no'},bt_breaker_on:{to:'restore',label:'Oui',variant:'yes'},bt_restore_ok:{to:'end',label:'Courant revenu',variant:'yes'},bt_restore_ko:{to:'maintenance',label:'Toujours pas de courant',variant:'no'},bt_maintenance_ok:{to:'end',label:'Remise sous tension possible',variant:'yes'},bt_maintenance_ko:{to:'process',label:'Remise sous tension impossible',variant:'no'}},
       order:['start','verify','sector','waitEnedis','meter','linkyStatus','safeShutdown','rearmLinky','breakerStatus','breakerOn','restore','maintenance','end','process'],
@@ -258,9 +258,9 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
   function updateTracking(){
     if(!activeKey){
       $('popup-badge').className = 'badge green';
-      $('popup-badge').textContent = 'Debut';
+      $('popup-badge').textContent = 'Début';
       $('popup-title').textContent = 'Aucune consigne ouverte';
-      $('popup-desc').textContent = 'Ouvrir une consigne depuis la page d accueil.';
+      $('popup-desc').textContent = 'Ouvrir une consigne depuis la page d’accueil.';
       $('historyText').textContent = 'Aucun parcours actif.';
       return;
     }
