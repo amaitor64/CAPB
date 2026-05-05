@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <style>
-:root{--blue:#1f7ae0;--blue-soft:#eaf4ff;--green:#2c9b5f;--green-soft:#e8f7ef;--orange:#d88b18;--orange-soft:#fff3d8;--red:#c43c3c;--red-soft:#fff0f0;--ink:#123047;--muted:#5d7486;--border:#cfe0ee;--card:#ffffff;--shadow:0 12px 30px rgba(18,48,71,.08)}
+:root{--blue:#1f7ae0;--blue-soft:#eaf4ff;--green:#2c9b5f;--green-soft:#e8f7ef;--yellow:#f0c54a;--orange:#d88b18;--orange-soft:#fff3d8;--red:#c43c3c;--red-soft:#fff0f0;--ink:#123047;--muted:#5d7486;--border:#cfe0ee;--card:#ffffff;--shadow:0 12px 30px rgba(18,48,71,.08)}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;overscroll-behavior:none;background:linear-gradient(180deg,#f9fcff 0%,#edf5fb 100%);color:var(--ink);font-family:Verdana,Geneva,Tahoma,sans-serif}
 body{-webkit-user-select:none;user-select:none}
@@ -24,23 +24,21 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
 .toolbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
 .toolbar button{min-height:42px;border:1px solid var(--border);border-radius:12px;background:#fff;color:var(--ink);font-weight:700}
 .page{width:min(1040px,100%);margin:0 auto;padding:18px 14px calc(32px + env(safe-area-inset-bottom))}
-.tabbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:18px}
-.tab{text-align:left;padding:14px 16px;border-radius:18px;border:1px solid var(--border);box-shadow:var(--shadow);position:relative;overflow:hidden}
-.tab strong{display:block;font-size:15px;line-height:1.35;position:relative;z-index:1}
-.tab span{display:block;margin-top:6px;font-size:12px;line-height:1.45;position:relative;z-index:1}
-.tab-vert{background:linear-gradient(135deg,#2f9d62 0%,#7bd59d 100%);border-color:#2b8c58;color:#fff}
-.tab-vert span{color:rgba(255,255,255,.92)}
-.tab-bleu{background:linear-gradient(135deg,#f0c54a 0 48%,#1f7ae0 52% 100%);border-color:#b7c8dd;color:#fff}
-.tab-bleu span{color:rgba(255,255,255,.94)}
-.tab.active{box-shadow:0 0 0 3px rgba(31,122,224,.12),var(--shadow);transform:translateY(-1px)}
-.tab-vert.active{box-shadow:0 0 0 3px rgba(44,155,95,.22),var(--shadow)}
-.tab-bleu.active{box-shadow:0 0 0 3px rgba(31,122,224,.18),var(--shadow)}
-.hero{color:#fff;border-radius:24px;padding:18px;box-shadow:var(--shadow)}
-.hero p{margin:8px 0 0;line-height:1.55}
-.hero-vert{background:linear-gradient(135deg,#2f9d62 0%,#7bd59d 100%)}
-.hero-bleu{background:linear-gradient(135deg,#f0c54a 0 48%,#1f7ae0 52% 100%)}
-.pane{display:none}
-.pane.active{display:block}
+.hero-title{padding:28px 18px;border-radius:28px;background:linear-gradient(135deg,#0f5aa8 0%,#4f9fea 100%);color:#fff;box-shadow:var(--shadow)}
+.hero-title h2{margin:0;font-size:28px;line-height:1.1}
+.hero-title p{margin:10px 0 0;line-height:1.55}
+.view{display:none}
+.view.active{display:block}
+.home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+.choice-card,.procedure-card{text-align:left;padding:18px;border-radius:24px;border:1px solid var(--border);box-shadow:var(--shadow);position:relative;overflow:hidden;color:#fff}
+.choice-card strong,.procedure-card strong{display:block;font-size:18px;line-height:1.3;position:relative;z-index:1}
+.choice-card span,.procedure-card p{display:block;margin-top:10px;line-height:1.55;position:relative;z-index:1;color:rgba(255,255,255,.94)}
+.theme-vert{background:linear-gradient(135deg,#2f9d62 0%,#7bd59d 100%);border-color:#2b8c58}
+.theme-bleu{background:linear-gradient(135deg,var(--yellow) 0 48%,var(--blue) 52% 100%);border-color:#b7c8dd}
+.choice-card{cursor:pointer}
+.choice-card:hover{transform:translateY(-2px)}
+.detail-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.detail-head button{min-height:42px;padding:0 16px;border:1px solid var(--border);border-radius:12px;background:#fff;font-weight:700}
 .flow{margin-top:18px;display:grid;gap:14px}
 .step{position:relative;background:var(--card);border:1px solid var(--border);border-radius:22px;padding:16px 16px 14px;box-shadow:var(--shadow)}
 .step::before{content:"";position:absolute;left:32px;top:-15px;width:2px;height:15px;background:#b8cddd}
@@ -88,68 +86,76 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
 .contact-name{font-weight:800}
 .contact-role{color:var(--muted)}
 .empty-state{margin-top:10px;color:var(--muted);font-size:14px}
-@media (max-width:700px){header h1{font-size:16px}.toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}.tabbar{grid-template-columns:1fr}.step h2{font-size:18px}}
+@media (max-width:700px){header h1{font-size:16px}.toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}.home-grid{grid-template-columns:1fr}.hero-title h2{font-size:24px}.step h2{font-size:18px}.detail-head{flex-direction:column;align-items:stretch}}
 </style>
 </head>
 <body>
 <header>
   <h1>Situation d'urgence</h1>
   <div class="toolbar">
+    <button id="btnHome" type="button">Accueil</button>
     <button id="btnBack" type="button">↩ Retour</button>
-    <button id="btnRestart" type="button">Recommencer</button>
     <button id="btnLegend" type="button">Légende</button>
     <button id="btnTracking" type="button">Suivi</button>
     <button id="btnContacts" type="button">Contacts</button>
   </div>
 </header>
 <main class="page">
-  <nav class="tabbar" aria-label="Choix de consigne">
-    <button id="tabVert" class="tab tab-vert active" type="button" data-tab="vert" aria-pressed="true">
-      <strong>Consigne coupure de courant tarif vert</strong>
-      <span>Coupure generale sur une installation HT / BT (site avec un poste de transformation HT)</span>
-    </button>
-    <button id="tabBleu" class="tab tab-bleu" type="button" data-tab="bleu" aria-pressed="false">
-      <strong>Consigne coupure de courant tarif bleu ou jaune</strong>
-      <span>Coupure generale sur une installation BT (site avec un comptage BT)</span>
-    </button>
-  </nav>
-  <section id="paneVert" class="pane active" aria-labelledby="tabVert">
-    <section class="hero hero-vert" aria-label="Présentation tarif vert">
+  <section id="homeView" class="view active" aria-label="Accueil">
+    <div class="hero-title">
+      <h2>Situation d'urgence</h2>
+      <p>Choisir une consigne pour ouvrir sa procedure dediee et suivre le logigramme correspondant.</p>
+    </div>
+    <div class="home-grid">
+      <button id="cardVert" class="choice-card theme-vert" type="button">
+        <strong>Consigne coupure de courant tarif vert</strong>
+        <span>Coupure generale sur une installation HT / BT, site avec un poste de transformation HT.</span>
+      </button>
+      <button id="cardBleu" class="choice-card theme-bleu" type="button">
+        <strong>Consigne coupure de courant tarif bleu ou jaune</strong>
+        <span>Coupure generale sur une installation BT, site avec un comptage BT.</span>
+      </button>
+    </div>
+  </section>
+
+  <section id="detailVert" class="view" aria-label="Procedure tarif vert">
+    <div class="detail-head">
+      <button type="button" data-open-home="true">← Retour a l'accueil</button>
+    </div>
+    <section class="procedure-card theme-vert">
       <strong>Procedure pour site avec poste de transformation HT</strong>
       <p>Cette consigne guide les actions a suivre lors d'une coupure generale sur une installation HT / BT.</p>
     </section>
     <section class="flow" id="flowVert" aria-live="polite"></section>
   </section>
-  <section id="paneBleu" class="pane" aria-labelledby="tabBleu">
-    <section class="hero hero-bleu" aria-label="Présentation tarif bleu ou jaune">
+
+  <section id="detailBleu" class="view" aria-label="Procedure tarif bleu ou jaune">
+    <div class="detail-head">
+      <button type="button" data-open-home="true">← Retour a l'accueil</button>
+    </div>
+    <section class="procedure-card theme-bleu">
       <strong>Procedure pour site avec comptage BT</strong>
       <p>Cette consigne suit la verification secteur ENEDIS, le controle du compteur Linky et du disjoncteur ENEDIS, puis le rearmement securise avec remise en route progressive des pompes.</p>
     </section>
     <section class="flow" id="flowBleu" aria-live="polite"></section>
   </section>
 </main>
+
 <div id="legendPopup" class="popup-backdrop" aria-hidden="true">
   <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="legendTitle">
-    <div class="popup-header">
-      <h2 id="legendTitle">Legende</h2>
-      <button type="button" data-close="legendPopup">Fermer</button>
-    </div>
-    <div class="popup-body">
-      <div class="legend-list">
-        <div class="legend-row"><span class="legend-shape legend-start"></span><span>Debut / fin / validation OK</span></div>
-        <div class="legend-row"><span class="legend-shape legend-action"></span><span>Action ou controle a realiser</span></div>
-        <div class="legend-row"><span class="legend-shape legend-decision"></span><span>Decision avec choix Oui / Non</span></div>
-        <div class="legend-row"><span class="legend-shape legend-no"></span><span>Branche NON / anomalie / intervention</span></div>
-      </div>
-    </div>
+    <div class="popup-header"><h2 id="legendTitle">Legende</h2><button type="button" data-close="legendPopup">Fermer</button></div>
+    <div class="popup-body"><div class="legend-list">
+      <div class="legend-row"><span class="legend-shape legend-start"></span><span>Debut / fin / validation OK</span></div>
+      <div class="legend-row"><span class="legend-shape legend-action"></span><span>Action ou controle a realiser</span></div>
+      <div class="legend-row"><span class="legend-shape legend-decision"></span><span>Decision avec choix Oui / Non</span></div>
+      <div class="legend-row"><span class="legend-shape legend-no"></span><span>Branche NON / anomalie / intervention</span></div>
+    </div></div>
   </div>
 </div>
+
 <div id="trackingPopup" class="popup-backdrop" aria-hidden="true">
   <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="trackingTitle">
-    <div class="popup-header">
-      <h2 id="trackingTitle">Suivi</h2>
-      <button type="button" data-close="trackingPopup">Fermer</button>
-    </div>
+    <div class="popup-header"><h2 id="trackingTitle">Suivi</h2><button type="button" data-close="trackingPopup">Fermer</button></div>
     <div class="popup-body">
       <div id="popup-badge" class="badge green">Debut</div>
       <h3 id="popup-title">Panne d'electricite detectee</h3>
@@ -158,33 +164,31 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
     </div>
   </div>
 </div>
+
 <div id="contactsPopup" class="popup-backdrop" aria-hidden="true">
   <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="contactsTitle">
-    <div class="popup-header">
-      <h2 id="contactsTitle">Contacts</h2>
-      <button type="button" data-close="contactsPopup">Fermer</button>
-    </div>
-    <div class="popup-body">
-      <div class="contacts-list">
-        <div class="contact-card"><div class="contact-name">Laurent MELCHIOR</div><div class="contact-role">Responsable regie exploitation<br>Adjoint chef de secteur</div><a href="tel:0622727350">06.22.72.73.50</a></div>
-        <div class="contact-card"><div class="contact-name">Regine LARREDE</div><div class="contact-role">Responsable Process</div><a href="tel:0620003139">06.20.00.31.39</a></div>
-        <div class="contact-card"><div class="contact-name">Gilles LADEVESE</div><div class="contact-role">Adjoint-Responsable Process</div><a href="tel:0623441509">06.23.44.15.09</a></div>
-        <div class="contact-card"><div class="contact-name">Jerome TURNACO</div><div class="contact-role">Responsable Maintenance</div><a href="tel:0629194522">06.29.19.45.22</a></div>
-        <div class="contact-card"><div class="contact-name">Ramuntxo DABBADIE</div><div class="contact-role">Adjoint-responsable Maintenance</div><a href="tel:0620003098">06.20.00.30.98</a></div>
-        <div class="contact-card"><div class="contact-name">Pierre SOUBLES</div><div class="contact-role">Responsable Reseaux</div><a href="tel:0624254811">06.24.25.48.11</a></div>
-        <div class="contact-card"><div class="contact-name">Jean-Lucien DOYHENARD</div><div class="contact-role">Adjoint-Responsable Reseaux</div><a href="tel:0624254815">06.24.25.48.15</a></div>
-        <div class="contact-card"><div class="contact-name">Depannage ENEDIS</div><a href="https://www.enedis.fr/panne-et-interruption" target="_blank" rel="noopener noreferrer">Site ENEDIS panne et interruption</a><br><a href="tel:0972675064">09.72.67.50.64</a></div>
-      </div>
-    </div>
+    <div class="popup-header"><h2 id="contactsTitle">Contacts</h2><button type="button" data-close="contactsPopup">Fermer</button></div>
+    <div class="popup-body"><div class="contacts-list">
+      <div class="contact-card"><div class="contact-name">Laurent MELCHIOR</div><div class="contact-role">Responsable regie exploitation<br>Adjoint chef de secteur</div><a href="tel:0622727350">06.22.72.73.50</a></div>
+      <div class="contact-card"><div class="contact-name">Regine LARREDE</div><div class="contact-role">Responsable Process</div><a href="tel:0620003139">06.20.00.31.39</a></div>
+      <div class="contact-card"><div class="contact-name">Gilles LADEVESE</div><div class="contact-role">Adjoint-Responsable Process</div><a href="tel:0623441509">06.23.44.15.09</a></div>
+      <div class="contact-card"><div class="contact-name">Jerome TURNACO</div><div class="contact-role">Responsable Maintenance</div><a href="tel:0629194522">06.29.19.45.22</a></div>
+      <div class="contact-card"><div class="contact-name">Ramuntxo DABBADIE</div><div class="contact-role">Adjoint-responsable Maintenance</div><a href="tel:0620003098">06.20.00.30.98</a></div>
+      <div class="contact-card"><div class="contact-name">Pierre SOUBLES</div><div class="contact-role">Responsable Reseaux</div><a href="tel:0624254811">06.24.25.48.11</a></div>
+      <div class="contact-card"><div class="contact-name">Jean-Lucien DOYHENARD</div><div class="contact-role">Adjoint-Responsable Reseaux</div><a href="tel:0624254815">06.24.25.48.15</a></div>
+      <div class="contact-card"><div class="contact-name">Depannage ENEDIS</div><a href="https://www.enedis.fr/panne-et-interruption" target="_blank" rel="noopener noreferrer">Site ENEDIS panne et interruption</a><br><a href="tel:0972675064">09.72.67.50.64</a></div>
+    </div></div>
   </div>
 </div>
+
 <script>
 (function(){
   const enedisLink = { href: 'https://www.enedis.fr/panne-et-interruption', label: 'Ouvrir le site ENEDIS panne et interruption' };
   const definitions = {
     vert: {
-      flowId: 'flowVert',
-      steps: {
+      viewId:'detailVert',
+      flowId:'flowVert',
+      steps:{
         start:{type:'Debut',cls:'green',title:"Panne d'electricite detectee",desc:'Point de depart du processus.',buttons:['launchBtn']},
         verify:{type:'Action',cls:'blue',title:'Verification ENEDIS',desc:"Informer le responsable et verifier si la coupure est locale ou generale via le site ENEDIS.",link:enedisLink,buttons:['b_verify']},
         local:{type:'Action',cls:'blue',title:'Se rendre au local TGBT',desc:'Deplacement vers le local TGBT du site.',buttons:['b_local']},
@@ -200,28 +204,14 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
         controls:{type:'Action',cls:'blue',title:'Controles finaux',desc:'Verifier superviseur, parametrage, deversement et bypass A2/A5.',buttons:['b_controls']},
         end:{type:'Fin',cls:'green',title:'Installation en fonctionnement normal',desc:'Fin du processus.',buttons:[]}
       },
-      transitions: {
-        launchBtn:{to:'verify',label:'Cliquer pour lancer',variant:'primary'},
-        b_verify:{to:'local',label:'Oui',variant:'yes'},
-        b_local:{to:'origin',label:'Oui',variant:'yes'},
-        b_origin:{to:'d1',label:'Oui',variant:'yes'},
-        b_d1_yes:{to:'ok1',label:'Oui',variant:'yes'},
-        b_d1_no:{to:'no1',label:'Non',variant:'no'},
-        b_ok1:{to:'controls',label:'Oui',variant:'yes'},
-        b_no1_yes:{to:'ok2',label:'Personnel du pole Maintenance',variant:'yes'},
-        b_no1_no:{to:'no2',label:'Non',variant:'no'},
-        b_ok2_yes:{to:'d3',label:'Oui',variant:'yes'},
-        b_ok2_no:{to:'enedis',label:'Non',variant:'no'},
-        b_d3_yes:{to:'controls',label:'Oui',variant:'yes'},
-        b_d3_no:{to:'no3',label:'Non',variant:'no'},
-        b_controls:{to:'end',label:'Oui',variant:'yes'}
-      },
+      transitions:{launchBtn:{to:'verify',label:'Cliquer pour lancer',variant:'primary'},b_verify:{to:'local',label:'Oui',variant:'yes'},b_local:{to:'origin',label:'Oui',variant:'yes'},b_origin:{to:'d1',label:'Oui',variant:'yes'},b_d1_yes:{to:'ok1',label:'Oui',variant:'yes'},b_d1_no:{to:'no1',label:'Non',variant:'no'},b_ok1:{to:'controls',label:'Oui',variant:'yes'},b_no1_yes:{to:'ok2',label:'Personnel du pole Maintenance',variant:'yes'},b_no1_no:{to:'no2',label:'Non',variant:'no'},b_ok2_yes:{to:'d3',label:'Oui',variant:'yes'},b_ok2_no:{to:'enedis',label:'Non',variant:'no'},b_d3_yes:{to:'controls',label:'Oui',variant:'yes'},b_d3_no:{to:'no3',label:'Non',variant:'no'},b_controls:{to:'end',label:'Oui',variant:'yes'}},
       order:['start','verify','local','origin','d1','ok1','no1','ok2','no2','enedis','d3','no3','controls','end'],
       markers:{start:'D',verify:'1',local:'2',origin:'3',d1:'?',ok1:'OK',no1:'?',ok2:'OK',no2:'!',enedis:'!',d3:'?',no3:'!',controls:'4',end:'F'}
     },
-    bleu: {
-      flowId: 'flowBleu',
-      steps: {
+    bleu:{
+      viewId:'detailBleu',
+      flowId:'flowBleu',
+      steps:{
         start:{type:'Debut',cls:'green',title:"Panne d'electricite detectee",desc:'Point de depart du processus BT.',buttons:['bt_launch']},
         verify:{type:'Action',cls:'blue',title:'Verification depuis le site ENEDIS',desc:'Verifier sur le site ENEDIS les pannes en cours sur le secteur du site.',link:enedisLink,buttons:['bt_verify']},
         sector:{type:'Decision',cls:'orange',title:'Panne sur le secteur du site ?',desc:'Determiner si la coupure provient du reseau ENEDIS du secteur.',buttons:['bt_sector_yes','bt_sector_no']},
@@ -237,146 +227,135 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
         end:{type:'Fin',cls:'green',title:'Remise sous tension effectuee',desc:'Le courant est retabli apres verification, reenclenchement et remise en service progressive.',buttons:[]},
         process:{type:'NON',cls:'red',title:'Alerter responsable process',desc:'Si la remise sous tension n est pas possible ou si le defaut persiste, alerter le responsable process.',buttons:[]}
       },
-      transitions: {
-        bt_launch:{to:'verify',label:'Cliquer pour lancer',variant:'primary'},
-        bt_verify:{to:'sector',label:'Oui',variant:'yes'},
-        bt_sector_yes:{to:'waitEnedis',label:'Oui',variant:'yes'},
-        bt_sector_no:{to:'meter',label:'Non',variant:'no'},
-        bt_meter:{to:'linkyStatus',label:'Oui',variant:'yes'},
-        bt_linky_over_yes:{to:'safeShutdown',label:'Oui',variant:'yes'},
-        bt_linky_over_no:{to:'breakerStatus',label:'Non',variant:'no'},
-        bt_safe_shutdown:{to:'rearmLinky',label:'Oui',variant:'yes'},
-        bt_rearm_linky:{to:'breakerStatus',label:'Oui',variant:'yes'},
-        bt_breaker_on_yes:{to:'maintenance',label:'Oui',variant:'yes'},
-        bt_breaker_on_no:{to:'breakerOn',label:'Non',variant:'no'},
-        bt_breaker_on:{to:'restore',label:'Oui',variant:'yes'},
-        bt_restore_ok:{to:'end',label:'Courant revenu',variant:'yes'},
-        bt_restore_ko:{to:'maintenance',label:'Toujours pas de courant',variant:'no'},
-        bt_maintenance_ok:{to:'end',label:'Remise sous tension possible',variant:'yes'},
-        bt_maintenance_ko:{to:'process',label:'Remise sous tension impossible',variant:'no'}
-      },
+      transitions:{bt_launch:{to:'verify',label:'Cliquer pour lancer',variant:'primary'},bt_verify:{to:'sector',label:'Oui',variant:'yes'},bt_sector_yes:{to:'waitEnedis',label:'Oui',variant:'yes'},bt_sector_no:{to:'meter',label:'Non',variant:'no'},bt_meter:{to:'linkyStatus',label:'Oui',variant:'yes'},bt_linky_over_yes:{to:'safeShutdown',label:'Oui',variant:'yes'},bt_linky_over_no:{to:'breakerStatus',label:'Non',variant:'no'},bt_safe_shutdown:{to:'rearmLinky',label:'Oui',variant:'yes'},bt_rearm_linky:{to:'breakerStatus',label:'Oui',variant:'yes'},bt_breaker_on_yes:{to:'maintenance',label:'Oui',variant:'yes'},bt_breaker_on_no:{to:'breakerOn',label:'Non',variant:'no'},bt_breaker_on:{to:'restore',label:'Oui',variant:'yes'},bt_restore_ok:{to:'end',label:'Courant revenu',variant:'yes'},bt_restore_ko:{to:'maintenance',label:'Toujours pas de courant',variant:'no'},bt_maintenance_ok:{to:'end',label:'Remise sous tension possible',variant:'yes'},bt_maintenance_ko:{to:'process',label:'Remise sous tension impossible',variant:'no'}},
       order:['start','verify','sector','waitEnedis','meter','linkyStatus','safeShutdown','rearmLinky','breakerStatus','breakerOn','restore','maintenance','end','process'],
       markers:{start:'D',verify:'1',sector:'?',waitEnedis:'!',meter:'2',linkyStatus:'?',safeShutdown:'S',rearmLinky:'+',breakerStatus:'?',breakerOn:'O',restore:'3',maintenance:'M',end:'F',process:'!'}
     }
   };
-  const states = Object.fromEntries(Object.keys(definitions).map(key => [key, { current: 'start', history: ['start'], revealed: new Set(['start']) }]));
-  let activeTab = 'vert';
+  const states = Object.fromEntries(Object.keys(definitions).map(key => [key,{current:'start',history:['start'],revealed:new Set(['start'])}]));
+  let activeKey = null;
   const $ = id => document.getElementById(id);
-  function renderFlow(tabId){
-    const def = definitions[tabId];
-    const flow = $(def.flowId);
-    flow.innerHTML = def.order.map(id => {
+
+  function renderFlow(key){
+    const def = definitions[key];
+    $(def.flowId).innerHTML = def.order.map(id => {
       const step = def.steps[id];
-      const buttons = (step.buttons || []).map(buttonId => {
-        const transition = def.transitions[buttonId];
-        return '<button class="flow-btn ' + transition.variant + ' hidden" data-tab="' + tabId + '" data-action="' + buttonId + '" type="button">' + transition.label + '</button>';
+      const buttons = (step.buttons||[]).map(buttonId => {
+        const t = def.transitions[buttonId];
+        return '<button class="flow-btn '+t.variant+' hidden" data-key="'+key+'" data-action="'+buttonId+'" type="button">'+t.label+'</button>';
       }).join('');
-      const link = step.link ? '<a class="step-link" href="' + step.link.href + '" target="_blank" rel="noopener noreferrer">' + step.link.label + '</a>' : '';
-      return '<article id="' + tabId + '-' + id + '" class="step ' + step.cls + ' hidden">' +
-        '<div class="step-head">' +
-        '<div class="marker">' + def.markers[id] + '</div>' +
-        '<div><div class="badge ' + step.cls + '">' + step.type + '</div><h2>' + step.title + '</h2><p>' + step.desc + '</p>' + link + '</div>' +
-        '</div><div class="actions">' + buttons + '</div></article>';
+      const link = step.link ? '<a class="step-link" href="'+step.link.href+'" target="_blank" rel="noopener noreferrer">'+step.link.label+'</a>' : '';
+      return '<article id="'+key+'-'+id+'" class="step '+step.cls+' hidden"><div class="step-head"><div class="marker">'+def.markers[id]+'</div><div><div class="badge '+step.cls+'">'+step.type+'</div><h2>'+step.title+'</h2><p>'+step.desc+'</p>'+link+'</div></div><div class="actions">'+buttons+'</div></article>';
     }).join('');
   }
-  function updateTrackingPopup(){
-    const def = definitions[activeTab];
-    const state = states[activeTab];
+
+  function setView(mode){
+    $('homeView').classList.toggle('active', mode === 'home');
+    Object.keys(definitions).forEach(key => $(definitions[key].viewId).classList.toggle('active', mode === key));
+  }
+
+  function updateTracking(){
+    if(!activeKey){
+      $('popup-badge').className = 'badge green';
+      $('popup-badge').textContent = 'Debut';
+      $('popup-title').textContent = 'Aucune consigne ouverte';
+      $('popup-desc').textContent = 'Ouvrir une consigne depuis la page d accueil.';
+      $('historyText').textContent = 'Aucun parcours actif.';
+      return;
+    }
+    const def = definitions[activeKey];
+    const state = states[activeKey];
     const step = def.steps[state.current];
-    [['popup-badge', step.type], ['popup-title', step.title], ['popup-desc', step.desc]].forEach(([id, text]) => {
-      const node = $(id);
-      if (id === 'popup-badge') {
-        node.className = 'badge ' + step.cls;
-      }
-      node.textContent = text;
-    });
+    $('popup-badge').className = 'badge '+step.cls;
+    $('popup-badge').textContent = step.type;
+    $('popup-title').textContent = step.title;
+    $('popup-desc').textContent = step.desc;
     $('historyText').textContent = 'Parcours: ' + state.history.map(id => def.steps[id].title).join(' → ');
   }
-  function redraw(tabId){
-    const def = definitions[tabId];
-    const state = states[tabId];
+
+  function redraw(key){
+    const def = definitions[key];
+    const state = states[key];
     def.order.forEach(id => {
-      const node = $(tabId + '-' + id);
+      const node = $(key+'-'+id);
       node.classList.toggle('hidden', !state.revealed.has(id));
-      node.classList.toggle('active', id === state.current && tabId === activeTab);
-      node.querySelectorAll('[data-action]').forEach(button => button.classList.add('hidden'));
+      node.classList.toggle('active', key === activeKey && id === state.current);
+      node.querySelectorAll('[data-action]').forEach(btn => btn.classList.add('hidden'));
     });
-    (def.steps[state.current].buttons || []).forEach(buttonId => {
-      const button = document.querySelector('[data-tab="' + tabId + '"][data-action="' + buttonId + '"]');
-      if (button) button.classList.remove('hidden');
+    (def.steps[state.current].buttons||[]).forEach(buttonId => {
+      const btn = document.querySelector('[data-key="'+key+'"][data-action="'+buttonId+'"]');
+      if(btn) btn.classList.remove('hidden');
     });
-    if (tabId === activeTab) updateTrackingPopup();
+    if(key === activeKey) updateTracking();
   }
-  function scrollCurrent(){
-    const state = states[activeTab];
-    const node = $(activeTab + '-' + state.current);
-    if (!node) return;
-    setTimeout(() => { try { node.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (error) { node.scrollIntoView(); } }, 30);
+
+  function openConsigne(key){
+    activeKey = key;
+    setView(key);
+    redraw(key);
+    updateTracking();
   }
-  function go(tabId, buttonId){
-    const def = definitions[tabId];
-    const state = states[tabId];
-    const transition = def.transitions[buttonId];
-    if (!transition || !def.steps[transition.to]) return;
-    state.current = transition.to;
+
+  function go(key, buttonId){
+    const def = definitions[key];
+    const state = states[key];
+    const t = def.transitions[buttonId];
+    if(!t || !def.steps[t.to]) return;
+    state.current = t.to;
     state.history.push(state.current);
     state.revealed.add(state.current);
-    redraw(tabId);
-    if (tabId === activeTab) scrollCurrent();
+    redraw(key);
+    const node = $(key+'-'+state.current);
+    if(node) setTimeout(() => node.scrollIntoView({behavior:'smooth',block:'center'}), 30);
   }
-  function back(){
-    const state = states[activeTab];
-    if (state.history.length <= 1) return;
+
+  function backStep(){
+    if(!activeKey) return;
+    const state = states[activeKey];
+    if(state.history.length <= 1) return;
     state.history.pop();
     state.current = state.history[state.history.length - 1];
     state.revealed = new Set(state.history);
-    redraw(activeTab);
-    scrollCurrent();
+    redraw(activeKey);
   }
-  function restart(){
-    const state = states[activeTab];
-    state.current = 'start';
-    state.history = ['start'];
-    state.revealed = new Set(['start']);
-    redraw(activeTab);
-    scrollCurrent();
+
+  function openHome(){
+    activeKey = null;
+    setView('home');
+    updateTracking();
   }
-  function setActiveTab(tabId){
-    activeTab = tabId;
-    ['vert','bleu'].forEach(id => {
-      const active = id === tabId;
-      $('tab' + id.charAt(0).toUpperCase() + id.slice(1)).classList.toggle('active', active);
-      $('tab' + id.charAt(0).toUpperCase() + id.slice(1)).setAttribute('aria-pressed', String(active));
-      $('pane' + id.charAt(0).toUpperCase() + id.slice(1)).classList.toggle('active', active);
-    });
-    redraw('vert');
-    redraw('bleu');
-  }
-  function openPopup(id){ const popup = $(id); popup.classList.add('open'); popup.setAttribute('aria-hidden', 'false'); }
-  function closePopup(id){ const popup = $(id); popup.classList.remove('open'); popup.setAttribute('aria-hidden', 'true'); }
+
+  function openPopup(id){ const p=$(id); p.classList.add('open'); p.setAttribute('aria-hidden','false'); }
+  function closePopup(id){ const p=$(id); p.classList.remove('open'); p.setAttribute('aria-hidden','true'); }
+
   function bind(){
     document.addEventListener('click', event => {
       const actionButton = event.target.closest('[data-action]');
-      if (actionButton) { event.preventDefault(); go(actionButton.dataset.tab, actionButton.dataset.action); return; }
+      if(actionButton){ event.preventDefault(); go(actionButton.dataset.key, actionButton.dataset.action); return; }
       const closeButton = event.target.closest('[data-close]');
-      if (closeButton) { closePopup(closeButton.dataset.close); return; }
+      if(closeButton){ closePopup(closeButton.dataset.close); return; }
+      const homeButton = event.target.closest('[data-open-home]');
+      if(homeButton){ openHome(); return; }
       const popup = event.target.closest('.popup-backdrop');
-      if (popup && event.target === popup) closePopup(popup.id);
+      if(popup && event.target === popup) closePopup(popup.id);
     });
-    $('btnBack').addEventListener('click', back);
-    $('btnRestart').addEventListener('click', restart);
+    $('cardVert').addEventListener('click', () => openConsigne('vert'));
+    $('cardBleu').addEventListener('click', () => openConsigne('bleu'));
+    $('btnHome').addEventListener('click', openHome);
+    $('btnBack').addEventListener('click', backStep);
     $('btnLegend').addEventListener('click', () => openPopup('legendPopup'));
     $('btnTracking').addEventListener('click', () => openPopup('trackingPopup'));
     $('btnContacts').addEventListener('click', () => openPopup('contactsPopup'));
-    $('tabVert').addEventListener('click', () => setActiveTab('vert'));
-    $('tabBleu').addEventListener('click', () => setActiveTab('bleu'));
   }
+
   renderFlow('vert');
   renderFlow('bleu');
   bind();
   redraw('vert');
   redraw('bleu');
-  if ('serviceWorker' in navigator) {
+  openHome();
+
+  if('serviceWorker' in navigator){
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./service-worker.js').catch(error => {
         console.log('Service worker non enregistre', error);
