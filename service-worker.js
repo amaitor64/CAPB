@@ -1,10 +1,9 @@
-const CACHE_NAME = "logigramme-bt-ht-v3";
+const CACHE_NAME = "logigramme-bt-ht-v4";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png",
+  "./icons/favicon.png?v=2",
   "./pshtbt/",
   "./psbt/",
   "./pi/"
