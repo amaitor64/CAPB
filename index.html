@@ -131,6 +131,20 @@
       background: rgba(255,255,255,.10);
     }
 
+    .card-icon {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 44px;
+      height: 44px;
+      padding: 7px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.24);
+      backdrop-filter: blur(6px);
+      object-fit: contain;
+    }
+
     .card-tag {
       display: inline-flex;
       align-self: flex-start;
@@ -147,6 +161,7 @@
       margin: 18px 0 10px;
       font-size: 28px;
       line-height: 1.08;
+      padding-right: 56px;
     }
 
     .card p {
@@ -196,6 +211,7 @@
       .lead { font-size: 16px; }
       .logo-wrap { margin-bottom: 14px; }
       .site-logo { width: min(220px, 78vw); }
+      .card-icon { top: 16px; right: 16px; width: 40px; height: 40px; }
     }
   </style>
 </head>
@@ -213,6 +229,7 @@
 
     <section class="grid" aria-label="Consignes disponibles">
       <a class="card card-green" href="pshtbt/">
+        <img class="card-icon" src="icons/favicon.png?v=2" alt="Icône consigne">
         <span class="card-tag">HT / BT</span>
         <h2>Consigne coupure de courant tarif vert</h2>
         <p>Coupure générale sur une installation HT / BT, site avec un poste de transformation HT.</p>
@@ -220,6 +237,7 @@
       </a>
 
       <a class="card card-blue-yellow" href="psbt/">
+        <img class="card-icon" src="icons/favicon.png?v=2" alt="Icône consigne">
         <span class="card-tag">BT</span>
         <h2>Consigne coupure de courant tarif bleu ou jaune</h2>
         <p>Coupure générale sur une installation BT, site avec un comptage BT.</p>
@@ -227,6 +245,7 @@
       </a>
 
       <a class="card card-red" href="pi/">
+        <img class="card-icon" src="icons/favicon.png?v=2" alt="Icône consigne">
         <span class="card-tag">Incendie</span>
         <h2>Consigne en cas d'incendie</h2>
         <p>Accès rapide à la procédure dédiée, de l'alarme jusqu'au point de rassemblement.</p>
