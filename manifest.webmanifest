@@ -14,7 +14,7 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icons/favicon.png",
+      "src": "icons/favicon.png?v=2",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
