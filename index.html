@@ -9,9 +9,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Situation d'urgence">
-<link rel="icon" type="image/png" href="icons/favicon.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/favicon.png">
+<link rel="shortcut icon" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/favicon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
 <style>
 :root{--blue:#1f7ae0;--blue-soft:#eaf4ff;--green:#2c9b5f;--green-soft:#e8f7ef;--yellow:#f0c54a;--orange:#d88b18;--orange-soft:#fff3d8;--red:#c43c3c;--red-soft:#fff0f0;--ink:#123047;--muted:#5d7486;--border:#cfe0ee;--card:#ffffff;--shadow:0 12px 30px rgba(18,48,71,.08)}
 *{box-sizing:border-box}
@@ -143,46 +144,9 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
   </section>
 </main>
 
-<div id="legendPopup" class="popup-backdrop" aria-hidden="true">
-  <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="legendTitle">
-    <div class="popup-header"><h2 id="legendTitle">Légende</h2><button type="button" data-close="legendPopup">Fermer</button></div>
-    <div class="popup-body"><div class="legend-list">
-      <div class="legend-row"><span class="legend-shape legend-start"></span><span>Début / fin / validation OK</span></div>
-      <div class="legend-row"><span class="legend-shape legend-action"></span><span>Action ou contrôle à réaliser</span></div>
-      <div class="legend-row"><span class="legend-shape legend-decision"></span><span>Décision avec choix Oui / Non</span></div>
-      <div class="legend-row"><span class="legend-shape legend-no"></span><span>Branche NON / anomalie / intervention</span></div>
-    </div></div>
-  </div>
-</div>
-
-<div id="trackingPopup" class="popup-backdrop" aria-hidden="true">
-  <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="trackingTitle">
-    <div class="popup-header"><h2 id="trackingTitle">Suivi</h2><button type="button" data-close="trackingPopup">Fermer</button></div>
-    <div class="popup-body">
-      <div id="popup-badge" class="badge green">Début</div>
-      <h3 id="popup-title">Panne d'électricité détectée</h3>
-      <p id="popup-desc">Point de départ du processus.</p>
-      <p class="empty-state" id="historyText"></p>
-    </div>
-  </div>
-</div>
-
-<div id="contactsPopup" class="popup-backdrop" aria-hidden="true">
-  <div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="contactsTitle">
-    <div class="popup-header"><h2 id="contactsTitle">Contacts</h2><button type="button" data-close="contactsPopup">Fermer</button></div>
-    <div class="popup-body"><div class="contacts-list">
-      <div class="contact-card"><div class="contact-name">Laurent MELCHIOR</div><div class="contact-role">Responsable regie exploitation<br>Adjoint chef de secteur</div><a href="tel:0622727350">06.22.72.73.50</a></div>
-      <div class="contact-card"><div class="contact-name">Regine LARREDE</div><div class="contact-role">Responsable Process</div><a href="tel:0620003139">06.20.00.31.39</a></div>
-      <div class="contact-card"><div class="contact-name">Gilles LADEVESE</div><div class="contact-role">Adjoint-Responsable Process</div><a href="tel:0623441509">06.23.44.15.09</a></div>
-      <div class="contact-card"><div class="contact-name">Jerome TURNACO</div><div class="contact-role">Responsable Maintenance</div><a href="tel:0629194522">06.29.19.45.22</a></div>
-      <div class="contact-card"><div class="contact-name">Ramuntxo DABBADIE</div><div class="contact-role">Adjoint-responsable Maintenance</div><a href="tel:0620003098">06.20.00.30.98</a></div>
-      <div class="contact-card"><div class="contact-name">Pierre SOUBLES</div><div class="contact-role">Responsable Reseaux</div><a href="tel:0624254811">06.24.25.48.11</a></div>
-      <div class="contact-card"><div class="contact-name">Jean-Lucien DOYHENARD</div><div class="contact-role">Adjoint-Responsable Reseaux</div><a href="tel:0624254815">06.24.25.48.15</a></div>
-      <div class="contact-card"><div class="contact-name">Depannage ENEDIS</div><a href="https://www.enedis.fr/panne-et-interruption" target="_blank" rel="noopener noreferrer">Site ENEDIS panne et interruption</a><br><a href="tel:0972675064">09.72.67.50.64</a></div>
-      <div class="contact-card"><div class="contact-name">Pompiers / secours</div><a href="tel:18">18</a><br><a href="tel:112">112</a></div>
-    </div></div>
-  </div>
-</div>
+<div id="legendPopup" class="popup-backdrop" aria-hidden="true"><div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="legendTitle"><div class="popup-header"><h2 id="legendTitle">Légende</h2><button type="button" data-close="legendPopup">Fermer</button></div><div class="popup-body"><div class="legend-list"><div class="legend-row"><span class="legend-shape legend-start"></span><span>Début / fin / validation OK</span></div><div class="legend-row"><span class="legend-shape legend-action"></span><span>Action ou contrôle à réaliser</span></div><div class="legend-row"><span class="legend-shape legend-decision"></span><span>Décision avec choix Oui / Non</span></div><div class="legend-row"><span class="legend-shape legend-no"></span><span>Branche NON / anomalie / intervention</span></div></div></div></div></div>
+<div id="trackingPopup" class="popup-backdrop" aria-hidden="true"><div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="trackingTitle"><div class="popup-header"><h2 id="trackingTitle">Suivi</h2><button type="button" data-close="trackingPopup">Fermer</button></div><div class="popup-body"><div id="popup-badge" class="badge green">Début</div><h3 id="popup-title">Panne d'électricité détectée</h3><p id="popup-desc">Point de départ du processus.</p><p class="empty-state" id="historyText"></p></div></div></div>
+<div id="contactsPopup" class="popup-backdrop" aria-hidden="true"><div class="popup-card" role="dialog" aria-modal="true" aria-labelledby="contactsTitle"><div class="popup-header"><h2 id="contactsTitle">Contacts</h2><button type="button" data-close="contactsPopup">Fermer</button></div><div class="popup-body"><div class="contacts-list"><div class="contact-card"><div class="contact-name">Laurent MELCHIOR</div><div class="contact-role">Responsable regie exploitation<br>Adjoint chef de secteur</div><a href="tel:0622727350">06.22.72.73.50</a></div><div class="contact-card"><div class="contact-name">Regine LARREDE</div><div class="contact-role">Responsable Process</div><a href="tel:0620003139">06.20.00.31.39</a></div><div class="contact-card"><div class="contact-name">Gilles LADEVESE</div><div class="contact-role">Adjoint-Responsable Process</div><a href="tel:0623441509">06.23.44.15.09</a></div><div class="contact-card"><div class="contact-name">Jerome TURNACO</div><div class="contact-role">Responsable Maintenance</div><a href="tel:0629194522">06.29.19.45.22</a></div><div class="contact-card"><div class="contact-name">Ramuntxo DABBADIE</div><div class="contact-role">Adjoint-responsable Maintenance</div><a href="tel:0620003098">06.20.00.30.98</a></div><div class="contact-card"><div class="contact-name">Pierre SOUBLES</div><div class="contact-role">Responsable Reseaux</div><a href="tel:0624254811">06.24.25.48.11</a></div><div class="contact-card"><div class="contact-name">Jean-Lucien DOYHENARD</div><div class="contact-role">Adjoint-Responsable Reseaux</div><a href="tel:0624254815">06.24.25.48.15</a></div><div class="contact-card"><div class="contact-name">Depannage ENEDIS</div><a href="https://www.enedis.fr/panne-et-interruption" target="_blank" rel="noopener noreferrer">Site ENEDIS panne et interruption</a><br><a href="tel:0972675064">09.72.67.50.64</a></div><div class="contact-card"><div class="contact-name">Pompiers / secours</div><a href="tel:18">18</a><br><a href="tel:112">112</a></div></div></div></div></div>
 
 <script>
 (function(){
@@ -256,88 +220,17 @@ header h1{margin:0 0 10px;font-size:18px;line-height:1.3;text-align:center;lette
   const states = Object.fromEntries(Object.keys(definitions).filter(key => definitions[key].steps).map(key => [key,{current:'start',history:['start'],revealed:new Set(['start'])}]));
   let activeKey = null;
   const $ = id => document.getElementById(id);
-
-  function renderFlow(key){
-    const def = definitions[key];
-    $(def.flowId).innerHTML = def.order.map(id => {
-      const step = def.steps[id];
-      const buttons = (step.buttons||[]).map(buttonId => {
-        const t = def.transitions[buttonId];
-        return '<button class="flow-btn '+t.variant+' hidden" data-key="'+key+'" data-action="'+buttonId+'" type="button">'+t.label+'</button>';
-      }).join('');
-      const link = step.link ? '<a class="step-link" href="'+step.link.href+'" target="_blank" rel="noopener noreferrer">'+step.link.label+'</a>' : '';
-      return '<article id="'+key+'-'+id+'" class="step '+step.cls+' hidden"><div class="step-head"><div class="marker">'+def.markers[id]+'</div><div><div class="badge '+step.cls+'">'+step.type+'</div><h2>'+step.title+'</h2><p>'+step.desc+'</p>'+link+'</div></div><div class="actions">'+buttons+'</div></article>';
-    }).join('');
-  }
-
-  function setView(mode){
-    $('homeView').classList.toggle('active', mode === 'home');
-    Object.keys(definitions).forEach(key => $(definitions[key].viewId).classList.toggle('active', mode === key));
-  }
-
-  function updateTracking(){
-    if(!activeKey){
-      $('popup-badge').className = 'badge green';
-      $('popup-badge').textContent = 'Début';
-      $('popup-title').textContent = 'Aucune consigne ouverte';
-      $('popup-desc').textContent = 'Ouvrir une consigne depuis la page d’accueil.';
-      $('historyText').textContent = 'Aucun parcours actif.';
-      return;
-    }
-    const def = definitions[activeKey];
-    const state = states[activeKey];
-    const step = def.steps[state.current];
-    $('popup-badge').className = 'badge '+step.cls;
-    $('popup-badge').textContent = step.type;
-    $('popup-title').textContent = step.title;
-    $('popup-desc').textContent = step.desc;
-    $('historyText').textContent = 'Parcours: ' + state.history.map(id => def.steps[id].title).join(' → ');
-  }
-
-  function redraw(key){
-    const def = definitions[key];
-    const state = states[key];
-    def.order.forEach(id => {
-      const node = $(key+'-'+id);
-      node.classList.toggle('hidden', !state.revealed.has(id));
-      node.classList.toggle('active', key === activeKey && id === state.current);
-      node.querySelectorAll('[data-action]').forEach(btn => btn.classList.add('hidden'));
-    });
-    (def.steps[state.current].buttons||[]).forEach(buttonId => {
-      const btn = document.querySelector('[data-key="'+key+'"][data-action="'+buttonId+'"]');
-      if(btn) btn.classList.remove('hidden');
-    });
-    if(key === activeKey) updateTracking();
-  }
-
+  function renderFlow(key){ const def = definitions[key]; $(def.flowId).innerHTML = def.order.map(id => { const step = def.steps[id]; const buttons = (step.buttons||[]).map(buttonId => { const t = def.transitions[buttonId]; return '<button class="flow-btn '+t.variant+' hidden" data-key="'+key+'" data-action="'+buttonId+'" type="button">'+t.label+'</button>'; }).join(''); const link = step.link ? '<a class="step-link" href="'+step.link.href+'" target="_blank" rel="noopener noreferrer">'+step.link.label+'</a>' : ''; return '<article id="'+key+'-'+id+'" class="step '+step.cls+' hidden"><div class="step-head"><div class="marker">'+def.markers[id]+'</div><div><div class="badge '+step.cls+'">'+step.type+'</div><h2>'+step.title+'</h2><p>'+step.desc+'</p>'+link+'</div></div><div class="actions">'+buttons+'</div></article>'; }).join(''); }
+  function setView(mode){ $('homeView').classList.toggle('active', mode === 'home'); Object.keys(definitions).forEach(key => $(definitions[key].viewId).classList.toggle('active', mode === key)); }
+  function updateTracking(){ if(!activeKey){ $('popup-badge').className = 'badge green'; $('popup-badge').textContent = 'Début'; $('popup-title').textContent = 'Aucune consigne ouverte'; $('popup-desc').textContent = 'Ouvrir une consigne depuis la page d’accueil.'; $('historyText').textContent = 'Aucun parcours actif.'; return; } const def = definitions[activeKey]; const state = states[activeKey]; const step = def.steps[state.current]; $('popup-badge').className = 'badge '+step.cls; $('popup-badge').textContent = step.type; $('popup-title').textContent = step.title; $('popup-desc').textContent = step.desc; $('historyText').textContent = 'Parcours: ' + state.history.map(id => def.steps[id].title).join(' → '); }
+  function redraw(key){ const def = definitions[key]; const state = states[key]; def.order.forEach(id => { const node = $(key+'-'+id); node.classList.toggle('hidden', !state.revealed.has(id)); node.classList.toggle('active', key === activeKey && id === state.current); node.querySelectorAll('[data-action]').forEach(btn => btn.classList.add('hidden')); }); (def.steps[state.current].buttons||[]).forEach(buttonId => { const btn = document.querySelector('[data-key="'+key+'"][data-action="'+buttonId+'"]'); if(btn) btn.classList.remove('hidden'); }); if(key === activeKey) updateTracking(); }
   function openConsigne(key){ activeKey = key; setView(key); redraw(key); updateTracking(); }
   function go(key, buttonId){ const def = definitions[key]; const state = states[key]; const t = def.transitions[buttonId]; if(!t || !def.steps[t.to]) return; state.current = t.to; state.history.push(state.current); state.revealed.add(state.current); redraw(key); const node = $(key+'-'+state.current); if(node) setTimeout(() => node.scrollIntoView({behavior:'smooth',block:'center'}), 30); }
   function backStep(){ if(!activeKey) return; const state = states[activeKey]; if(state.history.length <= 1) return; state.history.pop(); state.current = state.history[state.history.length - 1]; state.revealed = new Set(state.history); redraw(activeKey); }
   function openHome(){ activeKey = null; setView('home'); updateTracking(); }
   function openPopup(id){ const p=$(id); p.classList.add('open'); p.setAttribute('aria-hidden','false'); }
   function closePopup(id){ const p=$(id); p.classList.remove('open'); p.setAttribute('aria-hidden','true'); }
-
-  function bind(){
-    document.addEventListener('click', event => {
-      const actionButton = event.target.closest('[data-action]');
-      if(actionButton){ event.preventDefault(); go(actionButton.dataset.key, actionButton.dataset.action); return; }
-      const closeButton = event.target.closest('[data-close]');
-      if(closeButton){ closePopup(closeButton.dataset.close); return; }
-      const homeButton = event.target.closest('[data-open-home]');
-      if(homeButton){ openHome(); return; }
-      const popup = event.target.closest('.popup-backdrop');
-      if(popup && event.target === popup) closePopup(popup.id);
-    });
-    $('cardVert').addEventListener('click', () => openConsigne('vert'));
-    $('cardBleu').addEventListener('click', () => openConsigne('bleu'));
-    $('cardIncendie').addEventListener('click', () => openConsigne('incendie'));
-    $('btnHome').addEventListener('click', openHome);
-    $('btnBack').addEventListener('click', backStep);
-    $('btnLegend').addEventListener('click', () => openPopup('legendPopup'));
-    $('btnTracking').addEventListener('click', () => openPopup('trackingPopup'));
-    $('btnContacts').addEventListener('click', () => openPopup('contactsPopup'));
-  }
-
+  function bind(){ document.addEventListener('click', event => { const actionButton = event.target.closest('[data-action]'); if(actionButton){ event.preventDefault(); go(actionButton.dataset.key, actionButton.dataset.action); return; } const closeButton = event.target.closest('[data-close]'); if(closeButton){ closePopup(closeButton.dataset.close); return; } const homeButton = event.target.closest('[data-open-home]'); if(homeButton){ openHome(); return; } const popup = event.target.closest('.popup-backdrop'); if(popup && event.target === popup) closePopup(popup.id); }); $('cardVert').addEventListener('click', () => openConsigne('vert')); $('cardBleu').addEventListener('click', () => openConsigne('bleu')); $('cardIncendie').addEventListener('click', () => openConsigne('incendie')); $('btnHome').addEventListener('click', openHome); $('btnBack').addEventListener('click', backStep); $('btnLegend').addEventListener('click', () => openPopup('legendPopup')); $('btnTracking').addEventListener('click', () => openPopup('trackingPopup')); $('btnContacts').addEventListener('click', () => openPopup('contactsPopup')); }
   renderFlow('vert'); renderFlow('bleu'); renderFlow('incendie'); bind(); redraw('vert'); redraw('bleu'); redraw('incendie'); openHome();
   if('serviceWorker' in navigator){ window.addEventListener('load', () => { navigator.serviceWorker.register('./service-worker.js').catch(error => { console.log('Service worker non enregistre', error); }); }); }
 })();
