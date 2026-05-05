@@ -121,6 +121,35 @@ Taille actuelle du favicon sur les cards d'accueil :
 Toute modification doit rester lisible sur mobile.
 Ne pas ajouter de mise en page qui casse les cards, les boutons ou les textes sur petit ecran.
 
+## Contacts a maintenir
+Les contacts sont aujourd'hui dupliques dans les pages interactives et statiques.
+Quand un numero ou un role change, il faut mettre a jour toutes les occurrences concernees.
+
+### ENEDIS
+- Depannage ENEDIS : `09 72 67 50 64`
+- Lien : `https://www.enedis.fr/panne-et-interruption`
+
+### Maintenance
+- Jerome TURNACO - Responsable maintenance : `06 29 19 45 22`
+- Ramuntxo DABBADIE - Adjoint responsable maintenance : `06 20 00 30 98`
+- Astreinte - Hors heures ouvrees : `06 20 57 60 14`
+- Laurent MELCHIOR - Responsable regie exploitation, adjoint chef de secteur : `06 22 72 73 50`
+
+### Process
+- Regine LARREDE - Responsable process : `06 20 00 31 39`
+- Gilles LADEVESE - Adjoint responsable process : `06 23 44 15 09`
+- Astreinte - Hors heures ouvrees : `06 20 57 60 14`
+- Laurent MELCHIOR - Responsable regie exploitation, adjoint chef de secteur : `06 22 72 73 50`
+
+### Secours incendie
+- Pompiers : `18`
+- Secours d'urgence europeen : `112`
+
+### Points d'attention
+- Pierre SOUBLES ne fait pas partie des contacts maintenance.
+- Laurent MELCHIOR doit apparaitre dans les cards d'alerte metier, sauf pour ENEDIS et les secours incendie.
+- Les secours incendie et ENEDIS doivent rester dans des cards dediees, sans melange avec les contacts metier.
+
 ## Ajouter une nouvelle consigne
 Pour ajouter une nouvelle consigne, faire systematiquement les 5 blocs suivants.
 
