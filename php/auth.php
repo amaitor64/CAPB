@@ -26,6 +26,20 @@ function capb_auth_secret(): string
     return $secret;
 }
 
+function capb_is_https(): bool
+{
+    if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+        return true;
+    }
+
+    $forwardedProto = strtolower(trim((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')));
+    if ($forwardedProto !== '') {
+        return in_array($forwardedProto, ['https', 'wss'], true);
+    }
+
+    return false;
+}
+
 function capb_base_path(): string
 {
     $configured = trim((string) getenv('APP_BASE_PATH'));
@@ -62,6 +76,16 @@ function capb_is_allowed_email(string $email): bool
     return str_ends_with(capb_normalize_email($email), CAPB_ALLOWED_EMAIL_DOMAIN);
 }
 
+function capb_base64url_decode(string $value): string|false
+{
+    $padding = strlen($value) % 4;
+    if ($padding > 0) {
+        $value .= str_repeat('=', 4 - $padding);
+    }
+
+    return base64_decode(strtr($value, '-_', '+/'), true);
+}
+
 function capb_sign_token(array $payload, string $secret): string
 {
     $encodedPayload = rtrim(strtr(base64_encode(json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)), '+/', '-_'), '=');
@@ -87,7 +111,7 @@ function capb_verify_token(?string $token, string $secret): ?array
         return null;
     }
 
-    $json = base64_decode(strtr($encodedPayload, '-_', '+/'), true);
+    $json = capb_base64url_decode($encodedPayload);
     if ($json === false) {
         return null;
     }
@@ -140,12 +164,12 @@ function capb_get_session(): ?array
 function capb_sanitize_next(?string $next): string
 {
     if (!$next || $next[0] !== '/' || str_starts_with($next, '//')) {
-        return '/';
+        return capb_app_url('/');
     }
 
     $path = parse_url($next, PHP_URL_PATH);
     if (!is_string($path) || $path === '' || $path[0] !== '/' || str_starts_with($path, '//')) {
-        return '/';
+        return capb_app_url('/');
     }
 
     $basePath = capb_base_path();
@@ -194,7 +218,7 @@ function capb_oauth_config(): ?array
     }
 
     if ($redirectUri === '') {
-        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $scheme = capb_is_https() ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $redirectUri = $scheme . '://' . $host . capb_app_url('/api/auth/oauth-callback');
     }
@@ -255,13 +279,57 @@ function capb_decode_jwt_payload(?string $token): ?array
         return null;
     }
 
-    $json = base64_decode(strtr($parts[1], '-_', '+/'), true);
+    $json = capb_base64url_decode($parts[1]);
     if ($json === false) {
         return null;
     }
 
     $payload = json_decode($json, true);
     return is_array($payload) ? $payload : null;
+}
+
+function capb_validate_id_token_claims(array $claims, array $oauth): bool
+{
+    $issuer = (string) ($claims['iss'] ?? '');
+    $expectedIssuer = (string) ($oauth['metadata']['issuer'] ?? '');
+    if ($issuer === '' || $expectedIssuer === '' || !hash_equals($expectedIssuer, $issuer)) {
+        return false;
+    }
+
+    $audience = $claims['aud'] ?? null;
+    $clientId = (string) ($oauth['clientId'] ?? '');
+    $audiences = is_array($audience) ? $audience : [$audience];
+    if ($clientId === '' || !in_array($clientId, $audiences, true)) {
+        return false;
+    }
+
+    if ((int) ($claims['exp'] ?? 0) <= time()) {
+        return false;
+    }
+
+    return true;
+}
+
+function capb_logout_redirect_url(?string $next = null): string
+{
+    $target = capb_sanitize_next($next ?? capb_app_url('/auth/'));
+    if ($target === capb_app_url('/')) {
+        $target = capb_app_url('/auth/');
+    }
+
+    $oauth = capb_oauth_config();
+    $endSessionUrl = (string) ($oauth['metadata']['end_session_endpoint'] ?? '');
+    if ($endSessionUrl === '') {
+        return $target;
+    }
+
+    $scheme = capb_is_https() ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $postLogoutRedirect = $scheme . '://' . $host . $target;
+
+    return $endSessionUrl . '?' . http_build_query([
+        'post_logout_redirect_uri' => $postLogoutRedirect,
+    ]);
 }
 
 function capb_json(array $body, int $status = 200, array $headers = []): never
@@ -287,8 +355,8 @@ function capb_set_session_cookie(string $token): void
         'expires' => time() + CAPB_SESSION_TTL,
         'path' => capb_app_url('/'),
         'httponly' => true,
-        'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
-        'samesite' => 'Strict',
+        'secure' => capb_is_https(),
+        'samesite' => 'Lax',
     ]);
 }
 
@@ -298,8 +366,8 @@ function capb_clear_session_cookie(): void
         'expires' => time() - 3600,
         'path' => capb_app_url('/'),
         'httponly' => true,
-        'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
-        'samesite' => 'Strict',
+        'secure' => capb_is_https(),
+        'samesite' => 'Lax',
     ]);
 }
 
