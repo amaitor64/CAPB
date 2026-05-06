@@ -12,7 +12,7 @@ function capb_oauth_auth_redirect(string $next, string $error): never
 $secret = capb_auth_secret();
 $stateToken = (string) ($_GET['state'] ?? '');
 $statePayload = capb_verify_token($stateToken, $secret);
-$next = capb_sanitize_next($statePayload['next'] ?? '/');
+$next = capb_sanitize_next($statePayload['next'] ?? capb_app_url('/'));
 
 if (!$statePayload || ($statePayload['type'] ?? null) !== 'oauth_state' || (int) ($statePayload['exp'] ?? 0) <= time()) {
     capb_oauth_auth_redirect($next, 'Session OAuth2 expirée ou invalide.');
@@ -48,12 +48,18 @@ $tokenSet = $tokenResponse['json'];
 $email = '';
 if (!empty($tokenSet['id_token'])) {
     $claims = capb_decode_jwt_payload((string) $tokenSet['id_token']);
-    $email = capb_extract_email(is_array($claims) ? $claims : []);
+    if (!is_array($claims) || !capb_validate_id_token_claims($claims, $oauth)) {
+        capb_oauth_auth_redirect($next, 'Jeton d’authentification invalide.');
+    }
+    $email = capb_extract_email($claims);
 }
 
 if ($email === '' && !empty($tokenSet['access_token']) && !empty($oauth['userInfoUrl'])) {
-    $userInfo = capb_get_json($oauth['userInfoUrl'], (string) $tokenSet['access_token']);
-    $email = capb_extract_email($userInfo);
+    $userInfoResponse = capb_get_json($oauth['userInfoUrl'], (string) $tokenSet['access_token']);
+    if (($userInfoResponse['status'] ?? 500) >= 400) {
+        capb_oauth_auth_redirect($next, 'Lecture des informations utilisateur impossible.');
+    }
+    $email = capb_extract_email($userInfoResponse['json']);
 }
 
 if ($email === '' || !capb_is_allowed_email($email)) {
@@ -68,13 +74,21 @@ function capb_post_form(string $url, array $data): array
     $context = stream_context_create([
         'http' => [
             'method' => 'POST',
-            'header' => "Content-Type: application/x-www-form-urlencoded\r\n",
+            'header' => [
+                'Content-Type: application/x-www-form-urlencoded',
+                'Accept: application/json',
+            ],
             'content' => http_build_query($data),
             'ignore_errors' => true,
+            'timeout' => 15,
+        ],
+        'ssl' => [
+            'verify_peer' => true,
+            'verify_peer_name' => true,
         ],
     ]);
 
-    $body = file_get_contents($url, false, $context);
+    $body = @file_get_contents($url, false, $context);
     $status = 500;
     foreach ($http_response_header ?? [] as $headerLine) {
         if (preg_match('#HTTP/\S+\s+(\d{3})#', $headerLine, $matches)) {
@@ -94,13 +108,32 @@ function capb_get_json(string $url, string $accessToken): array
     $context = stream_context_create([
         'http' => [
             'method' => 'GET',
-            'header' => "Authorization: Bearer {$accessToken}\r\nIgnore-Errors: true\r\n",
+            'header' => [
+                'Authorization: Bearer ' . $accessToken,
+                'Accept: application/json',
+            ],
             'ignore_errors' => true,
+            'timeout' => 15,
+        ],
+        'ssl' => [
+            'verify_peer' => true,
+            'verify_peer_name' => true,
         ],
     ]);
 
-    $body = file_get_contents($url, false, $context);
+    $body = @file_get_contents($url, false, $context);
+    $status = 500;
+    foreach ($http_response_header ?? [] as $headerLine) {
+        if (preg_match('#HTTP/\S+\s+(\d{3})#', $headerLine, $matches)) {
+            $status = (int) $matches[1];
+            break;
+        }
+    }
+
     $json = is_string($body) ? json_decode($body, true) : null;
 
-    return is_array($json) ? $json : [];
+    return [
+        'status' => $status,
+        'json' => is_array($json) ? $json : [],
+    ];
 }
