@@ -1,4 +1,3 @@
-import { readFile } from 'node:fs/promises';
 import { getSessionFromRequest, jsonResponse } from './_lib/auth.js';
 
 let cachedContacts = null;
@@ -10,7 +9,7 @@ export async function GET(request) {
   }
 
   try {
-    const contacts = await loadContacts();
+    const contacts = loadContacts();
     return jsonResponse(
       {
         ok: true,
@@ -28,13 +27,21 @@ export async function GET(request) {
   }
 }
 
-async function loadContacts() {
+function loadContacts() {
   if (cachedContacts) {
     return cachedContacts;
   }
 
-  const fileUrl = new URL('../data/contacts.json', import.meta.url);
-  const raw = await readFile(fileUrl, 'utf-8');
-  cachedContacts = JSON.parse(raw);
+  const raw = process.env.CAPB_CONTACTS_JSON;
+  if (!raw) {
+    throw new Error('CAPB_CONTACTS_JSON is not configured');
+  }
+
+  const parsed = JSON.parse(raw);
+  if (!parsed || typeof parsed !== 'object') {
+    throw new Error('CAPB_CONTACTS_JSON is invalid');
+  }
+
+  cachedContacts = parsed;
   return cachedContacts;
 }
