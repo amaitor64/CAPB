@@ -1,22 +1,14 @@
-const CACHE_NAME = "capb-urgence-v6";
-const APP_SHELL = [
-  "./",
-  "./index.html",
+const CACHE_NAME = "capb-urgence-v7";
+const STATIC_ASSETS = [
   "./manifest.webmanifest",
   "./icons/favicon.png?v=2",
   "./icons/logo capb.png",
-  "./pshtbt/",
-  "./psbt/",
-  "./psii/",
-  "./pi/",
-  "./pshtbt/procedure-statique.html",
-  "./psbt/procedure-statique.html",
-  "./psii/procedure-statique.html",
-  "./pi/procedure-statique.html"
+  "./auth/",
+  "./auth/index.html"
 ];
 
 self.addEventListener("install", event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS)));
   self.skipWaiting();
 });
 
@@ -34,8 +26,16 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  if (event.request.mode === "navigate") {
-    event.respondWith(fetch(event.request).catch(() => caches.match("./index.html")));
+  const url = new URL(event.request.url);
+  const sameOrigin = url.origin === self.location.origin;
+  const isAuthNavigation = event.request.mode === "navigate" && url.pathname.startsWith("/auth");
+
+  if (isAuthNavigation) {
+    event.respondWith(fetch(event.request).catch(() => caches.match("./auth/index.html")));
+    return;
+  }
+
+  if (!sameOrigin || event.request.mode === "navigate") {
     return;
   }
 
