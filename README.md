@@ -15,6 +15,7 @@ Chaque procedure existe en 2 formats :
 
 Le site est maintenant protege par une authentification par code a 6 chiffres envoye par email.
 L'acces est reserve aux adresses `@communaute-paysbasque.fr`.
+La session se ferme automatiquement apres `1 heure d’inactivite`.
 
 ## Structure du depot
 
@@ -43,6 +44,8 @@ L'acces est reserve aux adresses `@communaute-paysbasque.fr`.
   - cree la session securisee
 - `api/auth/session.js`
   - expose l'etat de session courant
+- `api/auth/touch.js`
+  - prolonge la session uniquement en cas d’activite utilisateur
 - `api/auth/logout.js`
   - ferme la session
 - `api/_lib/auth.js`
@@ -162,12 +165,15 @@ L'authentification actuelle suit cette architecture :
 4. le serveur envoie le code par email
 5. l'utilisateur saisit le code
 6. le serveur cree une session securisee en cookie HTTP-only signe
+7. la session expire apres 1 heure sans activite
+8. l'activite utilisateur prolonge la session via `api/auth/touch.js`
 
 Contraintes de maintenance :
 - ne pas exposer le secret de signature dans le code
 - garder les cookies de session en `HttpOnly`, `Secure`, `SameSite=Strict`
 - ne pas remettre les pages protegees dans le cache offline
 - ne pas remplacer ce mecanisme par un stockage local JavaScript pour la session
+- conserver la duree d’inactivite a `1 heure` sauf decision explicite
 
 ## Variables d'environnement Vercel
 Configurer au minimum ces variables dans le projet Vercel :
@@ -291,6 +297,7 @@ Avant de considerer une modification comme terminee, verifier :
 - le code a 6 chiffres est bien verifie
 - une session est bien creee apres verification
 - une adresse hors domaine `@communaute-paysbasque.fr` est refusee
+- la deconnexion automatique apres 1 heure d’inactivite fonctionne
 - les cards principales sont visibles et cliquables
 - les icones d'accueil restent bien positionnees
 - chaque procedure interactive avance correctement etape par etape
