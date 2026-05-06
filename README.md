@@ -42,6 +42,7 @@ La session se ferme automatiquement apres `1 heure d’inactivite`.
 - `api/auth/verify-otp.js`
   - verifie le code saisi
   - cree la session securisee
+  - peut accepter un acces de secours si les variables Vercel dediees sont activees
 - `api/auth/session.js`
   - expose l'etat de session courant
 - `api/auth/touch.js`
@@ -196,6 +197,14 @@ Variables optionnelles si le relais SMTP demande une authentification :
 - `SMTP_USER`
 - `SMTP_PASSWORD`
 - `SMTP_TLS_REJECT_UNAUTHORIZED`
+
+Variables optionnelles pour l’acces de secours :
+- `EMERGENCY_ACCESS_ENABLED`
+  - `true` pour activer le mode secours
+- `EMERGENCY_ACCESS_EMAIL`
+  - adresse CAPB autorisee pour le mode secours
+- `EMERGENCY_ACCESS_CODE`
+  - code a 6 chiffres du mode secours
 
 ## Contacts a maintenir
 Les contacts ne doivent plus etre stockes dans le depot public.
