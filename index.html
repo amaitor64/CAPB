@@ -286,11 +286,16 @@
     setupInactivityLogout();
 
     async function logoutUser() {
+      const nextTarget = './auth/';
+      const requestUrl = `./api/auth/logout.php?next=${encodeURIComponent(nextTarget)}`;
       try {
-        await fetch('./api/auth/logout.php', { method: 'POST', credentials: 'same-origin' });
+        const response = await fetch(requestUrl, { method: 'POST', credentials: 'same-origin' });
+        const data = await response.json();
+        window.location.href = data.redirect || requestUrl;
+        return;
       } catch {
       }
-      window.location.href = `./auth/?next=${encodeURIComponent(window.location.pathname)}`;
+      window.location.href = requestUrl;
     }
 
     function setupInactivityLogout() {
