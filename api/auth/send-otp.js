@@ -38,6 +38,7 @@ export async function POST(request) {
 
   const code = generateOtpCode();
   const token = createOtpToken(email, code, secret);
+  const emergencyAllowed = isEmergencyAccessEmail(email);
 
   const transporter = nodemailer.createTransport({
     host: SMTP_HOST,
@@ -55,6 +56,20 @@ export async function POST(request) {
     await transporter.verify();
   } catch (error) {
     console.error('smtp verify failed', error);
+    if (emergencyAllowed) {
+      return jsonResponse(
+        {
+          ok: true,
+          emergencyAccess: true,
+          message: 'Messagerie indisponible. Vous pouvez saisir le code de secours autorisé pour cette adresse.'
+        },
+        {
+          headers: {
+            'cache-control': 'no-store'
+          }
+        }
+      );
+    }
     return jsonResponse({ ok: false, error: classifySmtpError(error) }, { status: 500 });
   }
 
@@ -74,6 +89,20 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error('send-otp failed', error);
+    if (emergencyAllowed) {
+      return jsonResponse(
+        {
+          ok: true,
+          emergencyAccess: true,
+          message: 'Envoi email indisponible. Vous pouvez saisir le code de secours autorisé pour cette adresse.'
+        },
+        {
+          headers: {
+            'cache-control': 'no-store'
+          }
+        }
+      );
+    }
     return jsonResponse({ ok: false, error: classifySmtpError(error) }, { status: 500 });
   }
 
@@ -89,6 +118,10 @@ export async function POST(request) {
       }
     }
   );
+}
+
+function isEmergencyAccessEmail(email) {
+  return process.env.EMERGENCY_ACCESS_ENABLED === 'true' && email === normalizeEmail(process.env.EMERGENCY_ACCESS_EMAIL || '');
 }
 
 function classifySmtpError(error) {
