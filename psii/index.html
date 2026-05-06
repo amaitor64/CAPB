@@ -42,145 +42,33 @@
       <button id="backBtn" class="ghost-btn" type="button">Retour</button>
       <button id="restartBtn" class="ghost-btn" type="button">Recommencer</button>
     </div>
-    <section id="stepCard" class="step-card"></section>
+    <section id="stepCard" class="step-card"><div class="badge">…</div><h3>Chargement</h3><p>Chargement sécurisé des contacts en cours.</p></section>
   </main>
   <script>
-    const contacts = {
-      processDay: [
-        { name: 'Régine LARREDE', role: 'Responsable process', tel: '0620003139', label: '06 20 00 31 39' },
-        { name: 'Gilles LADEVESE', role: 'Adjoint responsable process', tel: '0623441509', label: '06 23 44 15 09' },
-        { name: 'Laurent MELCHIOR', role: 'Responsable régie exploitation, adjoint chef de secteur', tel: '0622727350', label: '06 22 72 73 50' }
-      ],
-      regulation: [
-        { name: 'Astreinte régulation', role: 'Agent de régulation / régulateur d’astreinte secteur 2', tel: '0620576014', label: '06 20 57 60 14' },
-        { name: 'Laurent MELCHIOR', role: 'Responsable régie exploitation, adjoint chef de secteur', tel: '0622727350', label: '06 22 72 73 50' }
-      ],
-      maintenance: [
-        { name: 'Jérôme TURNACO', role: 'Responsable maintenance', tel: '0629194522', label: '06 29 19 45 22' },
-        { name: 'Ramuntxo DABBADIE', role: 'Adjoint responsable maintenance', tel: '0620003098', label: '06 20 00 30 98' },
-        { name: 'Astreinte', role: 'Hors heures ouvrées', tel: '0620576014', label: '06 20 57 60 14' },
-        { name: 'Laurent MELCHIOR', role: 'Responsable régie exploitation, adjoint chef de secteur', tel: '0622727350', label: '06 22 72 73 50' }
-      ],
-      dsi: [
-        { name: 'DSI', role: 'Heures ouvrées', tel: '0559447788', label: '05 59 44 77 88' },
-        { name: 'Astreinte DSI', role: 'Hors heures ouvrées', tel: '0624254797', label: '06 24 25 47 97' }
-      ],
-      dqfs: [
-        { name: 'Thierry BEROT', role: 'DQFS', tel: '0559253703', label: '05 59 25 37 03' },
-        { name: 'Thierry BEROT', role: 'DQFS mobile', tel: '0622727355', label: '06 22 72 73 55' }
-      ],
-      dqfsDuty: [
-        { name: 'Thierry BEROT', role: 'Astreinte DQFS', tel: '0622727355', label: '06 22 72 73 55' }
-      ]
-    };
-
-    const steps = {
-      start: {
-        title: 'Défaut de supervision détecté',
-        text: 'Le superviseur envoie un défaut sur les téléphones paramétrés dans TOPKAPI ou les clients TOPKAPI des différents sites sont déconnectés du serveur Izarlink à Bidart.',
-        question: 'Sommes-nous en journée ?',
-        options: [
-          { label: 'Oui', next: 'alertProcessDay', tone: 'ok' },
-          { label: 'Non, soirée ou week-end', next: 'alertRegulation', tone: 'warn' }
-        ]
-      },
-      alertProcessDay: {
-        title: 'Alerter le responsable process',
-        text: 'En journée, prévenir le responsable process afin de prendre en compte le défaut de supervision et organiser la vérification.',
-        contacts: contacts.processDay,
-        options: [{ label: 'Continuer', next: 'remoteCheck', tone: 'ok' }]
-      },
-      alertRegulation: {
-        title: 'Alerter l’agent de régulation d’astreinte',
-        text: 'En soirée et le week-end, prévenir l’agent de régulation d’astreinte qui prend en charge la vérification du défaut de supervision.',
-        contacts: contacts.regulation,
-        options: [{ label: 'Continuer', next: 'remoteCheck', tone: 'ok' }]
-      },
-      remoteCheck: {
-        title: 'Confirmer la panne via l’outil de supervision',
-        text: 'Prendre si possible la main à distance sur le site de traitement via l’outil de supervision pour confirmer ou non la panne informatique.',
-        question: 'La panne informatique semble-t-elle confirmée ?',
-        options: [
-          { label: 'Oui', next: 'internetCheck', tone: 'ok' },
-          { label: 'Non', next: 'monitoringOnly', tone: 'warn' }
-        ]
-      },
-      monitoringOnly: {
-        title: 'Poursuivre la surveillance',
-        text: 'Si la panne informatique n’est pas confirmée, maintenir la surveillance et vérifier les alarmes ou défauts locaux complémentaires avant escalade.',
-        end: true
-      },
-      internetCheck: {
-        title: 'Vérifier l’accès à Internet public',
-        text: 'Vérifier que les ordinateurs du site ont accès à Internet public avant d’orienter l’escalade vers la DSI ou vers la DQFS.',
-        question: 'Les ordinateurs du site ont-ils accès à Internet public ?',
-        options: [
-          { label: 'Oui', next: 'alertDQFS', tone: 'ok' },
-          { label: 'Non', next: 'alertDSI', tone: 'danger' }
-        ]
-      },
-      alertDSI: {
-        title: 'Avertir la DSI',
-        text: 'Si le site n’a pas accès à Internet public, prévenir la DSI pour traitement de la panne réseau ou système.',
-        contacts: contacts.dsi,
-        options: [{ label: 'Continuer', next: 'confirmIndustrialFailure', tone: 'ok' }]
-      },
-      alertDQFS: {
-        title: 'Avertir la DQFS pour vérification du serveur Izarlink à Bidart',
-        text: 'Si l’accès à Internet public fonctionne, prévenir la DQFS pour une vérification du serveur de Bidart hébergé par Izarlink.',
-        contacts: contacts.dqfs,
-        options: [{ label: 'Continuer', next: 'confirmIndustrialFailure', tone: 'ok' }]
-      },
-      confirmIndustrialFailure: {
-        title: 'Panne du système d’information industrielle confirmée',
-        text: 'Après confirmation de la panne du système d’information industrielle, engager les actions d’exploitation adaptées selon l’horaire.',
-        question: 'Sommes-nous en journée ?',
-        options: [
-          { label: 'Oui', next: 'dayActions', tone: 'ok' },
-          { label: 'Non, soirée ou week-end', next: 'nightActions', tone: 'warn' }
-        ]
-      },
-      dayActions: {
-        title: 'Actions en journée',
-        text: 'Prévenir le pôle maintenance. Si nécessaire, demander aussi l’appui de la direction DQFS et de la DSI.',
-        contacts: [...contacts.maintenance, ...contacts.dqfs, ...contacts.dsi],
-        options: [{ label: 'Continuer', next: 'restoreCheck', tone: 'ok' }]
-      },
-      nightActions: {
-        title: 'Actions en soirée et week-end',
-        text: 'Prévenir l’astreinte DQFS. Si nécessaire, solliciter aussi l’appui de la direction DQFS et de la DSI.',
-        contacts: [...contacts.dqfsDuty, ...contacts.dsi],
-        options: [{ label: 'Continuer', next: 'restoreCheck', tone: 'ok' }]
-      },
-      restoreCheck: {
-        title: 'Remise en service du système d’information industrielle',
-        text: 'Après remise en service, effectuer un contrôle global des paramétrages des sites de traitement afin de revenir aux conditions normales d’exploitation.',
-        question: 'Sommes-nous en heures ouvrées ?',
-        options: [
-          { label: 'Oui', next: 'processControl', tone: 'ok' },
-          { label: 'Non', next: 'regulationControl', tone: 'warn' }
-        ]
-      },
-      processControl: {
-        title: 'Contrôle global par le pôle process',
-        text: 'Le pôle process réalise le contrôle global des paramétrages, valide le retour à la normale et confirme les conditions d’exploitation.',
-        contacts: contacts.processDay,
-        end: true
-      },
-      regulationControl: {
-        title: 'Contrôle global par le régulateur d’astreinte secteur 2',
-        text: 'Hors heures ouvrées, le régulateur d’astreinte secteur 2 réalise le contrôle global des paramétrages et confirme le retour aux conditions normales.',
-        contacts: contacts.regulation,
-        end: true
-      }
-    };
-
-    const history=[]; let current='start'; const card=document.getElementById('stepCard'); const backBtn=document.getElementById('backBtn'); const restartBtn=document.getElementById('restartBtn'); const copyLinkBtn=document.getElementById('copyLinkBtn');
+    const history=[]; let current='start'; let steps=null; const card=document.getElementById('stepCard'); const backBtn=document.getElementById('backBtn'); const restartBtn=document.getElementById('restartBtn'); const copyLinkBtn=document.getElementById('copyLinkBtn');
+    init();
+    async function init(){ try { const response = await fetch('../api/contacts', { cache: 'no-store', credentials: 'same-origin' }); const data = await response.json(); if (!response.ok || !data.ok) throw new Error(data.error || 'Chargement des contacts impossible.'); steps = createSteps(data.contacts.psii); render(); } catch (error) { card.innerHTML = `<div class="badge">!</div><h3>Contacts indisponibles</h3><p>${error.message || 'Chargement impossible.'}</p>`; } }
+    function createSteps(contacts){ return {
+      start: { title: 'Défaut de supervision détecté', text: 'Le superviseur envoie un défaut sur les téléphones paramétrés dans TOPKAPI ou les clients TOPKAPI des différents sites sont déconnectés du serveur Izarlink à Bidart.', question: 'Sommes-nous en journée ?', options: [ { label: 'Oui', next: 'alertProcessDay', tone: 'ok' }, { label: 'Non, soirée ou week-end', next: 'alertRegulation', tone: 'warn' } ] },
+      alertProcessDay: { title: 'Alerter le responsable process', text: 'En journée, prévenir le responsable process afin de prendre en compte le défaut de supervision et organiser la vérification.', contacts: contacts.processDay, options: [{ label: 'Continuer', next: 'remoteCheck', tone: 'ok' }] },
+      alertRegulation: { title: 'Alerter l’agent de régulation d’astreinte', text: 'En soirée et le week-end, prévenir l’agent de régulation d’astreinte qui prend en charge la vérification du défaut de supervision.', contacts: contacts.regulation, options: [{ label: 'Continuer', next: 'remoteCheck', tone: 'ok' }] },
+      remoteCheck: { title: 'Confirmer la panne via l’outil de supervision', text: 'Prendre si possible la main à distance sur le site de traitement via l’outil de supervision pour confirmer ou non la panne informatique.', question: 'La panne informatique semble-t-elle confirmée ?', options: [ { label: 'Oui', next: 'internetCheck', tone: 'ok' }, { label: 'Non', next: 'monitoringOnly', tone: 'warn' } ] },
+      monitoringOnly: { title: 'Poursuivre la surveillance', text: 'Si la panne informatique n’est pas confirmée, maintenir la surveillance et vérifier les alarmes ou défauts locaux complémentaires avant escalade.', end: true },
+      internetCheck: { title: 'Vérifier l’accès à Internet public', text: 'Vérifier que les ordinateurs du site ont accès à Internet public avant d’orienter l’escalade vers la DSI ou vers la DQFS.', question: 'Les ordinateurs du site ont-ils accès à Internet public ?', options: [ { label: 'Oui', next: 'alertDQFS', tone: 'ok' }, { label: 'Non', next: 'alertDSI', tone: 'danger' } ] },
+      alertDSI: { title: 'Avertir la DSI', text: 'Si le site n’a pas accès à Internet public, prévenir la DSI pour traitement de la panne réseau ou système.', contacts: contacts.dsi, options: [{ label: 'Continuer', next: 'confirmIndustrialFailure', tone: 'ok' }] },
+      alertDQFS: { title: 'Avertir la DQFS pour vérification du serveur Izarlink à Bidart', text: 'Si l’accès à Internet public fonctionne, prévenir la DQFS pour une vérification du serveur de Bidart hébergé par Izarlink.', contacts: contacts.dqfs, options: [{ label: 'Continuer', next: 'confirmIndustrialFailure', tone: 'ok' }] },
+      confirmIndustrialFailure: { title: 'Panne du système d’information industrielle confirmée', text: 'Après confirmation de la panne du système d’information industrielle, engager les actions d’exploitation adaptées selon l’horaire.', question: 'Sommes-nous en journée ?', options: [ { label: 'Oui', next: 'dayActions', tone: 'ok' }, { label: 'Non, soirée ou week-end', next: 'nightActions', tone: 'warn' } ] },
+      dayActions: { title: 'Actions en journée', text: 'Prévenir le pôle maintenance. Si nécessaire, demander aussi l’appui de la direction DQFS et de la DSI.', contacts: [...contacts.maintenance, ...contacts.dqfs, ...contacts.dsi], options: [{ label: 'Continuer', next: 'restoreCheck', tone: 'ok' }] },
+      nightActions: { title: 'Actions en soirée et week-end', text: 'Prévenir l’astreinte DQFS. Si nécessaire, solliciter aussi l’appui de la direction DQFS et de la DSI.', contacts: [...contacts.dqfsDuty, ...contacts.dsi], options: [{ label: 'Continuer', next: 'restoreCheck', tone: 'ok' }] },
+      restoreCheck: { title: 'Remise en service du système d’information industrielle', text: 'Après remise en service, effectuer un contrôle global des paramétrages des sites de traitement afin de revenir aux conditions normales d’exploitation.', question: 'Sommes-nous en heures ouvrées ?', options: [ { label: 'Oui', next: 'processControl', tone: 'ok' }, { label: 'Non', next: 'regulationControl', tone: 'warn' } ] },
+      processControl: { title: 'Contrôle global par le pôle process', text: 'Le pôle process réalise le contrôle global des paramétrages, valide le retour à la normale et confirme les conditions d’exploitation.', contacts: contacts.processDay, end: true },
+      regulationControl: { title: 'Contrôle global par le régulateur d’astreinte secteur 2', text: 'Hors heures ouvrées, le régulateur d’astreinte secteur 2 réalise le contrôle global des paramétrages et confirme le retour aux conditions normales.', contacts: contacts.regulation, end: true }
+    }; }
     function renderContacts(list){ if(!list||!list.length) return ''; return `<div class="contacts"><h4>Contacts</h4><div class="contact-grid">${list.map(contact => `<div class="contact-card"><strong>${contact.name}</strong><span>${contact.role}</span><a href="tel:${contact.tel}">📞 ${contact.label}</a></div>`).join('')}</div></div>`; }
     function render(){ const step=steps[current]; const options=step.options ? `<div class="choices">${step.options.map(option => `<button class="choice-btn ${option.tone||''}" type="button" data-next="${option.next}">${option.label}</button>`).join('')}</div>` : ''; const summary=history.length ? `<div class="summary"><h4>Suivi du parcours</h4><div class="path">${history.map(id => steps[id].title).join(' → ')}</div></div>` : ''; card.innerHTML=`<div class="badge">${history.length + 1}</div><h3>${step.title}</h3><p>${step.text}</p>${step.question ? `<div class="path"><strong>${step.question}</strong></div>` : ''}${renderContacts(step.contacts)}${options}${step.end ? '<div class="path"><strong>Fin de procédure.</strong></div>' : ''}${summary}`; card.querySelectorAll('[data-next]').forEach(btn => btn.addEventListener('click', () => { history.push(current); current=btn.dataset.next; render(); })); backBtn.disabled=history.length===0; }
     async function copyCurrentLink(){ const link=window.location.href; const original=copyLinkBtn.textContent; try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(link); } else { const input=document.createElement('textarea'); input.value=link; document.body.appendChild(input); input.select(); document.execCommand('copy'); input.remove(); } copyLinkBtn.textContent='Lien copié'; setTimeout(() => { copyLinkBtn.textContent=original; }, 1600); } catch (error) { copyLinkBtn.textContent='Copie impossible'; setTimeout(() => { copyLinkBtn.textContent=original; }, 1600); } }
     copyLinkBtn.addEventListener('click', copyCurrentLink);
-    backBtn.addEventListener('click', () => { if(!history.length) return; current=history.pop(); render(); }); restartBtn.addEventListener('click', () => { history.length=0; current='start'; render(); }); render();
+    backBtn.addEventListener('click', () => { if(!history.length || !steps) return; current=history.pop(); render(); }); restartBtn.addEventListener('click', () => { if(!steps) return; history.length=0; current='start'; render(); });
     setupInactivityLogout();
     function setupInactivityLogout() { const inactivityMs = 60 * 60 * 1000; const touchIntervalMs = 5 * 60 * 1000; const events = ['click', 'keydown', 'pointerdown', 'scroll', 'touchstart']; let timeoutId = null; let lastTouchAt = 0; resetTimer(); events.forEach(eventName => window.addEventListener(eventName, handleActivity, { passive: true })); document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { handleActivity(); } }); function handleActivity() { resetTimer(); const now = Date.now(); if (now - lastTouchAt < touchIntervalMs) return; lastTouchAt = now; fetch('../api/auth/touch', { method: 'POST', credentials: 'same-origin' }).catch(() => {}); } function resetTimer() { clearTimeout(timeoutId); timeoutId = window.setTimeout(forceLogout, inactivityMs); } async function forceLogout() { try { await fetch('../api/auth/logout', { method: 'POST', credentials: 'same-origin' }); } catch {} window.location.href = `../auth/?next=${encodeURIComponent(window.location.pathname)}`; } }
   </script>
