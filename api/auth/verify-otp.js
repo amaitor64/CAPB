@@ -61,16 +61,3 @@ export async function POST(request) {
 
   return jsonResponse({ ok: true, redirectTo: nextPath }, { headers });
 }
-
-export default async function handler(request) {
-  if (request.method !== 'POST') {
-    return jsonResponse({ ok: false, error: 'Méthode non autorisée.' }, { status: 405 });
-  }
-
-  try {
-    return await POST(request);
-  } catch (error) {
-    console.error('verify-otp failed', error);
-    return jsonResponse({ ok: false, error: 'Vérification impossible.' }, { status: 500 });
-  }
-}
