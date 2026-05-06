@@ -1,9 +1,7 @@
 import crypto from 'node:crypto';
 
 export const ALLOWED_EMAIL_DOMAIN = '@communaute-paysbasque.fr';
-export const OTP_COOKIE_NAME = 'capb_pending_otp';
 export const SESSION_COOKIE_NAME = 'capb_session';
-export const OTP_TTL_SECONDS = 15 * 60;
 export const SESSION_TTL_SECONDS = 60 * 60;
 export const OAUTH_STATE_TTL_SECONDS = 10 * 60;
 
@@ -21,10 +19,6 @@ export function normalizeEmail(value = '') {
 
 export function isAllowedEmail(email) {
   return normalizeEmail(email).endsWith(ALLOWED_EMAIL_DOMAIN);
-}
-
-export function generateOtpCode() {
-  return String(crypto.randomInt(0, 1000000)).padStart(6, '0');
 }
 
 export function signToken(payload, secret) {
@@ -56,18 +50,6 @@ export function verifyToken(token, secret) {
   } catch {
     return null;
   }
-}
-
-export function createOtpToken(email, code, secret) {
-  const now = Math.floor(Date.now() / 1000);
-  return signToken({
-    type: 'otp',
-    email,
-    code,
-    iat: now,
-    exp: now + OTP_TTL_SECONDS,
-    nonce: crypto.randomBytes(8).toString('hex')
-  }, secret);
 }
 
 export function createSessionToken(email, secret) {
