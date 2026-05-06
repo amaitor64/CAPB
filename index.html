@@ -48,6 +48,25 @@
       margin: 0 auto;
     }
 
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 14px;
+    }
+
+    .ghost-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+    }
+
     .logo-wrap {
       display: flex;
       justify-content: center;
@@ -212,6 +231,10 @@
 </head>
 <body>
   <main class="shell">
+    <nav class="topbar">
+      <button id="logoutBtn" class="ghost-btn" type="button">Déconnexion</button>
+    </nav>
+
     <div class="logo-wrap">
       <img class="site-logo" src="icons/logo capb.png" alt="CAPB">
     </div>
@@ -257,7 +280,18 @@
     </section>
   </main>
   <script>
+    const logoutBtn = document.getElementById('logoutBtn');
+    logoutBtn.addEventListener('click', logoutUser);
+
     setupInactivityLogout();
+
+    async function logoutUser() {
+      try {
+        await fetch('./api/auth/logout.php', { method: 'POST', credentials: 'same-origin' });
+      } catch {
+      }
+      window.location.href = `./auth/?next=${encodeURIComponent(window.location.pathname)}`;
+    }
 
     function setupInactivityLogout() {
       const inactivityMs = 60 * 60 * 1000;
@@ -281,20 +315,12 @@
           return;
         }
         lastTouchAt = now;
-        fetch('./api/auth/touch', { method: 'POST', credentials: 'same-origin' }).catch(() => {});
+        fetch('./api/auth/touch.php', { method: 'POST', credentials: 'same-origin' }).catch(() => {});
       }
 
       function resetTimer() {
         clearTimeout(timeoutId);
-        timeoutId = window.setTimeout(forceLogout, inactivityMs);
-      }
-
-      async function forceLogout() {
-        try {
-          await fetch('./api/auth/logout', { method: 'POST', credentials: 'same-origin' });
-        } catch {
-        }
-        window.location.href = './auth/?next=/';
+        timeoutId = window.setTimeout(logoutUser, inactivityMs);
       }
     }
   </script>
