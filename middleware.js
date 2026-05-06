@@ -1,3 +1,4 @@
+import { next } from '@vercel/functions';
 import { getSessionFromRequest, sanitizeNextPath } from './api/_lib/auth.js';
 
 const PUBLIC_PREFIXES = ['/auth/', '/api/auth/', '/icons/'];
@@ -13,12 +14,12 @@ export default function middleware(request) {
   const pathname = url.pathname;
 
   if (PUBLIC_EXACT.includes(pathname) || PUBLIC_PREFIXES.some(prefix => pathname.startsWith(prefix))) {
-    return fetch(request);
+    return next();
   }
 
   const session = getSessionFromRequest(request);
   if (session) {
-    return fetch(request);
+    return next();
   }
 
   if (pathname.startsWith('/api/')) {
@@ -32,11 +33,5 @@ export default function middleware(request) {
   const redirectUrl = new URL('/auth/', url.origin);
   redirectUrl.searchParams.set('next', nextPath);
 
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: redirectUrl.toString(),
-      'cache-control': 'no-store'
-    }
-  });
+  return Response.redirect(redirectUrl, 302);
 }
