@@ -51,19 +51,24 @@ export async function POST(request) {
     }
   });
 
-  await transporter.sendMail({
-    from: SMTP_FROM,
-    to: email,
-    subject: 'Code d’accès - Procédures d’urgence CAPB',
-    text: [
-      'Bonjour,',
-      '',
-      `Votre code d’accès CAPB est : ${code}`,
-      '',
-      'Ce code est valable 10 minutes.',
-      'Si vous n’êtes pas à l’origine de cette demande, ignorez cet email.'
-    ].join('\n')
-  });
+  try {
+    await transporter.sendMail({
+      from: SMTP_FROM,
+      to: email,
+      subject: 'Code d’accès - Procédures d’urgence CAPB',
+      text: [
+        'Bonjour,',
+        '',
+        `Votre code d’accès CAPB est : ${code}`,
+        '',
+        'Ce code est valable 10 minutes.',
+        'Si vous n’êtes pas à l’origine de cette demande, ignorez cet email.'
+      ].join('\n')
+    });
+  } catch (error) {
+    console.error('send-otp failed', error);
+    return jsonResponse({ ok: false, error: 'Envoi du code impossible.' }, { status: 500 });
+  }
 
   return jsonResponse(
     { ok: true, message: 'Code envoyé par email.' },
@@ -77,17 +82,4 @@ export async function POST(request) {
       }
     }
   );
-}
-
-export default async function handler(request) {
-  if (request.method !== 'POST') {
-    return jsonResponse({ ok: false, error: 'Méthode non autorisée.' }, { status: 405 });
-  }
-
-  try {
-    return await POST(request);
-  } catch (error) {
-    console.error('send-otp failed', error);
-    return jsonResponse({ ok: false, error: 'Envoi du code impossible.' }, { status: 500 });
-  }
 }
