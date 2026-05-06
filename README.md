@@ -196,35 +196,35 @@ Les contacts sont aujourd'hui dupliques dans les pages interactives et statiques
 Quand un numero ou un role change, il faut mettre a jour toutes les occurrences concernees.
 
 ### ENEDIS
-- Depannage ENEDIS : `09 72 67 50 64`
+- Depannage ENEDIS : `numero masque`
 - Lien : `https://www.enedis.fr/panne-et-interruption`
 
 ### Maintenance
-- Jerome TURNACO - Responsable maintenance : `06 29 19 45 22`
-- Ramuntxo DABBADIE - Adjoint responsable maintenance : `06 20 00 30 98`
-- Astreinte - Hors heures ouvrees : `06 20 57 60 14`
-- Laurent MELCHIOR - Responsable regie exploitation, adjoint chef de secteur : `06 22 72 73 50`
+- Jerome TURNACO - Responsable maintenance : `numero masque`
+- Ramuntxo DABBADIE - Adjoint responsable maintenance : `numero masque`
+- Astreinte - Hors heures ouvrees : `numero masque`
+- Laurent MELCHIOR - Responsable regie exploitation, adjoint chef de secteur : `numero masque`
 
 ### Process
-- Regine LARREDE - Responsable process : `06 20 00 31 39`
-- Gilles LADEVESE - Adjoint responsable process : `06 23 44 15 09`
-- Laurent MELCHIOR - Responsable regie exploitation, adjoint chef de secteur : `06 22 72 73 50`
+- Regine LARREDE - Responsable process : `numero masque`
+- Gilles LADEVESE - Adjoint responsable process : `numero masque`
+- Laurent MELCHIOR - Responsable regie exploitation, adjoint chef de secteur : `numero masque`
 
 ### Regulation d’astreinte
-- Regulation d’astreinte secteur 2 : `06 20 57 60 14`
+- Regulation d’astreinte secteur 2 : `numero masque`
 
 ### DSI
-- DSI heures ouvrees : `05 59 44 77 88`
-- Astreinte DSI : `06 24 25 47 97`
+- DSI heures ouvrees : `numero masque`
+- Astreinte DSI : `numero masque`
 
 ### DQFS
-- Thierry BEROT - DQFS : `05 59 25 37 03`
-- Thierry BEROT - DQFS mobile : `06 22 72 73 55`
+- Thierry BEROT - DQFS : `numero masque`
+- Thierry BEROT - DQFS mobile : `numero masque`
 - Astreinte DQFS : Thierry BEROT
 
 ### Secours incendie
-- Pompiers : `18`
-- Secours d'urgence europeen : `112`
+- Pompiers : `numero masque`
+- Secours d'urgence europeen : `numero masque`
 
 ### Points d'attention
 - Pierre SOUBLES ne fait pas partie des contacts maintenance.
@@ -232,7 +232,7 @@ Quand un numero ou un role change, il faut mettre a jour toutes les occurrences 
 - Les secours incendie et ENEDIS doivent rester dans des cards dediees, sans melange avec les contacts metier.
 - Pour la procedure systeme d’information industrielle, utiliser la DSI si le site n’a plus acces a Internet public, sinon orienter la verification vers la DQFS / serveur Izarlink a Bidart.
 - Pour cette meme procedure :
-  - regulation d’astreinte = `06 20 57 60 14`
+  - regulation d’astreinte = `numero masque`
   - astreinte DQFS = Thierry BEROT
 
 ## Ajouter une nouvelle consigne
