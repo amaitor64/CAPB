@@ -3,9 +3,10 @@
 ## Objectif
 Ce depot contient le site statique des consignes d'urgence CAPB.
 
-Le site donne un acces rapide a 3 procedures :
+Le site donne un acces rapide a 4 procedures :
 - coupure de courant site avec poste HT / BT
 - coupure de courant site BT
+- panne sur le systeme d’information industrielle et de supervision
 - incendie
 
 Chaque procedure existe en 2 formats :
@@ -27,6 +28,8 @@ Chaque procedure existe en 2 formats :
   - procedure interactive coupure de courant site avec poste HT / BT
 - `psbt/index.html`
   - procedure interactive coupure de courant site BT
+- `psii/index.html`
+  - procedure interactive panne sur le systeme d’information industrielle et de supervision
 - `pi/index.html`
   - procedure interactive incendie
 
@@ -43,6 +46,7 @@ Chaque page interactive contient :
 ### Procedures statiques
 - `pshtbt/procedure-statique.html`
 - `psbt/procedure-statique.html`
+- `psii/procedure-statique.html`
 - `pi/procedure-statique.html`
 
 Ces pages servent a :
@@ -68,6 +72,7 @@ Ne pas casser ces routes :
 - `/`
 - `/pshtbt/`
 - `/psbt/`
+- `/psii/`
 - `/pi/`
 
 ## Regles de fonctionnement
@@ -109,6 +114,7 @@ Les versions statiques doivent :
 A conserver :
 - vert pour HT / BT
 - bleu / jaune pour BT
+- ambre pour la procedure systeme d’information industrielle
 - rouge pour incendie
 - logo CAPB centre en haut
 - favicon sur les cards de consigne de l'accueil
@@ -141,6 +147,14 @@ Quand un numero ou un role change, il faut mettre a jour toutes les occurrences 
 - Astreinte - Hors heures ouvrees : `06 20 57 60 14`
 - Laurent MELCHIOR - Responsable regie exploitation, adjoint chef de secteur : `06 22 72 73 50`
 
+### DSI
+- DSI heures ouvrees : `05 59 44 77 88`
+- Astreinte DSI : `06 24 25 47 97`
+
+### DQFS
+- Thierry BEROT - DQFS : `05 59 25 37 03`
+- Thierry BEROT - DQFS mobile : `06 22 72 73 55`
+
 ### Secours incendie
 - Pompiers : `18`
 - Secours d'urgence europeen : `112`
@@ -149,6 +163,7 @@ Quand un numero ou un role change, il faut mettre a jour toutes les occurrences 
 - Pierre SOUBLES ne fait pas partie des contacts maintenance.
 - Laurent MELCHIOR doit apparaitre dans les cards d'alerte metier, sauf pour ENEDIS et les secours incendie.
 - Les secours incendie et ENEDIS doivent rester dans des cards dediees, sans melange avec les contacts metier.
+- Pour la procedure systeme d’information industrielle, utiliser la DSI si le site n’a plus acces a Internet public, sinon orienter la verification vers la DQFS / serveur Izarlink a Bidart.
 
 ## Ajouter une nouvelle consigne
 Pour ajouter une nouvelle consigne, faire systematiquement les 5 blocs suivants.
@@ -208,7 +223,7 @@ Quand une procedure change :
 ## Check-list avant validation
 Avant de considerer une modification comme terminee, verifier :
 - l'accueil s'affiche correctement
-- les 3 cards principales sont visibles et cliquables
+- les cards principales sont visibles et cliquables
 - les icones d'accueil restent bien positionnees
 - chaque procedure interactive avance correctement etape par etape
 - `Retour` fonctionne
