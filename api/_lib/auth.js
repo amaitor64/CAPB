@@ -127,16 +127,26 @@ export function clearCookie(name) {
 }
 
 export function getSessionFromRequest(request) {
-  const secret = getAuthSecret();
-  const cookies = parseCookies(request.headers.get('cookie') || '');
-  const token = cookies[SESSION_COOKIE_NAME];
-  const payload = verifyToken(token, secret);
-
-  if (!payload || payload.type !== 'session' || payload.exp <= Math.floor(Date.now() / 1000)) {
+  let secret;
+  try {
+    secret = getAuthSecret();
+  } catch {
     return null;
   }
 
-  return payload;
+  try {
+    const cookies = parseCookies(request.headers.get('cookie') || '');
+    const token = cookies[SESSION_COOKIE_NAME];
+    const payload = verifyToken(token, secret);
+
+    if (!payload || payload.type !== 'session' || payload.exp <= Math.floor(Date.now() / 1000)) {
+      return null;
+    }
+
+    return payload;
+  } catch {
+    return null;
+  }
 }
 
 export function sanitizeNextPath(nextValue) {
