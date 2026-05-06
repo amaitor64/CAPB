@@ -68,7 +68,7 @@ export async function POST(request) {
         '',
         `Votre code d’accès CAPB est : ${code}`,
         '',
-        'Ce code est valable 10 minutes.',
+        'Ce code est valable 15 minutes.',
         'Si vous n’êtes pas à l’origine de cette demande, ignorez cet email.'
       ].join('\n')
     });
