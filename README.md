@@ -50,6 +50,9 @@ La session se ferme automatiquement apres `1 heure d’inactivite`.
   - ferme la session
 - `api/_lib/auth.js`
   - fonctions partagees : signature, cookies, tokens, validation email
+- `api/contacts.js`
+  - expose les contacts metier apres authentification
+  - lit les donnees depuis la variable Vercel `CAPB_CONTACTS_JSON`
 
 ### Procedures interactives
 - `pshtbt/index.html`
@@ -185,6 +188,9 @@ Configurer au minimum ces variables dans le projet Vercel :
   - valeur recommandee : `25`
 - `SMTP_FROM`
   - valeur recommandee : `no-reply@procedureurgence-capb.fr`
+- `CAPB_CONTACTS_JSON`
+  - JSON complet des contacts metier charge par `api/contacts.js`
+  - a maintenir cote Vercel, pas dans le depot
 
 Variables optionnelles si le relais SMTP demande une authentification :
 - `SMTP_USER`
@@ -192,39 +198,58 @@ Variables optionnelles si le relais SMTP demande une authentification :
 - `SMTP_TLS_REJECT_UNAUTHORIZED`
 
 ## Contacts a maintenir
-Les contacts sont aujourd'hui dupliques dans les pages interactives et statiques.
-Quand un numero ou un role change, il faut mettre a jour toutes les occurrences concernees.
+Les contacts ne doivent plus etre stockes dans le depot public.
+La source de verite est maintenant la variable Vercel `CAPB_CONTACTS_JSON`.
 
-### ENEDIS
-- Depannage ENEDIS : `numero masque`
-- Lien : `https://www.enedis.fr/panne-et-interruption`
+Structure attendue :
+```json
+{
+  "pshtbt": {
+    "enedis": [],
+    "maintenance": [],
+    "process": []
+  },
+  "psbt": {
+    "enedis": [],
+    "maintenance": [],
+    "process": []
+  },
+  "psii": {
+    "processDay": [],
+    "regulation": [],
+    "maintenance": [],
+    "dsi": [],
+    "dqfs": [],
+    "dqfsDuty": []
+  },
+  "pi": {
+    "emergency": [],
+    "siteAlert": []
+  }
+}
+```
 
-### Maintenance
-- Jerome TURNACO - Responsable maintenance : `numero masque`
-- Ramuntxo DABBADIE - Adjoint responsable maintenance : `numero masque`
-- Astreinte - Hors heures ouvrees : `numero masque`
-- Laurent MELCHIOR - Responsable regie exploitation, adjoint chef de secteur : `numero masque`
+Format d'un contact :
+```json
+{
+  "name": "Nom Prenom",
+  "role": "Fonction",
+  "tel": "0612345678",
+  "label": "06 12 34 56 78"
+}
+```
 
-### Process
-- Regine LARREDE - Responsable process : `numero masque`
-- Gilles LADEVESE - Adjoint responsable process : `numero masque`
-- Laurent MELCHIOR - Responsable regie exploitation, adjoint chef de secteur : `numero masque`
-
-### Regulation d’astreinte
-- Regulation d’astreinte secteur 2 : `numero masque`
-
-### DSI
-- DSI heures ouvrees : `numero masque`
-- Astreinte DSI : `numero masque`
-
-### DQFS
-- Thierry BEROT - DQFS : `numero masque`
-- Thierry BEROT - DQFS mobile : `numero masque`
-- Astreinte DQFS : Thierry BEROT
-
-### Secours incendie
-- Pompiers : `numero masque`
-- Secours d'urgence europeen : `numero masque`
+Format ENEDIS avec lien web :
+```json
+{
+  "name": "Depannage ENEDIS",
+  "role": "Site panne et interruption",
+  "tel": "0972675064",
+  "label": "09 72 67 50 64",
+  "link": "https://www.enedis.fr/panne-et-interruption",
+  "linkLabel": "Ouvrir le site ENEDIS"
+}
+```
 
 ### Points d'attention
 - Pierre SOUBLES ne fait pas partie des contacts maintenance.
@@ -280,6 +305,12 @@ Modifier `manifest.webmanifest` seulement si :
 - l'identite de l'application change
 - les icones changent
 
+### 6. Mettre a jour les contacts si necessaire
+Si la nouvelle consigne affiche des contacts :
+- ajouter la nouvelle structure dans `CAPB_CONTACTS_JSON`
+- conserver les memes champs (`name`, `role`, `tel`, `label`)
+- ne pas remettre de numeros en dur dans le HTML public
+
 ## Modifier une procedure existante
 Quand une procedure change :
 - ne pas casser sa route
@@ -288,6 +319,7 @@ Quand une procedure change :
 - verifier les contacts associes a chaque branche
 - verifier que les liens `tel:` sont corrects
 - verifier les liens externes
+- si les contacts changent, mettre a jour `CAPB_CONTACTS_JSON`
 
 ## Check-list avant validation
 Avant de considerer une modification comme terminee, verifier :
@@ -309,6 +341,7 @@ Avant de considerer une modification comme terminee, verifier :
 - l'impression A4 reste lisible
 - le service worker ne met pas les pages protegees en cache
 - le manifest reste coherent avec le site reel
+- `CAPB_CONTACTS_JSON` est configuree sur Vercel
 
 ## Mise en ligne Vercel
 Le site est maintenant prevu pour Vercel avec pages statiques + fonctions `api/`.
@@ -317,8 +350,9 @@ A faire cote projet Vercel :
 1. connecter le depot GitHub au projet Vercel
 2. definir les variables d'environnement listees plus haut
 3. verifier que le relais SMTP accepte les emails emis depuis Vercel
-4. redeployer en production
-5. tester `/auth/`, puis l'acces a `/`, `/pshtbt/`, `/psbt/`, `/psii/` et `/pi/`
+4. renseigner `CAPB_CONTACTS_JSON`
+5. redeployer en production
+6. tester `/auth/`, puis l'acces a `/`, `/pshtbt/`, `/psbt/`, `/psii/` et `/pi/`
 
 ## Philosophie de maintenance
 Le site doit rester :
