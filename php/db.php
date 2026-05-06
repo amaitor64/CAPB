@@ -7,40 +7,34 @@ function capb_db_driver(): string
     return strtolower(trim((string) getenv('CAPB_DB_DRIVER')) ?: 'mysql');
 }
 
-function capb_db_dsn(): string
+function capb_db_host(): string
 {
-    $dsn = trim((string) getenv('CAPB_DB_DSN'));
-    if ($dsn !== '') {
-        return $dsn;
-    }
-
-    $driver = capb_db_driver();
-    if ($driver === 'mysql') {
-        $host = trim((string) getenv('CAPB_DB_HOST')) ?: '192.168.15.253';
-        $port = (int) (getenv('CAPB_DB_PORT') ?: '3306');
-        $database = trim((string) getenv('CAPB_DB_NAME')) ?: 'exploitation';
-        $charset = trim((string) getenv('CAPB_DB_CHARSET')) ?: 'utf8mb4';
-        return sprintf('mysql:host=%s;port=%d;dbname=%s;charset=%s', $host, $port, $database, $charset);
-    }
-
-    $path = trim((string) getenv('CAPB_DB_PATH'));
-    if ($path === '') {
-        $path = dirname(__DIR__) . '/var/capb.sqlite';
-    }
-
-    return 'sqlite:' . $path;
+    return trim((string) getenv('CAPB_DB_HOST')) ?: '192.168.15.253';
 }
 
-function capb_db_user(): ?string
+function capb_db_port(): int
 {
-    $value = getenv('CAPB_DB_USER');
-    return $value === false || $value === '' ? null : $value;
+    return (int) (getenv('CAPB_DB_PORT') ?: '3306');
 }
 
-function capb_db_password(): ?string
+function capb_db_name(): string
 {
-    $value = getenv('CAPB_DB_PASSWORD');
-    return $value === false || $value === '' ? null : $value;
+    return trim((string) getenv('CAPB_DB_NAME')) ?: 'exploitation';
+}
+
+function capb_db_charset(): string
+{
+    return trim((string) getenv('CAPB_DB_CHARSET')) ?: 'utf8mb4';
+}
+
+function capb_db_user(): string
+{
+    return trim((string) getenv('CAPB_DB_USER'));
+}
+
+function capb_db_password(): string
+{
+    return (string) getenv('CAPB_DB_PASSWORD');
 }
 
 function capb_contacts_table(): string
@@ -52,49 +46,48 @@ function capb_contacts_table(): string
     return $table;
 }
 
-function capb_db(): PDO
+function capb_db(): mysqli
 {
-    static $pdo = null;
-    if ($pdo instanceof PDO) {
-        return $pdo;
+    static $mysqli = null;
+    if ($mysqli instanceof mysqli) {
+        return $mysqli;
     }
 
-    $dsn = capb_db_dsn();
-    $user = capb_db_user();
-    $password = capb_db_password();
-
-    if (str_starts_with($dsn, 'sqlite:')) {
-        $path = substr($dsn, 7);
-        $directory = dirname($path);
-        if ($directory !== '' && $directory !== '.' && !is_dir($directory)) {
-            mkdir($directory, 0775, true);
-        }
+    if (capb_db_driver() !== 'mysql') {
+        throw new RuntimeException('Only MySQL / mysqli is supported on this host.');
     }
 
-    $pdo = new PDO($dsn, $user, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
-
-    if (str_starts_with($dsn, 'sqlite:')) {
-        $pdo->exec('PRAGMA foreign_keys = ON');
+    if (!extension_loaded('mysqli')) {
+        throw new RuntimeException('The mysqli extension is not available.');
     }
 
-    return $pdo;
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+    $mysqli = new mysqli(
+        capb_db_host(),
+        capb_db_user(),
+        capb_db_password(),
+        capb_db_name(),
+        capb_db_port()
+    );
+
+    $mysqli->set_charset(capb_db_charset());
+
+    return $mysqli;
 }
 
 function capb_fetch_contacts_tree(): array
 {
     $table = capb_contacts_table();
-    $statement = capb_db()->query(
-        "SELECT procedure_key, group_key, name, role, tel, label, link, link_label
-         FROM {$table}
-         WHERE is_active = 1
-         ORDER BY procedure_key, group_key, sort_order, id"
-    );
+    $sql = "SELECT procedure_key, group_key, name, role, tel, label, link, link_label
+            FROM {$table}
+            WHERE is_active = 1
+            ORDER BY procedure_key, group_key, sort_order, id";
 
+    $result = capb_db()->query($sql);
     $contacts = [];
-    foreach ($statement->fetchAll() as $row) {
+
+    while ($row = $result->fetch_assoc()) {
         $procedureKey = (string) $row['procedure_key'];
         $groupKey = (string) $row['group_key'];
         $contacts[$procedureKey] ??= [];
@@ -116,6 +109,8 @@ function capb_fetch_contacts_tree(): array
 
         $contacts[$procedureKey][$groupKey][] = $item;
     }
+
+    $result->free();
 
     return $contacts;
 }
