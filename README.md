@@ -27,30 +27,36 @@ La session se ferme automatiquement apres `1 heure d’inactivite`.
   - logo CAPB centre en haut
   - favicon visible sur chaque card de consigne en haut a droite
 
-### Authentification Vercel
+### Authentification
 - `auth/index.html`
   - page de connexion SSO / OAuth2
-- `middleware.js`
-  - protege les pages du site
-  - redirige vers `/auth/` si la session n'est pas presente
-- `api/auth/oauth-start.js`
+- `php/auth.php`
+  - fonctions partagees PHP : signature, cookies, session, validation email, helpers OAuth2
+- `api/auth/oauth-start.php`
   - construit la redirection OAuth2
   - signe l'etat de retour
-- `api/auth/oauth-callback.js`
+- `api/auth/oauth-callback.php`
   - recupere le code OAuth2
   - echange le code contre un token
   - extrait l'email autorise et cree la session
-- `api/auth/session.js`
+- `api/auth/session.php`
   - expose l'etat de session courant
-- `api/auth/touch.js`
+- `api/auth/touch.php`
   - prolonge la session uniquement en cas d’activite utilisateur
-- `api/auth/logout.js`
+- `api/auth/logout.php`
   - ferme la session
-- `api/_lib/auth.js`
-  - fonctions partagees : signature, cookies, session, validation email, helpers OAuth2
-- `api/contacts.js`
+
+### Base de donnees contacts
+- `php/db.php`
+  - connexion base de donnees
+  - lecture des contacts metier
+- `api/contacts.php`
   - expose les contacts metier apres authentification
-  - lit les donnees depuis la variable Vercel `CAPB_CONTACTS_JSON`
+  - lit les donnees depuis la base MySQL
+- `database/schema.mysql.sql`
+  - schema MySQL 8 de la table `contacts_secu`
+- `database/schema.sql`
+  - schema SQLite de secours pour un usage local si necessaire
 
 ### Procedures interactives
 - `pshtbt/index.html`
@@ -78,24 +84,13 @@ Chaque page interactive contient :
 - `psii/procedure-statique.html`
 - `pi/procedure-statique.html`
 
-Ces pages servent a :
-- telecharger la procedure
-- imprimer la procedure en A4
-- conserver une version lineaire et lisible
-
 ### Assets communs
 - `icons/favicon.png`
-  - favicon du site
-  - utilise aussi comme icone visuelle sur les cards de l'accueil
 - `icons/logo capb.png`
-  - logo CAPB affiche en haut des pages
 
 ### PWA / offline
 - `manifest.webmanifest`
-  - configuration de l'application web
 - `service-worker.js`
-  - cache offline limite aux assets publics
-  - ne doit plus mettre en cache les pages protegees
 
 ## URLs a conserver
 Ne pas casser ces routes :
@@ -113,8 +108,6 @@ L'accueil doit rester simple :
 - titre principal
 - cards de consignes
 - acces direct aux procedures
-
-Chaque nouvelle consigne ajoutee au site doit apparaitre ici.
 
 ### 2. Procedure interactive
 Chaque procedure interactive doit rester un vrai logigramme pas-a-pas :
@@ -134,230 +127,106 @@ Pour les contacts :
 - utiliser `🔗` pour un lien web
 - utiliser `📞` pour un numero de telephone
 
-### 4. Versions statiques
-Les versions statiques doivent :
-- reprendre la meme logique metier
-- rester lisibles sans interaction
-- conserver la coherence graphique du site
-- rester propres a l'impression A4
-
-### 5. Identite visuelle
-A conserver :
-- vert pour HT / BT
-- bleu / jaune pour BT
-- ambre pour la procedure systeme d’information industrielle
-- rouge pour incendie
-- logo CAPB centre en haut
-- favicon sur les cards de consigne de l'accueil
-
-Taille actuelle du favicon sur les cards d'accueil :
-- desktop : `110x110`
-- mobile : `75x75`
-
-### 6. Mobile first
-Toute modification doit rester lisible sur mobile.
-Ne pas ajouter de mise en page qui casse les cards, les boutons ou les textes sur petit ecran.
-
-### 7. Authentification
-L'authentification actuelle suit cette architecture :
-1. l'utilisateur clique sur le bouton SSO
-2. `api/auth/oauth-start.js` construit l'URL du fournisseur OAuth2
-3. un etat signe est transmis pour proteger le retour
-4. le fournisseur renvoie un `code` sur `api/auth/oauth-callback.js`
-5. le serveur echange ce code contre un token OAuth2
-6. l'email du compte est extrait depuis le token ou le profil utilisateur
-7. seuls les comptes `@communaute-paysbasque.fr` ouvrent une session
-8. la session expire apres 1 heure sans activite
-9. l'activite utilisateur prolonge la session via `api/auth/touch.js`
-
-Contraintes de maintenance :
-- ne pas exposer le secret de signature dans le code
-- garder les cookies de session en `HttpOnly`, `Secure`, `SameSite=Strict`
-- ne pas remettre les pages protegees dans le cache offline
-- ne pas remplacer ce mecanisme par un stockage local JavaScript pour la session
-- conserver la duree d’inactivite a `1 heure` sauf decision explicite
-- conserver le controle du domaine `@communaute-paysbasque.fr` en OAuth2
-
-## Variables d'environnement Vercel
-Configurer au minimum ces variables dans le projet Vercel :
+## Variables d'environnement serveur
+Configurer au minimum ces variables :
 - `AUTH_SECRET`
-  - secret aleatoire fort utilise pour signer l'etat OAuth2 et la session
-- `CAPB_CONTACTS_JSON`
-  - JSON complet des contacts metier charge par `api/contacts.js`
-  - a maintenir cote Vercel, pas dans le depot
-- `OAUTH2_ENABLED`
-  - `true` pour activer le bouton SSO
+- `OAUTH2_ENABLED=true`
 - `OAUTH2_CLIENT_ID`
 - `OAUTH2_CLIENT_SECRET`
-- `OAUTH2_AUTHORIZE_URL`
-- `OAUTH2_TOKEN_URL`
-
-Variables optionnelles pour OAuth2 / SSO :
-- `OAUTH2_PROVIDER_NAME`
-  - libelle du fournisseur, par exemple `Microsoft 365 CAPB`
-- `OAUTH2_USERINFO_URL`
-  - optionnelle mais recommandee
-- `OAUTH2_SCOPE`
-  - par defaut : `openid profile email`
 - `OAUTH2_REDIRECT_URI`
-  - optionnelle, sinon valeur par defaut : `https://<domaine>/api/auth/oauth-callback`
+- `APP_BASE_PATH`
 
-## Contacts a maintenir
-Les contacts ne doivent plus etre stockes dans le depot public.
-La source de verite est maintenant la variable Vercel `CAPB_CONTACTS_JSON`.
+## Variables d'environnement base de donnees
+Le site est maintenant prevu pour MySQL 8.
 
-Structure attendue :
-```json
-{
-  "pshtbt": {
-    "enedis": [],
-    "maintenance": [],
-    "process": []
-  },
-  "psbt": {
-    "enedis": [],
-    "maintenance": [],
-    "process": []
-  },
-  "psii": {
-    "processDay": [],
-    "regulation": [],
-    "maintenance": [],
-    "dsi": [],
-    "dqfs": [],
-    "dqfsDuty": []
-  },
-  "pi": {
-    "emergency": [],
-    "siteAlert": []
-  }
-}
+Variables supportees par `php/db.php` :
+- `CAPB_DB_DRIVER`
+  - par defaut : `mysql`
+- `CAPB_DB_HOST`
+  - par defaut : `192.168.15.253`
+- `CAPB_DB_PORT`
+  - par defaut : `3306`
+- `CAPB_DB_NAME`
+  - par defaut : `exploitation`
+- `CAPB_DB_USER`
+- `CAPB_DB_PASSWORD`
+- `CAPB_DB_CHARSET`
+  - par defaut : `utf8mb4`
+- `CAPB_DB_CONTACTS_TABLE`
+  - par defaut : `contacts_secu`
+
+Option avancee :
+- `CAPB_DB_DSN`
+  - si definie, remplace la construction automatique de la connexion
+
+## Parametrage Portainer attendu
+Exemple de variables a poser dans le conteneur :
+
+```env
+APP_BASE_PATH=/secu
+AUTH_SECRET=remplacer-par-une-cle-longue
+OAUTH2_ENABLED=true
+OAUTH2_CLIENT_ID=situation-urgence
+OAUTH2_CLIENT_SECRET=remplacer-par-le-secret-oidc
+OAUTH2_REDIRECT_URI=https://elmn.communaute-paysbasque.fr/secu/api/auth/oauth-callback
+CAPB_DB_DRIVER=mysql
+CAPB_DB_HOST=192.168.15.253
+CAPB_DB_PORT=3306
+CAPB_DB_NAME=exploitation
+CAPB_DB_USER=secu
+CAPB_DB_PASSWORD=remplacer-par-le-mot-de-passe
+CAPB_DB_CONTACTS_TABLE=contacts_secu
 ```
 
-Format d'un contact :
-```json
-{
-  "name": "Nom Prenom",
-  "role": "Fonction",
-  "tel": "0612345678",
-  "label": "06 12 34 56 78"
-}
+## Structure attendue de la table contacts
+La table `contacts_secu` doit contenir au minimum :
+- `procedure_key`
+- `group_key`
+- `name`
+- `role`
+- `tel`
+- `label`
+- `link`
+- `link_label`
+- `sort_order`
+- `is_active`
+
+Cles procedures attendues :
+- `pshtbt`
+- `psbt`
+- `psii`
+- `pi`
+
+Groupes attendus selon les procedures :
+- `pshtbt` : `enedis`, `maintenance`, `process`
+- `psbt` : `enedis`, `maintenance`, `process`
+- `psii` : `processDay`, `regulation`, `maintenance`, `dsi`, `dqfs`, `dqfsDuty`
+- `pi` : `emergency`, `siteAlert`
+
+## Creation de la table MySQL
+Executer `database/schema.mysql.sql` dans la base `exploitation`.
+
+## Exemple d'insertion
+```sql
+INSERT INTO contacts_secu (procedure_key, group_key, name, role, tel, label, link, link_label, sort_order, is_active)
+VALUES
+('psbt', 'enedis', 'Depannage ENEDIS', 'Site panne et interruption', '0972675064', '09 72 67 50 64', 'https://www.enedis.fr/panne-et-interruption', 'Ouvrir le site ENEDIS', 10, 1),
+('psbt', 'maintenance', 'Responsable maintenance', 'Maintenance', '0600000000', '06 00 00 00 00', NULL, NULL, 20, 1),
+('psbt', 'process', 'Responsable process', 'Process', '0611111111', '06 11 11 11 11', NULL, NULL, 30, 1);
 ```
-
-Format ENEDIS avec lien web :
-```json
-{
-  "name": "Depannage ENEDIS",
-  "role": "Site panne et interruption",
-  "tel": "0972675064",
-  "label": "09 72 67 50 64",
-  "link": "https://www.enedis.fr/panne-et-interruption",
-  "linkLabel": "Ouvrir le site ENEDIS"
-}
-```
-
-### Points d'attention
-- un contact masque ne fait pas partie des contacts maintenance.
-- un contact masque doit apparaitre dans les cards d'alerte metier, sauf pour ENEDIS et les secours incendie.
-- Les secours incendie et ENEDIS doivent rester dans des cards dediees, sans melange avec les contacts metier.
-- Pour la procedure systeme d’information industrielle, utiliser la DSI si le site n’a plus acces a Internet public, sinon orienter la verification vers un service metier masque / serveur masque a Bidart.
-- Pour cette meme procedure :
-  - regulation d’astreinte = `numero masque`
-  - astreinte DQFS = `contact masque`
-
-## Ajouter une nouvelle consigne
-Pour ajouter une nouvelle consigne, faire systematiquement les 5 blocs suivants.
-
-### 1. Ajouter la card sur l'accueil
-Modifier `index.html` :
-- ajouter une nouvelle card dans la grille
-- ajouter son titre
-- ajouter son texte de presentation
-- ajouter son lien vers la nouvelle page
-- ajouter l'icone favicon comme sur les autres cards
-
-### 2. Creer la page interactive
-Creer un nouveau dossier, par exemple :
-- `nouvelle-consigne/index.html`
-
-La page doit contenir :
-- navigation retour accueil et autres procedures si necessaire
-- logo CAPB
-- hero de procedure
-- bloc `Procedure`
-- etapes en JavaScript
-- boutons `Retour` et `Recommencer`
-- cards contacts si necessaire
-
-### 3. Creer la page statique
-Creer :
-- `nouvelle-consigne/procedure-statique.html`
-
-La page doit :
-- reprendre la procedure sous forme lineaire
-- etre telechargeable
-- rester imprimable en A4
-
-### 4. Mettre a jour le cache offline
-Modifier `service-worker.js` :
-- ajouter seulement les nouveaux assets publics si besoin
-- ne pas ajouter les pages protegees dans le cache
-- incrementer `CACHE_NAME`
-
-### 5. Verifier le manifest si necessaire
-Modifier `manifest.webmanifest` seulement si :
-- le nom global du site change
-- l'identite de l'application change
-- les icones changent
-
-### 6. Mettre a jour les contacts si necessaire
-Si la nouvelle consigne affiche des contacts :
-- ajouter la nouvelle structure dans `CAPB_CONTACTS_JSON`
-- conserver les memes champs (`name`, `role`, `tel`, `label`)
-- ne pas remettre de numeros en dur dans le HTML public
-
-## Modifier une procedure existante
-Quand une procedure change :
-- ne pas casser sa route
-- conserver le mode pas-a-pas
-- mettre a jour aussi la version statique si la logique metier change
-- verifier les contacts associes a chaque branche
-- verifier que les liens `tel:` sont corrects
-- verifier les liens externes
-- si les contacts changent, mettre a jour `CAPB_CONTACTS_JSON`
 
 ## Check-list avant validation
 Avant de considerer une modification comme terminee, verifier :
 - l'accueil s'affiche correctement apres connexion
 - la page `/auth/` fonctionne
-- le bouton SSO ouvre bien le fournisseur OAuth2 si active
 - le callback OAuth2 ouvre bien une session pour un compte autorise
-- une session est bien creee apres verification
-- une adresse hors domaine `@communaute-paysbasque.fr` est refusee
 - la deconnexion automatique apres 1 heure d’inactivite fonctionne
-- les cards principales sont visibles et cliquables
-- les icones d'accueil restent bien positionnees
 - chaque procedure interactive avance correctement etape par etape
-- `Retour` fonctionne
-- `Recommencer` fonctionne
 - les contacts s'affichent dans les bonnes etapes
 - les appels telephoniques utilisent bien `tel:`
-- les versions statiques sont a jour
-- l'impression A4 reste lisible
+- `api/contacts.php` renvoie bien un JSON valide
+- la table `contacts_secu` contient bien des lignes actives
 - le service worker ne met pas les pages protegees en cache
-- le manifest reste coherent avec le site reel
-- `CAPB_CONTACTS_JSON` est configuree sur Vercel
-
-## Mise en ligne Vercel
-Le site est maintenant prevu pour Vercel avec pages statiques + fonctions `api/`.
-
-A faire cote projet Vercel :
-1. connecter le depot GitHub au projet Vercel
-2. definir les variables d'environnement listees plus haut
-3. renseigner `CAPB_CONTACTS_JSON`
-4. configurer les URLs et identifiants du fournisseur OAuth2
-5. redeployer en production
-6. tester `/auth/`, puis l'acces a `/`, `/pshtbt/`, `/psbt/`, `/psii/` et `/pi/`
 
 ## Philosophie de maintenance
 Le site doit rester :
@@ -367,12 +236,6 @@ Le site doit rester :
 - modifiable rapidement
 - sans framework
 - sans dependance externe inutile
-
-Si une evolution importante est demandee, preferer :
-- du HTML clair
-- du CSS local par page si besoin
-- du JavaScript simple, lisible et structure
-- des fonctions Vercel courtes et explicites pour la partie serveur
 
 Eviter :
 - les abstractions inutiles
