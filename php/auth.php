@@ -155,6 +155,26 @@ function capb_oauth_config(): ?array
     ];
 }
 
+function capb_build_oauth_authorize_url(string $next): ?string
+{
+    $oauth = capb_oauth_config();
+    if (!$oauth) {
+        return null;
+    }
+
+    $secret = capb_auth_secret();
+    $state = capb_create_oauth_state_token($next, $secret);
+    $params = http_build_query([
+        'response_type' => 'code',
+        'client_id' => $oauth['clientId'],
+        'redirect_uri' => $oauth['redirectUri'],
+        'scope' => $oauth['scope'],
+        'state' => $state,
+    ]);
+
+    return $oauth['authorizeUrl'] . '?' . $params;
+}
+
 function capb_extract_email(array $claims): string
 {
     foreach (['email', 'preferred_username', 'upn', 'unique_name'] as $key) {
@@ -233,9 +253,9 @@ function capb_require_auth(): void
     }
 
     $next = capb_sanitize_next($_SERVER['REQUEST_URI'] ?? '/');
-    $oauth = capb_oauth_config();
-    if ($oauth) {
-        capb_redirect('/api/auth/oauth-start?next=' . rawurlencode($next));
+    $authorizeUrl = capb_build_oauth_authorize_url($next);
+    if ($authorizeUrl) {
+        capb_redirect($authorizeUrl);
     }
 
     capb_redirect('/auth/?next=' . rawurlencode($next));
