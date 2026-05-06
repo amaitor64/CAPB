@@ -252,5 +252,47 @@
       </a>
     </section>
   </main>
+  <script>
+    setupInactivityLogout();
+
+    function setupInactivityLogout() {
+      const inactivityMs = 60 * 60 * 1000;
+      const touchIntervalMs = 5 * 60 * 1000;
+      const events = ['click', 'keydown', 'pointerdown', 'scroll', 'touchstart'];
+      let timeoutId = null;
+      let lastTouchAt = 0;
+
+      resetTimer();
+      events.forEach(eventName => window.addEventListener(eventName, handleActivity, { passive: true }));
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          handleActivity();
+        }
+      });
+
+      function handleActivity() {
+        resetTimer();
+        const now = Date.now();
+        if (now - lastTouchAt < touchIntervalMs) {
+          return;
+        }
+        lastTouchAt = now;
+        fetch('./api/auth/touch', { method: 'POST', credentials: 'same-origin' }).catch(() => {});
+      }
+
+      function resetTimer() {
+        clearTimeout(timeoutId);
+        timeoutId = window.setTimeout(forceLogout, inactivityMs);
+      }
+
+      async function forceLogout() {
+        try {
+          await fetch('./api/auth/logout', { method: 'POST', credentials: 'same-origin' });
+        } catch {
+        }
+        window.location.href = './auth/?next=/';
+      }
+    }
+  </script>
 </body>
 </html>
