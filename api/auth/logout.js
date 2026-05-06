@@ -6,11 +6,3 @@ export function POST() {
   headers.append('set-cookie', clearCookie(SESSION_COOKIE_NAME));
   return jsonResponse({ ok: true }, { headers });
 }
-
-export default function handler(request) {
-  if (request.method !== 'POST') {
-    return jsonResponse({ ok: false, error: 'Méthode non autorisée.' }, { status: 405 });
-  }
-
-  return POST();
-}
