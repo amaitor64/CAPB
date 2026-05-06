@@ -7,7 +7,7 @@ require_once dirname(__DIR__, 2) . '/php/auth.php';
 $oauth = capb_oauth_config();
 if (!$oauth) {
     $next = capb_sanitize_next($_GET['next'] ?? '/');
-    capb_redirect('/auth/?next=' . rawurlencode($next) . '&error=' . rawurlencode('OAuth2 non configuré.'));
+    capb_redirect(capb_app_url('/auth/') . '?next=' . rawurlencode($next) . '&error=' . rawurlencode('OAuth2 non configuré.'));
 }
 
 $secret = capb_auth_secret();
