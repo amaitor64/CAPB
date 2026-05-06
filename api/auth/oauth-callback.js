@@ -7,6 +7,7 @@ import {
   getOAuthConfig,
   isAllowedEmail,
   normalizeEmail,
+  OTP_COOKIE_NAME,
   sanitizeNextPath,
   serializeCookie,
   SESSION_COOKIE_NAME,
@@ -79,7 +80,7 @@ export async function GET(request) {
 
   const sessionToken = createSessionToken(email, secret);
   const headers = new Headers({ location: nextPath, 'cache-control': 'no-store' });
-  headers.append('set-cookie', clearCookie('capb_pending_otp'));
+  headers.append('set-cookie', clearCookie(OTP_COOKIE_NAME));
   headers.append('set-cookie', serializeCookie(SESSION_COOKIE_NAME, sessionToken, {
     maxAge: SESSION_TTL_SECONDS,
     sameSite: 'Strict'
