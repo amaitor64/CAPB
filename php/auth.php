@@ -26,6 +26,32 @@ function capb_auth_secret(): string
     return $secret;
 }
 
+function capb_base_path(): string
+{
+    $configured = trim((string) getenv('APP_BASE_PATH'));
+    if ($configured !== '') {
+        $configured = '/' . trim($configured, '/');
+        return $configured === '/' ? '' : $configured;
+    }
+
+    $scriptName = str_replace('\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? ''));
+    foreach (['/api/auth', '/api', '/auth', '/pshtbt', '/psbt', '/psii', '/pi'] as $marker) {
+        $position = strpos($scriptName, $marker . '/');
+        if ($position !== false) {
+            return rtrim(substr($scriptName, 0, $position), '/');
+        }
+    }
+
+    return '';
+}
+
+function capb_app_url(string $path): string
+{
+    $basePath = capb_base_path();
+    $normalizedPath = '/' . ltrim($path, '/');
+    return ($basePath === '' ? '' : $basePath) . $normalizedPath;
+}
+
 function capb_normalize_email(?string $value): string
 {
     return strtolower(trim((string) $value));
@@ -139,7 +165,7 @@ function capb_oauth_config(): ?array
     if ($redirectUri === '') {
         $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $redirectUri = $scheme . '://' . $host . '/api/auth/oauth-callback';
+        $redirectUri = $scheme . '://' . $host . capb_app_url('/api/auth/oauth-callback');
     }
 
     return [
@@ -228,7 +254,7 @@ function capb_set_session_cookie(string $token): void
 {
     setcookie(CAPB_SESSION_COOKIE, $token, [
         'expires' => time() + CAPB_SESSION_TTL,
-        'path' => '/',
+        'path' => capb_app_url('/'),
         'httponly' => true,
         'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
         'samesite' => 'Strict',
@@ -239,7 +265,7 @@ function capb_clear_session_cookie(): void
 {
     setcookie(CAPB_SESSION_COOKIE, '', [
         'expires' => time() - 3600,
-        'path' => '/',
+        'path' => capb_app_url('/'),
         'httponly' => true,
         'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
         'samesite' => 'Strict',
@@ -258,5 +284,5 @@ function capb_require_auth(): void
         capb_redirect($authorizeUrl);
     }
 
-    capb_redirect('/auth/?next=' . rawurlencode($next));
+    capb_redirect(capb_app_url('/auth/') . '?next=' . rawurlencode($next));
 }
