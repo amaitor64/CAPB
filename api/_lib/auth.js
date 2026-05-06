@@ -5,6 +5,7 @@ export const OTP_COOKIE_NAME = 'capb_pending_otp';
 export const SESSION_COOKIE_NAME = 'capb_session';
 export const OTP_TTL_SECONDS = 15 * 60;
 export const SESSION_TTL_SECONDS = 60 * 60;
+export const OAUTH_STATE_TTL_SECONDS = 10 * 60;
 
 export function getAuthSecret() {
   const secret = process.env.AUTH_SECRET;
@@ -76,6 +77,17 @@ export function createSessionToken(email, secret) {
     email,
     iat: now,
     exp: now + SESSION_TTL_SECONDS
+  }, secret);
+}
+
+export function createOAuthStateToken(nextPath, secret) {
+  const now = Math.floor(Date.now() / 1000);
+  return signToken({
+    type: 'oauth_state',
+    next: sanitizeNextPath(nextPath),
+    iat: now,
+    exp: now + OAUTH_STATE_TTL_SECONDS,
+    nonce: crypto.randomBytes(8).toString('hex')
   }, secret);
 }
 
@@ -159,6 +171,75 @@ export function sanitizeNextPath(nextValue) {
   }
 
   return nextValue;
+}
+
+export function getOAuthConfig(origin = '') {
+  if (process.env.OAUTH2_ENABLED !== 'true') {
+    return null;
+  }
+
+  const clientId = String(process.env.OAUTH2_CLIENT_ID || '').trim();
+  const clientSecret = String(process.env.OAUTH2_CLIENT_SECRET || '').trim();
+  const authorizeUrl = String(process.env.OAUTH2_AUTHORIZE_URL || '').trim();
+  const tokenUrl = String(process.env.OAUTH2_TOKEN_URL || '').trim();
+  const userInfoUrl = String(process.env.OAUTH2_USERINFO_URL || '').trim();
+  const redirectUri = String(process.env.OAUTH2_REDIRECT_URI || '').trim() || (origin ? `${origin}/api/auth/oauth-callback` : '');
+  const scope = String(process.env.OAUTH2_SCOPE || 'openid profile email').trim();
+  const providerName = String(process.env.OAUTH2_PROVIDER_NAME || 'SSO CAPB').trim();
+
+  if (!clientId || !clientSecret || !authorizeUrl || !tokenUrl || !redirectUri) {
+    return null;
+  }
+
+  return {
+    clientId,
+    clientSecret,
+    authorizeUrl,
+    tokenUrl,
+    userInfoUrl,
+    redirectUri,
+    scope,
+    providerName
+  };
+}
+
+export function extractEmailFromClaims(claims) {
+  if (!claims || typeof claims !== 'object') {
+    return '';
+  }
+
+  const candidates = [
+    claims.email,
+    claims.preferred_username,
+    claims.upn,
+    claims.unique_name
+  ];
+
+  for (const value of candidates) {
+    const email = normalizeEmail(value);
+    if (email) {
+      return email;
+    }
+  }
+
+  return '';
+}
+
+export function decodeJwtPayload(token) {
+  if (!token || typeof token !== 'string') {
+    return null;
+  }
+
+  const parts = token.split('.');
+  if (parts.length < 2) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf-8'));
+  } catch {
+    return null;
+  }
 }
 
 export function jsonResponse(body, init = {}) {
