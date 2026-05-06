@@ -1,0 +1,16 @@
+DirectoryIndex index.php index.html
+
+RewriteEngine On
+
+RewriteRule ^api/contacts$ api/contacts.php [L,QSA]
+RewriteRule ^api/auth/session$ api/auth/session.php [L,QSA]
+RewriteRule ^api/auth/touch$ api/auth/touch.php [L,QSA]
+RewriteRule ^api/auth/logout$ api/auth/logout.php [L,QSA]
+RewriteRule ^api/auth/oauth-start$ api/auth/oauth-start.php [L,QSA]
+RewriteRule ^api/auth/oauth-callback$ api/auth/oauth-callback.php [L,QSA]
+
+RewriteRule ^auth/$ auth/index.php [L,QSA]
+RewriteRule ^pshtbt/$ pshtbt/index.php [L,QSA]
+RewriteRule ^psbt/$ psbt/index.php [L,QSA]
+RewriteRule ^psii/$ psii/index.php [L,QSA]
+RewriteRule ^pi/$ pi/index.php [L,QSA]
