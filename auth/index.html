@@ -282,7 +282,7 @@
         emailForm.classList.add('hidden');
         codeInput.value = '';
         codeInput.focus();
-        setMessage(`Code envoyé par email à ${email}. Vérifiez votre messagerie.`, 'ok');
+        setMessage(data.message || `Code envoyé par email à ${email}. Vérifiez votre messagerie.`, 'ok');
       } catch (error) {
         setMessage(error.message || 'Envoi du code impossible.', 'error');
       } finally {
