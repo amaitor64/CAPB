@@ -252,13 +252,13 @@ Format ENEDIS avec lien web :
 ```
 
 ### Points d'attention
-- Pierre SOUBLES ne fait pas partie des contacts maintenance.
-- Laurent MELCHIOR doit apparaitre dans les cards d'alerte metier, sauf pour ENEDIS et les secours incendie.
+- un contact masque ne fait pas partie des contacts maintenance.
+- un contact masque doit apparaitre dans les cards d'alerte metier, sauf pour ENEDIS et les secours incendie.
 - Les secours incendie et ENEDIS doivent rester dans des cards dediees, sans melange avec les contacts metier.
-- Pour la procedure systeme d’information industrielle, utiliser la DSI si le site n’a plus acces a Internet public, sinon orienter la verification vers la DQFS / serveur Izarlink a Bidart.
+- Pour la procedure systeme d’information industrielle, utiliser la DSI si le site n’a plus acces a Internet public, sinon orienter la verification vers un service metier masque / serveur masque a Bidart.
 - Pour cette meme procedure :
   - regulation d’astreinte = `numero masque`
-  - astreinte DQFS = Thierry BEROT
+  - astreinte DQFS = `contact masque`
 
 ## Ajouter une nouvelle consigne
 Pour ajouter une nouvelle consigne, faire systematiquement les 5 blocs suivants.
