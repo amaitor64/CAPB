@@ -120,15 +120,21 @@ function capb_verify_token(?string $token, string $secret): ?array
     return is_array($payload) ? $payload : null;
 }
 
-function capb_create_session_token(string $email, string $secret): string
+function capb_create_session_token(string $email, string $secret, ?string $idToken = null): string
 {
     $now = time();
-    return capb_sign_token([
+    $payload = [
         'type' => 'session',
         'email' => $email,
         'iat' => $now,
         'exp' => $now + CAPB_SESSION_TTL,
-    ], $secret);
+    ];
+
+    if (is_string($idToken) && $idToken !== '') {
+        $payload['id_token'] = $idToken;
+    }
+
+    return capb_sign_token($payload, $secret);
 }
 
 function capb_create_oauth_state_token(string $nextPath, string $secret): string
@@ -310,7 +316,7 @@ function capb_validate_id_token_claims(array $claims, array $oauth): bool
     return true;
 }
 
-function capb_logout_redirect_url(?string $next = null): string
+function capb_logout_redirect_url(?string $next = null, ?string $idTokenHint = null): string
 {
     $target = capb_sanitize_next($next ?? capb_app_url('/auth/'));
     if ($target === capb_app_url('/')) {
@@ -319,7 +325,7 @@ function capb_logout_redirect_url(?string $next = null): string
 
     $oauth = capb_oauth_config();
     $endSessionUrl = (string) ($oauth['metadata']['end_session_endpoint'] ?? '');
-    if ($endSessionUrl === '') {
+    if ($endSessionUrl === '' || !is_string($idTokenHint) || $idTokenHint === '') {
         return $target;
     }
 
@@ -329,6 +335,7 @@ function capb_logout_redirect_url(?string $next = null): string
 
     return $endSessionUrl . '?' . http_build_query([
         'post_logout_redirect_uri' => $postLogoutRedirect,
+        'id_token_hint' => $idTokenHint,
     ]);
 }
 
