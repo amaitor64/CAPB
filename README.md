@@ -14,6 +14,7 @@ Chaque procedure existe en 2 formats :
 - une version statique telechargeable et imprimable
 
 Le site est maintenant protege par une authentification par code a 6 chiffres envoye par email.
+Une couche OAuth2 / SSO peut aussi etre activee en parallele.
 L'acces est reserve aux adresses `@communaute-paysbasque.fr`.
 La session se ferme automatiquement apres `1 heure d’inactivite`.
 
@@ -32,6 +33,7 @@ La session se ferme automatiquement apres `1 heure d’inactivite`.
   - page de connexion passwordless
   - saisie de l'email professionnel
   - saisie du code OTP a 6 chiffres
+  - bouton de connexion SSO / OAuth2
 - `middleware.js`
   - protege les pages du site
   - redirige vers `/auth/` si la session n'est pas presente
@@ -43,6 +45,13 @@ La session se ferme automatiquement apres `1 heure d’inactivite`.
   - verifie le code saisi
   - cree la session securisee
   - peut accepter un acces de secours si les variables Vercel dediees sont activees
+- `api/auth/oauth-start.js`
+  - construit la redirection OAuth2
+  - signe l'etat de retour
+- `api/auth/oauth-callback.js`
+  - recupere le code OAuth2
+  - echange le code contre un token
+  - extrait l'email autorise et cree la session
 - `api/auth/session.js`
   - expose l'etat de session courant
 - `api/auth/touch.js`
@@ -50,7 +59,7 @@ La session se ferme automatiquement apres `1 heure d’inactivite`.
 - `api/auth/logout.js`
   - ferme la session
 - `api/_lib/auth.js`
-  - fonctions partagees : signature, cookies, tokens, validation email
+  - fonctions partagees : signature, cookies, tokens, validation email, helpers OAuth2
 - `api/contacts.js`
   - expose les contacts metier apres authentification
   - lit les donnees depuis la variable Vercel `CAPB_CONTACTS_JSON`
@@ -163,8 +172,8 @@ Ne pas ajouter de mise en page qui casse les cards, les boutons ou les textes su
 
 ### 7. Authentification
 L'authentification actuelle suit cette architecture :
-1. l'utilisateur saisit son email
-2. le serveur verifie que l'adresse finit par `@communaute-paysbasque.fr`
+1. l'utilisateur peut lancer une connexion OAuth2 / SSO ou saisir son email
+2. en mode OTP, le serveur verifie que l'adresse finit par `@communaute-paysbasque.fr`
 3. le serveur genere un code a 6 chiffres
 4. le serveur envoie le code par email
 5. l'utilisateur saisit le code
@@ -172,17 +181,27 @@ L'authentification actuelle suit cette architecture :
 7. la session expire apres 1 heure sans activite
 8. l'activite utilisateur prolonge la session via `api/auth/touch.js`
 
+Flux OAuth2 ajoute :
+1. l'utilisateur clique sur le bouton SSO
+2. `api/auth/oauth-start.js` construit l'URL du fournisseur OAuth2
+3. un etat signe est transmis pour proteger le retour
+4. le fournisseur renvoie un `code` sur `api/auth/oauth-callback.js`
+5. le serveur echange ce code contre un token OAuth2
+6. l'email du compte est extrait depuis le token ou le profil utilisateur
+7. seuls les comptes `@communaute-paysbasque.fr` ouvrent une session
+
 Contraintes de maintenance :
 - ne pas exposer le secret de signature dans le code
 - garder les cookies de session en `HttpOnly`, `Secure`, `SameSite=Strict`
 - ne pas remettre les pages protegees dans le cache offline
 - ne pas remplacer ce mecanisme par un stockage local JavaScript pour la session
 - conserver la duree d’inactivite a `1 heure` sauf decision explicite
+- conserver le controle du domaine `@communaute-paysbasque.fr` aussi en OAuth2
 
 ## Variables d'environnement Vercel
 Configurer au minimum ces variables dans le projet Vercel :
 - `AUTH_SECRET`
-  - secret aleatoire fort utilise pour signer les tokens OTP et session
+  - secret aleatoire fort utilise pour signer les tokens OTP, OAuth2 state et session
 - `SMTP_HOST`
   - valeur recommandee : `smtp.communaute-paysbasque.fr`
 - `SMTP_PORT`
@@ -205,6 +224,22 @@ Variables optionnelles pour l’acces de secours :
   - adresse CAPB autorisee pour le mode secours
 - `EMERGENCY_ACCESS_CODE`
   - code a 6 chiffres du mode secours
+
+Variables optionnelles pour OAuth2 / SSO :
+- `OAUTH2_ENABLED`
+  - `true` pour activer le bouton SSO
+- `OAUTH2_PROVIDER_NAME`
+  - libelle du fournisseur, par exemple `Microsoft 365 CAPB`
+- `OAUTH2_CLIENT_ID`
+- `OAUTH2_CLIENT_SECRET`
+- `OAUTH2_AUTHORIZE_URL`
+- `OAUTH2_TOKEN_URL`
+- `OAUTH2_USERINFO_URL`
+  - optionnelle mais recommandee
+- `OAUTH2_SCOPE`
+  - par defaut : `openid profile email`
+- `OAUTH2_REDIRECT_URI`
+  - optionnelle, sinon valeur par defaut : `https://<domaine>/api/auth/oauth-callback`
 
 ## Contacts a maintenir
 Les contacts ne doivent plus etre stockes dans le depot public.
@@ -336,6 +371,8 @@ Avant de considerer une modification comme terminee, verifier :
 - la page `/auth/` fonctionne
 - l'envoi du code OTP fonctionne
 - le code a 6 chiffres est bien verifie
+- le bouton SSO ouvre bien le fournisseur OAuth2 si active
+- le callback OAuth2 ouvre bien une session pour un compte autorise
 - une session est bien creee apres verification
 - une adresse hors domaine `@communaute-paysbasque.fr` est refusee
 - la deconnexion automatique apres 1 heure d’inactivite fonctionne
@@ -360,8 +397,9 @@ A faire cote projet Vercel :
 2. definir les variables d'environnement listees plus haut
 3. verifier que le relais SMTP accepte les emails emis depuis Vercel
 4. renseigner `CAPB_CONTACTS_JSON`
-5. redeployer en production
-6. tester `/auth/`, puis l'acces a `/`, `/pshtbt/`, `/psbt/`, `/psii/` et `/pi/`
+5. si OAuth2 est active, configurer aussi les URLs et identifiants du fournisseur
+6. redeployer en production
+7. tester `/auth/`, puis l'acces a `/`, `/pshtbt/`, `/psbt/`, `/psii/` et `/pi/`
 
 ## Philosophie de maintenance
 Le site doit rester :
