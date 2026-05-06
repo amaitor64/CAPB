@@ -13,12 +13,12 @@ export default function middleware(request) {
   const pathname = url.pathname;
 
   if (PUBLIC_EXACT.includes(pathname) || PUBLIC_PREFIXES.some(prefix => pathname.startsWith(prefix))) {
-    return;
+    return fetch(request);
   }
 
   const session = getSessionFromRequest(request);
   if (session) {
-    return;
+    return fetch(request);
   }
 
   if (pathname.startsWith('/api/')) {
