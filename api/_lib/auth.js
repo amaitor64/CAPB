@@ -5,6 +5,15 @@ export const SESSION_COOKIE_NAME = 'capb_session';
 export const SESSION_TTL_SECONDS = 60 * 60;
 export const OAUTH_STATE_TTL_SECONDS = 10 * 60;
 
+const DEFAULT_OIDC_CONFIG = {
+  issuer: 'https://connect.elmn.communaute-paysbasque.fr/realms/ELMN',
+  authorizeUrl: 'https://connect.elmn.communaute-paysbasque.fr/realms/ELMN/protocol/openid-connect/auth',
+  tokenUrl: 'https://connect.elmn.communaute-paysbasque.fr/realms/ELMN/protocol/openid-connect/token',
+  introspectionUrl: 'https://connect.elmn.communaute-paysbasque.fr/realms/ELMN/protocol/openid-connect/token/introspect',
+  userInfoUrl: 'https://connect.elmn.communaute-paysbasque.fr/realms/ELMN/protocol/openid-connect/userinfo',
+  endSessionUrl: 'https://connect.elmn.communaute-paysbasque.fr/realms/ELMN/protocol/openid-connect/logout'
+};
+
 export function getAuthSecret() {
   const secret = process.env.AUTH_SECRET;
   if (!secret) {
@@ -162,12 +171,15 @@ export function getOAuthConfig(origin = '') {
 
   const clientId = String(process.env.OAUTH2_CLIENT_ID || '').trim();
   const clientSecret = String(process.env.OAUTH2_CLIENT_SECRET || '').trim();
-  const authorizeUrl = String(process.env.OAUTH2_AUTHORIZE_URL || '').trim();
-  const tokenUrl = String(process.env.OAUTH2_TOKEN_URL || '').trim();
-  const userInfoUrl = String(process.env.OAUTH2_USERINFO_URL || '').trim();
+  const authorizeUrl = String(process.env.OAUTH2_AUTHORIZE_URL || '').trim() || DEFAULT_OIDC_CONFIG.authorizeUrl;
+  const tokenUrl = String(process.env.OAUTH2_TOKEN_URL || '').trim() || DEFAULT_OIDC_CONFIG.tokenUrl;
+  const userInfoUrl = String(process.env.OAUTH2_USERINFO_URL || '').trim() || DEFAULT_OIDC_CONFIG.userInfoUrl;
   const redirectUri = String(process.env.OAUTH2_REDIRECT_URI || '').trim() || (origin ? `${origin}/api/auth/oauth-callback` : '');
   const scope = String(process.env.OAUTH2_SCOPE || 'openid profile email').trim();
   const providerName = String(process.env.OAUTH2_PROVIDER_NAME || 'SSO CAPB').trim();
+  const issuer = String(process.env.OAUTH2_ISSUER || '').trim() || DEFAULT_OIDC_CONFIG.issuer;
+  const introspectionUrl = String(process.env.OAUTH2_INTROSPECTION_URL || '').trim() || DEFAULT_OIDC_CONFIG.introspectionUrl;
+  const endSessionUrl = String(process.env.OAUTH2_END_SESSION_URL || '').trim() || DEFAULT_OIDC_CONFIG.endSessionUrl;
 
   if (!clientId || !clientSecret || !authorizeUrl || !tokenUrl || !redirectUri) {
     return null;
@@ -181,7 +193,10 @@ export function getOAuthConfig(origin = '') {
     userInfoUrl,
     redirectUri,
     scope,
-    providerName
+    providerName,
+    issuer,
+    introspectionUrl,
+    endSessionUrl
   };
 }
 
