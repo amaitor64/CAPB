@@ -89,18 +89,40 @@
       font-weight: 700;
       color: var(--text);
     }
+    .email-input-wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: stretch;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .email-input-wrap:focus-within {
+      outline: 2px solid rgba(31,122,224,.20);
+      border-color: var(--blue);
+    }
     input {
       width: 100%;
       padding: 13px 14px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
+      border: 0;
       font-size: 16px;
       color: var(--text);
       background: #fff;
     }
     input:focus {
-      outline: 2px solid rgba(31,122,224,.20);
-      border-color: var(--blue);
+      outline: 0;
+    }
+    .email-suffix {
+      display: inline-flex;
+      align-items: center;
+      padding: 0 14px;
+      background: #f8fbff;
+      border-left: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
     }
     .button-row {
       display: flex;
@@ -150,6 +172,17 @@
       border-radius: 14px;
       background: #f8fbff;
     }
+    @media (max-width: 560px) {
+      .email-input-wrap {
+        grid-template-columns: 1fr;
+      }
+      .email-suffix {
+        justify-content: flex-start;
+        border-left: 0;
+        border-top: 1px solid var(--border);
+        padding: 10px 14px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -165,7 +198,10 @@
       <form id="emailForm" class="stack">
         <label>
           Adresse email professionnelle
-          <input id="emailInput" type="email" inputmode="email" autocomplete="email" placeholder="prenom.nom@communaute-paysbasque.fr" required>
+          <div class="email-input-wrap">
+            <input id="emailLocalPartInput" type="text" inputmode="email" autocomplete="username" placeholder="prenom.nom" autocapitalize="none" spellcheck="false" required>
+            <span class="email-suffix">@communaute-paysbasque.fr</span>
+          </div>
         </label>
         <div class="button-row">
           <button id="sendBtn" type="submit">Envoyer le code</button>
@@ -197,10 +233,11 @@
   </main>
 
   <script>
+    const EMAIL_DOMAIN = '@communaute-paysbasque.fr';
     const next = sanitizeNext(new URLSearchParams(window.location.search).get('next'));
     const emailForm = document.getElementById('emailForm');
     const codeForm = document.getElementById('codeForm');
-    const emailInput = document.getElementById('emailInput');
+    const emailLocalPartInput = document.getElementById('emailLocalPartInput');
     const codeInput = document.getElementById('codeInput');
     const sendBtn = document.getElementById('sendBtn');
     const verifyBtn = document.getElementById('verifyBtn');
@@ -217,10 +254,11 @@
 
     emailForm.addEventListener('submit', async event => {
       event.preventDefault();
-      const email = emailInput.value.trim().toLowerCase();
+      const localPart = sanitizeLocalPart(emailLocalPartInput.value);
+      const email = buildEmail(localPart);
 
-      if (!email.endsWith('@communaute-paysbasque.fr')) {
-        setMessage('Adresse email non autorisée.', 'error');
+      if (!localPart) {
+        setMessage('Saisir la partie avant @communaute-paysbasque.fr.', 'error');
         return;
       }
 
@@ -244,7 +282,7 @@
         emailForm.classList.add('hidden');
         codeInput.value = '';
         codeInput.focus();
-        setMessage('Code envoyé par email. Vérifiez votre messagerie.', 'ok');
+        setMessage(`Code envoyé par email à ${email}. Vérifiez votre messagerie.`, 'ok');
       } catch (error) {
         setMessage(error.message || 'Envoi du code impossible.', 'error');
       } finally {
@@ -289,7 +327,7 @@
       currentEmail = '';
       emailForm.classList.remove('hidden');
       codeForm.classList.add('hidden');
-      emailInput.focus();
+      emailLocalPartInput.focus();
       setMessage('', 'info');
     });
 
@@ -320,7 +358,7 @@
       } catch {
       }
 
-      emailInput.focus();
+      emailLocalPartInput.focus();
     }
 
     function setLoading(button, active) {
@@ -337,6 +375,14 @@
         return '/';
       }
       return value;
+    }
+
+    function sanitizeLocalPart(value) {
+      return String(value || '').trim().toLowerCase().replace(/@.*/, '');
+    }
+
+    function buildEmail(localPart) {
+      return `${localPart}${EMAIL_DOMAIN}`;
     }
 
     function setupInactivityLogout() {
