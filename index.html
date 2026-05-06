@@ -22,6 +22,8 @@
       --red-dark: #971f1f;
       --blue: #0f5cc0;
       --yellow: #f0c419;
+      --amber: #b45309;
+      --amber-light: #f59e0b;
     }
 
     * { box-sizing: border-box; }
@@ -188,6 +190,10 @@
       background: linear-gradient(145deg, var(--red) 0%, var(--red-dark) 100%);
     }
 
+    .card-amber {
+      background: linear-gradient(145deg, var(--amber) 0%, var(--amber-light) 100%);
+    }
+
     .footer-note {
       margin-top: 18px;
       padding: 16px 18px;
@@ -239,6 +245,14 @@
         <strong>Ouvrir la procédure →</strong>
       </a>
 
+      <a class="card card-amber" href="psii/">
+        <img class="card-icon" src="icons/favicon.png?v=2" alt="Icône consigne" width="472" height="472">
+        <span class="card-tag">SII</span>
+        <h2>Panne sur le système d’information industrielle</h2>
+        <p>Défaut de supervision, perte TOPKAPI ou déconnexion du serveur Izarlink à Bidart.</p>
+        <strong>Ouvrir la procédure →</strong>
+      </a>
+
       <a class="card card-red" href="pi/">
         <img class="card-icon" src="icons/favicon.png?v=2" alt="Icône consigne" width="472" height="472">
         <span class="card-tag">Incendie</span>
@@ -249,7 +263,7 @@
     </section>
 
     <section class="footer-note">
-      Les adresses dédiées sont maintenant stables : <strong>/pshtbt/</strong>, <strong>/psbt/</strong> et <strong>/pi/</strong>.
+      Les adresses dédiées sont maintenant stables : <strong>/pshtbt/</strong>, <strong>/psbt/</strong>, <strong>/psii/</strong> et <strong>/pi/</strong>.
     </section>
   </main>
 </body>
