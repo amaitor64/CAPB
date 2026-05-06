@@ -3,7 +3,7 @@ import crypto from 'node:crypto';
 export const ALLOWED_EMAIL_DOMAIN = '@communaute-paysbasque.fr';
 export const OTP_COOKIE_NAME = 'capb_pending_otp';
 export const SESSION_COOKIE_NAME = 'capb_session';
-export const OTP_TTL_SECONDS = 10 * 60;
+export const OTP_TTL_SECONDS = 15 * 60;
 export const SESSION_TTL_SECONDS = 60 * 60;
 
 export function getAuthSecret() {
