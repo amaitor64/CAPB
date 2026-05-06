@@ -45,9 +45,10 @@ if (($tokenResponse['status'] ?? 500) >= 400 || !is_array($tokenResponse['json']
 }
 
 $tokenSet = $tokenResponse['json'];
+$idToken = !empty($tokenSet['id_token']) && is_string($tokenSet['id_token']) ? (string) $tokenSet['id_token'] : null;
 $email = '';
-if (!empty($tokenSet['id_token'])) {
-    $claims = capb_decode_jwt_payload((string) $tokenSet['id_token']);
+if ($idToken !== null) {
+    $claims = capb_decode_jwt_payload($idToken);
     if (!is_array($claims) || !capb_validate_id_token_claims($claims, $oauth)) {
         capb_oauth_auth_redirect($next, 'Jeton d’authentification invalide.');
     }
@@ -66,7 +67,7 @@ if ($email === '' || !capb_is_allowed_email($email)) {
     capb_oauth_auth_redirect($next, 'Compte OAuth2 non autorisé pour ce site.');
 }
 
-capb_set_session_cookie(capb_create_session_token($email, $secret));
+capb_set_session_cookie(capb_create_session_token($email, $secret, $idToken));
 capb_redirect($next);
 
 function capb_post_form(string $url, array $data): array
