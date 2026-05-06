@@ -67,6 +67,7 @@
       border-radius: 24px;
       box-shadow: var(--shadow);
       padding: 28px 22px;
+      text-align: center;
     }
 
     .eyebrow {
@@ -90,7 +91,7 @@
     }
 
     .lead {
-      margin: 0;
+      margin: 0 auto;
       max-width: 760px;
       color: var(--muted);
       font-size: 17px;
@@ -108,6 +109,7 @@
       position: relative;
       display: flex;
       flex-direction: column;
+      align-items: center;
       min-height: 240px;
       padding: 22px;
       border-radius: 22px;
@@ -116,6 +118,7 @@
       box-shadow: var(--shadow);
       overflow: hidden;
       transition: transform .18s ease, box-shadow .18s ease;
+      text-align: center;
     }
 
     .card:hover {
@@ -144,7 +147,7 @@
 
     .card-tag {
       display: inline-flex;
-      align-self: flex-start;
+      align-self: center;
       padding: 6px 10px;
       border-radius: 999px;
       background: rgba(255,255,255,.18);
@@ -159,10 +162,11 @@
       font-size: 28px;
       line-height: 1.08;
       padding-right: 128px;
+      padding-left: 18px;
     }
 
     .card p {
-      margin: 0;
+      margin: 0 auto;
       max-width: 28ch;
       line-height: 1.5;
       color: rgba(255,255,255,.92);
@@ -198,7 +202,7 @@
       body { padding: 16px 12px 32px; }
       .hero { padding: 22px 18px; border-radius: 20px; }
       .card { min-height: 220px; }
-      .card h2 { font-size: 24px; padding-right: 93px; }
+      .card h2 { font-size: 24px; padding-right: 93px; padding-left: 12px; }
       .lead { font-size: 16px; }
       .logo-wrap { margin-bottom: 14px; }
       .site-logo { width: min(220px, 78vw); }
