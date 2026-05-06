@@ -2,7 +2,6 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { next as vercelNext } from '@vercel/functions';
 
 import { GET as getContacts } from './api/contacts.js';
 import { GET as getSession } from './api/auth/session.js';
@@ -70,7 +69,18 @@ createServer(async (req, res) => {
       return;
     }
 
-    const body = await readFile(filePath);
+    let body;
+    try {
+      body = await readFile(filePath);
+    } catch (error) {
+      if (error && error.code === 'ENOENT') {
+        res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
+        res.end('Not found');
+        return;
+      }
+      throw error;
+    }
+
     const contentType = MIME_TYPES.get(path.extname(filePath)) || 'application/octet-stream';
     res.writeHead(200, { 'content-type': contentType });
     res.end(body);
