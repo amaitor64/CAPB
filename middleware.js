@@ -1,5 +1,5 @@
 import { next } from '@vercel/functions';
-import { getSessionFromRequest, sanitizeNextPath } from './api/_lib/auth.js';
+import { getOAuthConfig, getSessionFromRequest, sanitizeNextPath } from './api/_lib/auth.js';
 
 const PUBLIC_PREFIXES = ['/auth/', '/api/auth/', '/icons/'];
 const PUBLIC_EXACT = ['/auth', '/manifest.webmanifest', '/service-worker.js'];
@@ -30,7 +30,8 @@ export default function middleware(request) {
   }
 
   const nextPath = sanitizeNextPath(`${pathname}${url.search}`);
-  const redirectUrl = new URL('/auth/', url.origin);
+  const oauth = getOAuthConfig(url.origin);
+  const redirectUrl = new URL(oauth ? '/api/auth/oauth-start' : '/auth/', url.origin);
   redirectUrl.searchParams.set('next', nextPath);
 
   return Response.redirect(redirectUrl, 302);
