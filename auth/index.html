@@ -83,6 +83,24 @@
       gap: 14px;
       margin-top: 22px;
     }
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
     label {
       display: grid;
       gap: 7px;
@@ -129,7 +147,7 @@
       gap: 10px;
       flex-wrap: wrap;
     }
-    button {
+    button, .button-link {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -141,6 +159,11 @@
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
+      text-decoration: none;
+    }
+    .button-link.oauth {
+      width: 100%;
+      background: #0f172a;
     }
     button.secondary {
       background: #fff;
@@ -156,6 +179,7 @@
       font-size: 14px;
       font-weight: 700;
       white-space: pre-line;
+      margin-top: 14px;
     }
     .message.info { color: var(--blue); }
     .message.ok { color: var(--ok); }
@@ -194,6 +218,12 @@
       <span class="eyebrow">Accès réservé</span>
       <h1>Demande de connexion</h1>
       <p>L’accès au site est réservé aux agents de la CAPB. Un code à usage unique est envoyé par email, validité 15 min.</p>
+
+      <div class="stack">
+        <a id="oauthBtn" class="button-link oauth" href="#">Se connecter avec le compte CAPB</a>
+      </div>
+
+      <div class="auth-divider">ou</div>
 
       <form id="emailForm" class="stack">
         <label>
@@ -234,7 +264,9 @@
 
   <script>
     const EMAIL_DOMAIN = '@communaute-paysbasque.fr';
-    const next = sanitizeNext(new URLSearchParams(window.location.search).get('next'));
+    const query = new URLSearchParams(window.location.search);
+    const next = sanitizeNext(query.get('next'));
+    const oauthError = query.get('error');
     const emailForm = document.getElementById('emailForm');
     const codeForm = document.getElementById('codeForm');
     const emailLocalPartInput = document.getElementById('emailLocalPartInput');
@@ -244,12 +276,14 @@
     const restartBtn = document.getElementById('restartBtn');
     const continueBtn = document.getElementById('continueBtn');
     const logoutBtn = document.getElementById('logoutBtn');
+    const oauthBtn = document.getElementById('oauthBtn');
     const message = document.getElementById('message');
     const sessionBox = document.getElementById('sessionBox');
     const sessionText = document.getElementById('sessionText');
 
     let currentEmail = '';
 
+    oauthBtn.href = `../api/auth/oauth-start?next=${encodeURIComponent(next)}`;
     boot();
 
     emailForm.addEventListener('submit', async event => {
@@ -344,6 +378,10 @@
     });
 
     async function boot() {
+      if (oauthError) {
+        setMessage(oauthError, 'error');
+      }
+
       try {
         const response = await fetch('../api/auth/session', { cache: 'no-store' });
         const data = await response.json();
