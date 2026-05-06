@@ -27,6 +27,7 @@
       <a class="btn-link" href="../psbt/">Procédure BT</a>
       <a class="btn-link" href="../pi/">Procédure incendie</a>
       <a class="btn-link" href="./procedure-statique.html" download>Télécharger la procédure</a>
+      <button id="copyLinkBtn" class="ghost-btn" type="button">Copier le lien</button>
     </nav>
     <div class="logo-wrap"><img class="site-logo" src="../icons/logo capb.png" alt="CAPB"></div>
     <section class="hero">
@@ -174,9 +175,11 @@
       }
     };
 
-    const history=[]; let current='start'; const card=document.getElementById('stepCard'); const backBtn=document.getElementById('backBtn'); const restartBtn=document.getElementById('restartBtn');
+    const history=[]; let current='start'; const card=document.getElementById('stepCard'); const backBtn=document.getElementById('backBtn'); const restartBtn=document.getElementById('restartBtn'); const copyLinkBtn=document.getElementById('copyLinkBtn');
     function renderContacts(list){ if(!list||!list.length) return ''; return `<div class="contacts"><h4>Contacts</h4><div class="contact-grid">${list.map(contact => `<div class="contact-card"><strong>${contact.name}</strong><span>${contact.role}</span><a href="tel:${contact.tel}">📞 ${contact.label}</a></div>`).join('')}</div></div>`; }
     function render(){ const step=steps[current]; const options=step.options ? `<div class="choices">${step.options.map(option => `<button class="choice-btn ${option.tone||''}" type="button" data-next="${option.next}">${option.label}</button>`).join('')}</div>` : ''; const summary=history.length ? `<div class="summary"><h4>Suivi du parcours</h4><div class="path">${history.map(id => steps[id].title).join(' → ')}</div></div>` : ''; card.innerHTML=`<div class="badge">${history.length + 1}</div><h3>${step.title}</h3><p>${step.text}</p>${step.question ? `<div class="path"><strong>${step.question}</strong></div>` : ''}${renderContacts(step.contacts)}${options}${step.end ? '<div class="path"><strong>Fin de procédure.</strong></div>' : ''}${summary}`; card.querySelectorAll('[data-next]').forEach(btn => btn.addEventListener('click', () => { history.push(current); current=btn.dataset.next; render(); })); backBtn.disabled=history.length===0; }
+    async function copyCurrentLink(){ const link=window.location.href; const original=copyLinkBtn.textContent; try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(link); } else { const input=document.createElement('textarea'); input.value=link; document.body.appendChild(input); input.select(); document.execCommand('copy'); input.remove(); } copyLinkBtn.textContent='Lien copié'; setTimeout(() => { copyLinkBtn.textContent=original; }, 1600); } catch (error) { copyLinkBtn.textContent='Copie impossible'; setTimeout(() => { copyLinkBtn.textContent=original; }, 1600); } }
+    copyLinkBtn.addEventListener('click', copyCurrentLink);
     backBtn.addEventListener('click', () => { if(!history.length) return; current=history.pop(); render(); }); restartBtn.addEventListener('click', () => { history.length=0; current='start'; render(); }); render();
   </script>
 </body>
