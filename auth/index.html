@@ -174,12 +174,7 @@
       window.location.href = next;
     });
 
-    logoutBtn.addEventListener('click', async () => {
-      await fetch('../api/auth/logout.php', { method: 'POST' });
-      sessionBox.classList.add('hidden');
-      loginBox.classList.remove('hidden');
-      setMessage('Session fermée.', 'ok');
-    });
+    logoutBtn.addEventListener('click', logoutUser);
 
     async function boot() {
       if (oauthError) {
@@ -211,6 +206,19 @@
       return value;
     }
 
+    async function logoutUser() {
+      const nextTarget = `${basePath || ''}/auth/?next=${encodeURIComponent(next)}`;
+      const requestUrl = `../api/auth/logout.php?next=${encodeURIComponent(nextTarget)}`;
+      try {
+        const response = await fetch(requestUrl, { method: 'POST', credentials: 'same-origin' });
+        const data = await response.json();
+        window.location.href = data.redirect || requestUrl;
+        return;
+      } catch {
+      }
+      window.location.href = requestUrl;
+    }
+
     function setupInactivityLogout() {
       const inactivityMs = 60 * 60 * 1000;
       const touchIntervalMs = 5 * 60 * 1000;
@@ -238,15 +246,7 @@
 
       function resetTimer() {
         clearTimeout(timeoutId);
-        timeoutId = window.setTimeout(forceLogout, inactivityMs);
-      }
-
-      async function forceLogout() {
-        try {
-          await fetch('../api/auth/logout.php', { method: 'POST', credentials: 'same-origin' });
-        } catch {
-        }
-        window.location.href = `../auth/?next=${encodeURIComponent(next)}`;
+        timeoutId = window.setTimeout(logoutUser, inactivityMs);
       }
     }
   </script>
