@@ -4,5 +4,13 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__, 2) . '/php/auth.php';
 
+$next = capb_sanitize_next($_GET['next'] ?? capb_app_url('/auth/'));
+$redirectUrl = capb_logout_redirect_url($next);
+
 capb_clear_session_cookie();
-capb_json(['ok' => true], 200, ['Cache-Control' => 'no-store']);
+
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+    capb_json(['ok' => true, 'redirect' => $redirectUrl], 200, ['Cache-Control' => 'no-store']);
+}
+
+capb_redirect($redirectUrl);
