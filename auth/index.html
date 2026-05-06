@@ -16,7 +16,6 @@
       --muted: #475569;
       --border: #dbe4ef;
       --blue: #1f7ae0;
-      --blue-dark: #1559a6;
       --ok: #1e9f4f;
       --danger: #c62828;
       --shadow: 0 18px 40px rgba(15, 23, 42, .12);
@@ -83,96 +82,26 @@
       gap: 14px;
       margin-top: 22px;
     }
-    .auth-divider {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-    }
-    .auth-divider::before,
-    .auth-divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-    label {
-      display: grid;
-      gap: 7px;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .email-input-wrap {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: stretch;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      background: #fff;
-    }
-    .email-input-wrap:focus-within {
-      outline: 2px solid rgba(31,122,224,.20);
-      border-color: var(--blue);
-    }
-    input {
-      width: 100%;
-      padding: 13px 14px;
-      border: 0;
-      font-size: 16px;
-      color: var(--text);
-      background: #fff;
-    }
-    input:focus {
-      outline: 0;
-    }
-    .email-suffix {
-      display: inline-flex;
-      align-items: center;
-      padding: 0 14px;
-      background: #f8fbff;
-      border-left: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .button-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    button, .button-link {
+    .button-link, button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 12px 16px;
+      width: 100%;
+      padding: 14px 16px;
       border: 0;
       border-radius: 12px;
-      background: var(--blue);
+      background: #0f172a;
       color: #fff;
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
       text-decoration: none;
     }
-    .button-link.oauth {
-      width: 100%;
-      background: #0f172a;
-    }
     button.secondary {
+      width: auto;
       background: #fff;
       color: var(--text);
       border: 1px solid var(--border);
-    }
-    button:disabled {
-      opacity: .65;
-      cursor: wait;
     }
     .message {
       min-height: 24px;
@@ -185,10 +114,6 @@
     .message.ok { color: var(--ok); }
     .message.error { color: var(--danger); }
     .hidden { display: none; }
-    .hint {
-      font-size: 13px;
-      color: var(--muted);
-    }
     .session-box {
       margin-top: 22px;
       padding: 14px;
@@ -196,16 +121,11 @@
       border-radius: 14px;
       background: #f8fbff;
     }
-    @media (max-width: 560px) {
-      .email-input-wrap {
-        grid-template-columns: 1fr;
-      }
-      .email-suffix {
-        justify-content: flex-start;
-        border-left: 0;
-        border-top: 1px solid var(--border);
-        padding: 10px 14px;
-      }
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
     }
   </style>
 </head>
@@ -216,45 +136,18 @@
     </div>
     <section class="panel">
       <span class="eyebrow">Accès réservé</span>
-      <h1>Demande de connexion</h1>
-      <p>L’accès au site est réservé aux agents de la CAPB. Un code à usage unique est envoyé par email, validité 15 min.</p>
+      <h1>Connexion CAPB</h1>
+      <p>L’accès au site est réservé aux agents de la CAPB via l’authentification sécurisée du compte CAPB.</p>
 
-      <div class="stack">
-        <a id="oauthBtn" class="button-link oauth" href="#">Se connecter avec le compte CAPB</a>
+      <div id="loginBox" class="stack">
+        <a id="oauthBtn" class="button-link" href="#">Se connecter avec le compte CAPB</a>
       </div>
-
-      <div class="auth-divider">ou</div>
-
-      <form id="emailForm" class="stack">
-        <label>
-          Adresse email professionnelle
-          <div class="email-input-wrap">
-            <input id="emailLocalPartInput" type="text" inputmode="email" autocomplete="username" placeholder="p.nom" autocapitalize="none" spellcheck="false" required>
-            <span class="email-suffix">@communaute-paysbasque.fr</span>
-          </div>
-        </label>
-        <div class="button-row">
-          <button id="sendBtn" type="submit">Envoyer le code</button>
-        </div>
-      </form>
-
-      <form id="codeForm" class="stack hidden">
-        <label>
-          Code à 6 chiffres
-          <input id="codeInput" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" placeholder="123456" required>
-        </label>
-        <p class="hint">Le code reste valable 15 minutes.</p>
-        <div class="button-row">
-          <button id="verifyBtn" type="submit">Valider le code</button>
-          <button id="restartBtn" class="secondary" type="button">Changer d’email</button>
-        </div>
-      </form>
 
       <div id="message" class="message" aria-live="polite"></div>
 
       <div id="sessionBox" class="session-box hidden">
         <p id="sessionText"></p>
-        <div class="button-row" style="margin-top: 12px;">
+        <div class="button-row">
           <button id="continueBtn" type="button">Continuer</button>
           <button id="logoutBtn" class="secondary" type="button">Se déconnecter</button>
         </div>
@@ -263,107 +156,19 @@
   </main>
 
   <script>
-    const EMAIL_DOMAIN = '@communaute-paysbasque.fr';
     const query = new URLSearchParams(window.location.search);
     const next = sanitizeNext(query.get('next'));
     const oauthError = query.get('error');
-    const emailForm = document.getElementById('emailForm');
-    const codeForm = document.getElementById('codeForm');
-    const emailLocalPartInput = document.getElementById('emailLocalPartInput');
-    const codeInput = document.getElementById('codeInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const verifyBtn = document.getElementById('verifyBtn');
-    const restartBtn = document.getElementById('restartBtn');
+    const loginBox = document.getElementById('loginBox');
+    const oauthBtn = document.getElementById('oauthBtn');
     const continueBtn = document.getElementById('continueBtn');
     const logoutBtn = document.getElementById('logoutBtn');
-    const oauthBtn = document.getElementById('oauthBtn');
     const message = document.getElementById('message');
     const sessionBox = document.getElementById('sessionBox');
     const sessionText = document.getElementById('sessionText');
 
-    let currentEmail = '';
-
     oauthBtn.href = `../api/auth/oauth-start?next=${encodeURIComponent(next)}`;
     boot();
-
-    emailForm.addEventListener('submit', async event => {
-      event.preventDefault();
-      const localPart = sanitizeLocalPart(emailLocalPartInput.value);
-      const email = buildEmail(localPart);
-
-      if (!localPart) {
-        setMessage('Saisir la partie avant @communaute-paysbasque.fr.', 'error');
-        return;
-      }
-
-      setLoading(sendBtn, true);
-      setMessage('Envoi du code en cours...', 'info');
-
-      try {
-        const response = await fetch('../api/auth/send-otp', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
-        const data = await response.json();
-
-        if (!response.ok || !data.ok) {
-          throw new Error(data.error || 'Envoi impossible.');
-        }
-
-        currentEmail = email;
-        codeForm.classList.remove('hidden');
-        emailForm.classList.add('hidden');
-        codeInput.value = '';
-        codeInput.focus();
-        setMessage(data.message || `Code envoyé par email à ${email}. Vérifiez votre messagerie.`, 'ok');
-      } catch (error) {
-        setMessage(error.message || 'Envoi du code impossible.', 'error');
-      } finally {
-        setLoading(sendBtn, false);
-      }
-    });
-
-    codeForm.addEventListener('submit', async event => {
-      event.preventDefault();
-      const code = codeInput.value.replace(/\D/g, '').slice(0, 6);
-
-      if (code.length !== 6) {
-        setMessage('Le code doit contenir 6 chiffres.', 'error');
-        return;
-      }
-
-      setLoading(verifyBtn, true);
-      setMessage('Vérification du code...', 'info');
-
-      try {
-        const response = await fetch('../api/auth/verify-otp', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ email: currentEmail, code, next })
-        });
-        const data = await response.json();
-
-        if (!response.ok || !data.ok) {
-          throw new Error(data.error || 'Code invalide.');
-        }
-
-        setMessage('Connexion réussie.', 'ok');
-        window.location.href = data.redirectTo || next;
-      } catch (error) {
-        setMessage(error.message || 'Vérification impossible.', 'error');
-      } finally {
-        setLoading(verifyBtn, false);
-      }
-    });
-
-    restartBtn.addEventListener('click', () => {
-      currentEmail = '';
-      emailForm.classList.remove('hidden');
-      codeForm.classList.add('hidden');
-      emailLocalPartInput.focus();
-      setMessage('', 'info');
-    });
 
     continueBtn.addEventListener('click', () => {
       window.location.href = next;
@@ -372,8 +177,7 @@
     logoutBtn.addEventListener('click', async () => {
       await fetch('../api/auth/logout', { method: 'POST' });
       sessionBox.classList.add('hidden');
-      emailForm.classList.remove('hidden');
-      codeForm.classList.add('hidden');
+      loginBox.classList.remove('hidden');
       setMessage('Session fermée.', 'ok');
     });
 
@@ -386,21 +190,13 @@
         const response = await fetch('../api/auth/session', { cache: 'no-store' });
         const data = await response.json();
         if (data.authenticated) {
-          emailForm.classList.add('hidden');
-          codeForm.classList.add('hidden');
+          loginBox.classList.add('hidden');
           sessionBox.classList.remove('hidden');
           sessionText.textContent = `Session active pour ${data.email}.`;
           setupInactivityLogout();
-          return;
         }
       } catch {
       }
-
-      emailLocalPartInput.focus();
-    }
-
-    function setLoading(button, active) {
-      button.disabled = active;
     }
 
     function setMessage(text, tone) {
@@ -413,14 +209,6 @@
         return '/';
       }
       return value;
-    }
-
-    function sanitizeLocalPart(value) {
-      return String(value || '').trim().toLowerCase().replace(/@.*/, '');
-    }
-
-    function buildEmail(localPart) {
-      return `${localPart}${EMAIL_DOMAIN}`;
     }
 
     function setupInactivityLogout() {
