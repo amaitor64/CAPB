@@ -143,7 +143,38 @@ function capb_sanitize_next(?string $next): string
         return '/';
     }
 
-    return $next;
+    $path = parse_url($next, PHP_URL_PATH);
+    if (!is_string($path) || $path === '' || $path[0] !== '/' || str_starts_with($path, '//')) {
+        return '/';
+    }
+
+    $basePath = capb_base_path();
+    if ($basePath !== '' && !str_starts_with($path, $basePath . '/') && $path !== $basePath) {
+        return capb_app_url('/');
+    }
+
+    $query = parse_url($next, PHP_URL_QUERY);
+    if (!is_string($query) || $query === '') {
+        return $path;
+    }
+
+    return $path . '?' . $query;
+}
+
+function capb_current_request_next(): string
+{
+    $requestUri = (string) ($_SERVER['REQUEST_URI'] ?? '');
+    $path = parse_url($requestUri, PHP_URL_PATH);
+    if (!is_string($path) || $path === '') {
+        return capb_app_url('/');
+    }
+
+    $basePath = capb_base_path();
+    if ($basePath !== '' && !str_starts_with($path, $basePath . '/') && $path !== $basePath) {
+        return capb_app_url('/');
+    }
+
+    return capb_sanitize_next($requestUri);
 }
 
 function capb_oauth_config(): ?array
@@ -272,17 +303,17 @@ function capb_clear_session_cookie(): void
     ]);
 }
 
-function capb_require_auth(): void
+function capb_require_auth(?string $next = null): void
 {
     if (capb_get_session()) {
         return;
     }
 
-    $next = capb_sanitize_next($_SERVER['REQUEST_URI'] ?? '/');
-    $authorizeUrl = capb_build_oauth_authorize_url($next);
+    $target = $next !== null ? capb_sanitize_next($next) : capb_current_request_next();
+    $authorizeUrl = capb_build_oauth_authorize_url($target);
     if ($authorizeUrl) {
         capb_redirect($authorizeUrl);
     }
 
-    capb_redirect(capb_app_url('/auth/') . '?next=' . rawurlencode($next));
+    capb_redirect(capb_app_url('/auth/') . '?next=' . rawurlencode($target));
 }
