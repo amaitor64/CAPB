@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "Situation d'urgence CAPB",
-  "short_name": "Urgence CAPB",
+  "name": "CAPB- ELMN- Site de procedures d'urgence -",
+  "short_name": "CAPB- ELMN",
   "description": "Consignes d'urgence CAPB : coupure de courant HT/BT, coupure BT, système d’information industrielle et procédure incendie.",
   "lang": "fr",
   "start_url": "./index.html",
