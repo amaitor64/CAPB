@@ -33,7 +33,7 @@ export async function POST(request) {
   try {
     secret = getAuthSecret();
   } catch {
-    return jsonResponse({ ok: false, error: 'Configuration d’authentification manquante.' }, { status: 500 });
+    return jsonResponse({ ok: false, error: 'Configuration AUTH_SECRET manquante sur Vercel.' }, { status: 500 });
   }
 
   const code = generateOtpCode();
@@ -52,6 +52,13 @@ export async function POST(request) {
   });
 
   try {
+    await transporter.verify();
+  } catch (error) {
+    console.error('smtp verify failed', error);
+    return jsonResponse({ ok: false, error: classifySmtpError(error) }, { status: 500 });
+  }
+
+  try {
     await transporter.sendMail({
       from: SMTP_FROM,
       to: email,
@@ -67,7 +74,7 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error('send-otp failed', error);
-    return jsonResponse({ ok: false, error: 'Envoi du code impossible.' }, { status: 500 });
+    return jsonResponse({ ok: false, error: classifySmtpError(error) }, { status: 500 });
   }
 
   return jsonResponse(
@@ -82,4 +89,32 @@ export async function POST(request) {
       }
     }
   );
+}
+
+function classifySmtpError(error) {
+  const code = String(error?.code || '').toUpperCase();
+  const responseCode = Number(error?.responseCode || 0);
+  const message = String(error?.message || '').toLowerCase();
+
+  if (code === 'ECONNECTION' || code === 'ETIMEDOUT' || code === 'ESOCKET' || message.includes('timeout')) {
+    return 'Connexion SMTP refusée ou impossible depuis Vercel.';
+  }
+
+  if (responseCode === 535 || responseCode === 534 || code === 'EAUTH' || message.includes('auth')) {
+    return 'Authentification SMTP requise ou invalide.';
+  }
+
+  if (responseCode === 550 || responseCode === 553 || message.includes('sender') || message.includes('from address')) {
+    return 'Expéditeur SMTP refusé. Vérifier SMTP_FROM.';
+  }
+
+  if (responseCode === 554 || responseCode === 551 || message.includes('recipient')) {
+    return 'Destinataire refusé par le serveur SMTP.';
+  }
+
+  if (message.includes('greeting never received') || message.includes('invalid greeting')) {
+    return 'Le serveur SMTP ne répond pas correctement.';
+  }
+
+  return 'Envoi du code impossible. Vérifier la configuration SMTP Vercel.';
 }
