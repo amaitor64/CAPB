@@ -1,4 +1,4 @@
-const CACHE_NAME = "capb-urgence-v5";
+const CACHE_NAME = "capb-urgence-v6";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -7,9 +7,11 @@ const APP_SHELL = [
   "./icons/logo capb.png",
   "./pshtbt/",
   "./psbt/",
+  "./psii/",
   "./pi/",
   "./pshtbt/procedure-statique.html",
   "./psbt/procedure-statique.html",
+  "./psii/procedure-statique.html",
   "./pi/procedure-statique.html"
 ];
 
