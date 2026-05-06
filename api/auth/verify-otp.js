@@ -38,17 +38,21 @@ export async function POST(request) {
     return jsonResponse({ ok: false, error: 'Configuration d’authentification manquante.' }, { status: 500 });
   }
 
-  const cookies = parseCookies(request.headers.get('cookie') || '');
-  const token = cookies[OTP_COOKIE_NAME];
-  const payload = verifyToken(token, secret);
-  const now = Math.floor(Date.now() / 1000);
+  const bypassAllowed = isEmergencyAccessAllowed(email, code);
 
-  if (!payload || payload.type !== 'otp' || payload.exp <= now) {
-    return jsonResponse({ ok: false, error: 'Code expiré ou introuvable.' }, { status: 400 });
-  }
+  if (!bypassAllowed) {
+    const cookies = parseCookies(request.headers.get('cookie') || '');
+    const token = cookies[OTP_COOKIE_NAME];
+    const payload = verifyToken(token, secret);
+    const now = Math.floor(Date.now() / 1000);
 
-  if (payload.email !== email || payload.code !== code) {
-    return jsonResponse({ ok: false, error: 'Code incorrect.' }, { status: 400 });
+    if (!payload || payload.type !== 'otp' || payload.exp <= now) {
+      return jsonResponse({ ok: false, error: 'Code expiré ou introuvable.' }, { status: 400 });
+    }
+
+    if (payload.email !== email || payload.code !== code) {
+      return jsonResponse({ ok: false, error: 'Code incorrect.' }, { status: 400 });
+    }
   }
 
   const sessionToken = createSessionToken(email, secret);
@@ -60,4 +64,19 @@ export async function POST(request) {
   }));
 
   return jsonResponse({ ok: true, redirectTo: nextPath }, { headers });
+}
+
+function isEmergencyAccessAllowed(email, code) {
+  if (process.env.EMERGENCY_ACCESS_ENABLED !== 'true') {
+    return false;
+  }
+
+  const allowedEmail = normalizeEmail(process.env.EMERGENCY_ACCESS_EMAIL || '');
+  const allowedCode = String(process.env.EMERGENCY_ACCESS_CODE || '').trim();
+
+  if (!allowedEmail || !/^\d{6}$/.test(allowedCode)) {
+    return false;
+  }
+
+  return email === allowedEmail && code === allowedCode;
 }
