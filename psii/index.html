@@ -51,7 +51,7 @@
         { name: 'Laurent MELCHIOR', role: 'Responsable régie exploitation, adjoint chef de secteur', tel: '0622727350', label: '06 22 72 73 50' }
       ],
       regulation: [
-        { name: 'Astreinte', role: 'Agent de régulation / régulateur d’astreinte secteur 2', tel: '0620576014', label: '06 20 57 60 14' },
+        { name: 'Astreinte régulation', role: 'Agent de régulation / régulateur d’astreinte secteur 2', tel: '0620576014', label: '06 20 57 60 14' },
         { name: 'Laurent MELCHIOR', role: 'Responsable régie exploitation, adjoint chef de secteur', tel: '0622727350', label: '06 22 72 73 50' }
       ],
       maintenance: [
@@ -67,6 +67,9 @@
       dqfs: [
         { name: 'Thierry BEROT', role: 'DQFS', tel: '0559253703', label: '05 59 25 37 03' },
         { name: 'Thierry BEROT', role: 'DQFS mobile', tel: '0622727355', label: '06 22 72 73 55' }
+      ],
+      dqfsDuty: [
+        { name: 'Thierry BEROT', role: 'Astreinte DQFS', tel: '0622727355', label: '06 22 72 73 55' }
       ]
     };
 
@@ -144,8 +147,8 @@
       },
       nightActions: {
         title: 'Actions en soirée et week-end',
-        text: 'Prévenir l’agent d’astreinte DQFS. Si nécessaire, solliciter aussi l’appui de la direction DQFS et de la DSI.',
-        contacts: [...contacts.dqfs, ...contacts.dsi],
+        text: 'Prévenir l’astreinte DQFS. Si nécessaire, solliciter aussi l’appui de la direction DQFS et de la DSI.',
+        contacts: [...contacts.dqfsDuty, ...contacts.dsi],
         options: [{ label: 'Continuer', next: 'restoreCheck', tone: 'ok' }]
       },
       restoreCheck: {
