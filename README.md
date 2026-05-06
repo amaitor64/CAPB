@@ -13,6 +13,9 @@ Chaque procedure existe en 2 formats :
 - une version interactive pas-a-pas
 - une version statique telechargeable et imprimable
 
+Le site est maintenant protege par une authentification par code a 6 chiffres envoye par email.
+L'acces est reserve aux adresses `@communaute-paysbasque.fr`.
+
 ## Structure du depot
 
 ### Accueil
@@ -22,6 +25,28 @@ Chaque procedure existe en 2 formats :
   - cards de consignes
   - logo CAPB centre en haut
   - favicon visible sur chaque card de consigne en haut a droite
+
+### Authentification Vercel
+- `auth/index.html`
+  - page de connexion passwordless
+  - saisie de l'email professionnel
+  - saisie du code OTP a 6 chiffres
+- `middleware.js`
+  - protege les pages du site
+  - redirige vers `/auth/` si la session n'est pas presente
+- `api/auth/send-otp.js`
+  - verifie le domaine email autorise
+  - genere le code OTP
+  - envoie le code par email via SMTP
+- `api/auth/verify-otp.js`
+  - verifie le code saisi
+  - cree la session securisee
+- `api/auth/session.js`
+  - expose l'etat de session courant
+- `api/auth/logout.js`
+  - ferme la session
+- `api/_lib/auth.js`
+  - fonctions partagees : signature, cookies, tokens, validation email
 
 ### Procedures interactives
 - `pshtbt/index.html`
@@ -65,11 +90,13 @@ Ces pages servent a :
 - `manifest.webmanifest`
   - configuration de l'application web
 - `service-worker.js`
-  - cache offline de l'accueil, des procedures et des assets principaux
+  - cache offline limite aux assets publics
+  - ne doit plus mettre en cache les pages protegees
 
 ## URLs a conserver
 Ne pas casser ces routes :
 - `/`
+- `/auth/`
 - `/pshtbt/`
 - `/psbt/`
 - `/psii/`
@@ -126,6 +153,37 @@ Taille actuelle du favicon sur les cards d'accueil :
 ### 6. Mobile first
 Toute modification doit rester lisible sur mobile.
 Ne pas ajouter de mise en page qui casse les cards, les boutons ou les textes sur petit ecran.
+
+### 7. Authentification
+L'authentification actuelle suit cette architecture :
+1. l'utilisateur saisit son email
+2. le serveur verifie que l'adresse finit par `@communaute-paysbasque.fr`
+3. le serveur genere un code a 6 chiffres
+4. le serveur envoie le code par email
+5. l'utilisateur saisit le code
+6. le serveur cree une session securisee en cookie HTTP-only signe
+
+Contraintes de maintenance :
+- ne pas exposer le secret de signature dans le code
+- garder les cookies de session en `HttpOnly`, `Secure`, `SameSite=Strict`
+- ne pas remettre les pages protegees dans le cache offline
+- ne pas remplacer ce mecanisme par un stockage local JavaScript pour la session
+
+## Variables d'environnement Vercel
+Configurer au minimum ces variables dans le projet Vercel :
+- `AUTH_SECRET`
+  - secret aleatoire fort utilise pour signer les tokens OTP et session
+- `SMTP_HOST`
+  - valeur recommandee : `smtp.communaute-paysbasque.fr`
+- `SMTP_PORT`
+  - valeur recommandee : `25`
+- `SMTP_FROM`
+  - valeur recommandee : `no-reply@procedureurgence-capb.fr`
+
+Variables optionnelles si le relais SMTP demande une authentification :
+- `SMTP_USER`
+- `SMTP_PASSWORD`
+- `SMTP_TLS_REJECT_UNAUTHORIZED`
 
 ## Contacts a maintenir
 Les contacts sont aujourd'hui dupliques dans les pages interactives et statiques.
@@ -206,9 +264,8 @@ La page doit :
 
 ### 4. Mettre a jour le cache offline
 Modifier `service-worker.js` :
-- ajouter la nouvelle route interactive
-- ajouter la page statique
-- ajouter les nouveaux assets si besoin
+- ajouter seulement les nouveaux assets publics si besoin
+- ne pas ajouter les pages protegees dans le cache
 - incrementer `CACHE_NAME`
 
 ### 5. Verifier le manifest si necessaire
@@ -228,7 +285,12 @@ Quand une procedure change :
 
 ## Check-list avant validation
 Avant de considerer une modification comme terminee, verifier :
-- l'accueil s'affiche correctement
+- l'accueil s'affiche correctement apres connexion
+- la page `/auth/` fonctionne
+- l'envoi du code OTP fonctionne
+- le code a 6 chiffres est bien verifie
+- une session est bien creee apres verification
+- une adresse hors domaine `@communaute-paysbasque.fr` est refusee
 - les cards principales sont visibles et cliquables
 - les icones d'accueil restent bien positionnees
 - chaque procedure interactive avance correctement etape par etape
@@ -238,19 +300,18 @@ Avant de considerer une modification comme terminee, verifier :
 - les appels telephoniques utilisent bien `tel:`
 - les versions statiques sont a jour
 - l'impression A4 reste lisible
-- le service worker reference bien les nouvelles pages
+- le service worker ne met pas les pages protegees en cache
 - le manifest reste coherent avec le site reel
 
-## Mise en ligne GitHub Pages
-Le site est compatible avec GitHub Pages.
+## Mise en ligne Vercel
+Le site est maintenant prevu pour Vercel avec pages statiques + fonctions `api/`.
 
-Configuration classique :
-1. pousser le depot sur GitHub
-2. aller dans `Settings > Pages`
-3. choisir :
-   - source : `Deploy from a branch`
-   - branch : `main`
-   - folder : `/root`
+A faire cote projet Vercel :
+1. connecter le depot GitHub au projet Vercel
+2. definir les variables d'environnement listees plus haut
+3. verifier que le relais SMTP accepte les emails emis depuis Vercel
+4. redeployer en production
+5. tester `/auth/`, puis l'acces a `/`, `/pshtbt/`, `/psbt/`, `/psii/` et `/pi/`
 
 ## Philosophie de maintenance
 Le site doit rester :
@@ -259,14 +320,16 @@ Le site doit rester :
 - stable
 - modifiable rapidement
 - sans framework
-- sans dependance externe
+- sans dependance externe inutile
 
 Si une evolution importante est demandee, preferer :
 - du HTML clair
 - du CSS local par page si besoin
 - du JavaScript simple, lisible et structure
+- des fonctions Vercel courtes et explicites pour la partie serveur
 
 Eviter :
 - les abstractions inutiles
 - les dependances ajoutees sans necessite
 - les changements de structure qui cassent les URLs ou le mode de fonctionnement actuel
+- le stockage de secrets dans le depot
