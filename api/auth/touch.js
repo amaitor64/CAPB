@@ -14,7 +14,13 @@ export function POST(request) {
     return jsonResponse({ ok: false, error: 'Session absente.' }, { status: 401 });
   }
 
-  const secret = getAuthSecret();
+  let secret;
+  try {
+    secret = getAuthSecret();
+  } catch {
+    return jsonResponse({ ok: false, error: 'Configuration d’authentification manquante.' }, { status: 500 });
+  }
+
   const refreshedToken = createSessionToken(session.email, secret);
 
   return jsonResponse(
