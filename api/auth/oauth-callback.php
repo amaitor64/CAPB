@@ -6,7 +6,7 @@ require_once dirname(__DIR__, 2) . '/php/auth.php';
 
 function capb_oauth_auth_redirect(string $next, string $error): never
 {
-    capb_redirect('/auth/?next=' . rawurlencode($next) . '&error=' . rawurlencode($error));
+    capb_redirect(capb_app_url('/auth/') . '?next=' . rawurlencode($next) . '&error=' . rawurlencode($error));
 }
 
 $secret = capb_auth_secret();
