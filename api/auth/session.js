@@ -14,11 +14,3 @@ export function GET(request) {
     }
   );
 }
-
-export default function handler(request) {
-  if (request.method !== 'GET') {
-    return jsonResponse({ authenticated: false, error: 'Méthode non autorisée.' }, { status: 405 });
-  }
-
-  return GET(request);
-}
