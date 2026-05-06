@@ -153,6 +153,9 @@
   </main>
 
   <script>
+    const authPath = new URL('.', window.location.href).pathname.replace(/\/$/, '');
+    const basePath = authPath.replace(/\/auth$/, '') || '';
+    const defaultNext = `${basePath || ''}/`;
     const query = new URLSearchParams(window.location.search);
     const next = sanitizeNext(query.get('next'));
     const oauthError = query.get('error');
@@ -203,7 +206,7 @@
 
     function sanitizeNext(value) {
       if (!value || typeof value !== 'string' || !value.startsWith('/') || value.startsWith('//')) {
-        return '/';
+        return defaultNext;
       }
       return value;
     }
