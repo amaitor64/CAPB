@@ -167,7 +167,7 @@
     const sessionBox = document.getElementById('sessionBox');
     const sessionText = document.getElementById('sessionText');
 
-    oauthBtn.href = `../api/auth/oauth-start?next=${encodeURIComponent(next)}`;
+    oauthBtn.href = `../api/auth/oauth-start.php?next=${encodeURIComponent(next)}`;
     boot();
 
     continueBtn.addEventListener('click', () => {
@@ -175,7 +175,7 @@
     });
 
     logoutBtn.addEventListener('click', async () => {
-      await fetch('../api/auth/logout', { method: 'POST' });
+      await fetch('../api/auth/logout.php', { method: 'POST' });
       sessionBox.classList.add('hidden');
       loginBox.classList.remove('hidden');
       setMessage('Session fermée.', 'ok');
@@ -187,7 +187,7 @@
       }
 
       try {
-        const response = await fetch('../api/auth/session', { cache: 'no-store' });
+        const response = await fetch('../api/auth/session.php', { cache: 'no-store' });
         const data = await response.json();
         if (data.authenticated) {
           loginBox.classList.add('hidden');
@@ -233,7 +233,7 @@
           return;
         }
         lastTouchAt = now;
-        fetch('../api/auth/touch', { method: 'POST', credentials: 'same-origin' }).catch(() => {});
+        fetch('../api/auth/touch.php', { method: 'POST', credentials: 'same-origin' }).catch(() => {});
       }
 
       function resetTimer() {
@@ -243,7 +243,7 @@
 
       async function forceLogout() {
         try {
-          await fetch('../api/auth/logout', { method: 'POST', credentials: 'same-origin' });
+          await fetch('../api/auth/logout.php', { method: 'POST', credentials: 'same-origin' });
         } catch {
         }
         window.location.href = `../auth/?next=${encodeURIComponent(next)}`;
