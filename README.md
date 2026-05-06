@@ -144,8 +144,10 @@ Quand un numero ou un role change, il faut mettre a jour toutes les occurrences 
 ### Process
 - Regine LARREDE - Responsable process : `06 20 00 31 39`
 - Gilles LADEVESE - Adjoint responsable process : `06 23 44 15 09`
-- Astreinte - Hors heures ouvrees : `06 20 57 60 14`
 - Laurent MELCHIOR - Responsable regie exploitation, adjoint chef de secteur : `06 22 72 73 50`
+
+### Regulation d’astreinte
+- Regulation d’astreinte secteur 2 : `06 20 57 60 14`
 
 ### DSI
 - DSI heures ouvrees : `05 59 44 77 88`
@@ -154,6 +156,7 @@ Quand un numero ou un role change, il faut mettre a jour toutes les occurrences 
 ### DQFS
 - Thierry BEROT - DQFS : `05 59 25 37 03`
 - Thierry BEROT - DQFS mobile : `06 22 72 73 55`
+- Astreinte DQFS : Thierry BEROT
 
 ### Secours incendie
 - Pompiers : `18`
@@ -164,6 +167,9 @@ Quand un numero ou un role change, il faut mettre a jour toutes les occurrences 
 - Laurent MELCHIOR doit apparaitre dans les cards d'alerte metier, sauf pour ENEDIS et les secours incendie.
 - Les secours incendie et ENEDIS doivent rester dans des cards dediees, sans melange avec les contacts metier.
 - Pour la procedure systeme d’information industrielle, utiliser la DSI si le site n’a plus acces a Internet public, sinon orienter la verification vers la DQFS / serveur Izarlink a Bidart.
+- Pour cette meme procedure :
+  - regulation d’astreinte = `06 20 57 60 14`
+  - astreinte DQFS = Thierry BEROT
 
 ## Ajouter une nouvelle consigne
 Pour ajouter une nouvelle consigne, faire systematiquement les 5 blocs suivants.
