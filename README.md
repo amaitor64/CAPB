@@ -13,8 +13,7 @@ Chaque procedure existe en 2 formats :
 - une version interactive pas-a-pas
 - une version statique telechargeable et imprimable
 
-Le site est maintenant protege par une authentification par code a 6 chiffres envoye par email.
-Une couche OAuth2 / SSO peut aussi etre activee en parallele.
+Le site est maintenant protege par une authentification OAuth2 / SSO.
 L'acces est reserve aux adresses `@communaute-paysbasque.fr`.
 La session se ferme automatiquement apres `1 heure d’inactivite`.
 
@@ -30,21 +29,10 @@ La session se ferme automatiquement apres `1 heure d’inactivite`.
 
 ### Authentification Vercel
 - `auth/index.html`
-  - page de connexion passwordless
-  - saisie de l'email professionnel
-  - saisie du code OTP a 6 chiffres
-  - bouton de connexion SSO / OAuth2
+  - page de connexion SSO / OAuth2
 - `middleware.js`
   - protege les pages du site
   - redirige vers `/auth/` si la session n'est pas presente
-- `api/auth/send-otp.js`
-  - verifie le domaine email autorise
-  - genere le code OTP
-  - envoie le code par email via SMTP
-- `api/auth/verify-otp.js`
-  - verifie le code saisi
-  - cree la session securisee
-  - peut accepter un acces de secours si les variables Vercel dediees sont activees
 - `api/auth/oauth-start.js`
   - construit la redirection OAuth2
   - signe l'etat de retour
@@ -59,7 +47,7 @@ La session se ferme automatiquement apres `1 heure d’inactivite`.
 - `api/auth/logout.js`
   - ferme la session
 - `api/_lib/auth.js`
-  - fonctions partagees : signature, cookies, tokens, validation email, helpers OAuth2
+  - fonctions partagees : signature, cookies, session, validation email, helpers OAuth2
 - `api/contacts.js`
   - expose les contacts metier apres authentification
   - lit les donnees depuis la variable Vercel `CAPB_CONTACTS_JSON`
@@ -172,16 +160,6 @@ Ne pas ajouter de mise en page qui casse les cards, les boutons ou les textes su
 
 ### 7. Authentification
 L'authentification actuelle suit cette architecture :
-1. l'utilisateur peut lancer une connexion OAuth2 / SSO ou saisir son email
-2. en mode OTP, le serveur verifie que l'adresse finit par `@communaute-paysbasque.fr`
-3. le serveur genere un code a 6 chiffres
-4. le serveur envoie le code par email
-5. l'utilisateur saisit le code
-6. le serveur cree une session securisee en cookie HTTP-only signe
-7. la session expire apres 1 heure sans activite
-8. l'activite utilisateur prolonge la session via `api/auth/touch.js`
-
-Flux OAuth2 ajoute :
 1. l'utilisateur clique sur le bouton SSO
 2. `api/auth/oauth-start.js` construit l'URL du fournisseur OAuth2
 3. un etat signe est transmis pour proteger le retour
@@ -189,6 +167,8 @@ Flux OAuth2 ajoute :
 5. le serveur echange ce code contre un token OAuth2
 6. l'email du compte est extrait depuis le token ou le profil utilisateur
 7. seuls les comptes `@communaute-paysbasque.fr` ouvrent une session
+8. la session expire apres 1 heure sans activite
+9. l'activite utilisateur prolonge la session via `api/auth/touch.js`
 
 Contraintes de maintenance :
 - ne pas exposer le secret de signature dans le code
@@ -196,44 +176,25 @@ Contraintes de maintenance :
 - ne pas remettre les pages protegees dans le cache offline
 - ne pas remplacer ce mecanisme par un stockage local JavaScript pour la session
 - conserver la duree d’inactivite a `1 heure` sauf decision explicite
-- conserver le controle du domaine `@communaute-paysbasque.fr` aussi en OAuth2
+- conserver le controle du domaine `@communaute-paysbasque.fr` en OAuth2
 
 ## Variables d'environnement Vercel
 Configurer au minimum ces variables dans le projet Vercel :
 - `AUTH_SECRET`
-  - secret aleatoire fort utilise pour signer les tokens OTP, OAuth2 state et session
-- `SMTP_HOST`
-  - valeur recommandee : `smtp.communaute-paysbasque.fr`
-- `SMTP_PORT`
-  - valeur recommandee : `25`
-- `SMTP_FROM`
-  - valeur recommandee : `no-reply@procedureurgence-capb.fr`
+  - secret aleatoire fort utilise pour signer l'etat OAuth2 et la session
 - `CAPB_CONTACTS_JSON`
   - JSON complet des contacts metier charge par `api/contacts.js`
   - a maintenir cote Vercel, pas dans le depot
-
-Variables optionnelles si le relais SMTP demande une authentification :
-- `SMTP_USER`
-- `SMTP_PASSWORD`
-- `SMTP_TLS_REJECT_UNAUTHORIZED`
-
-Variables optionnelles pour l’acces de secours :
-- `EMERGENCY_ACCESS_ENABLED`
-  - `true` pour activer le mode secours
-- `EMERGENCY_ACCESS_EMAIL`
-  - adresse CAPB autorisee pour le mode secours
-- `EMERGENCY_ACCESS_CODE`
-  - code a 6 chiffres du mode secours
-
-Variables optionnelles pour OAuth2 / SSO :
 - `OAUTH2_ENABLED`
   - `true` pour activer le bouton SSO
-- `OAUTH2_PROVIDER_NAME`
-  - libelle du fournisseur, par exemple `Microsoft 365 CAPB`
 - `OAUTH2_CLIENT_ID`
 - `OAUTH2_CLIENT_SECRET`
 - `OAUTH2_AUTHORIZE_URL`
 - `OAUTH2_TOKEN_URL`
+
+Variables optionnelles pour OAuth2 / SSO :
+- `OAUTH2_PROVIDER_NAME`
+  - libelle du fournisseur, par exemple `Microsoft 365 CAPB`
 - `OAUTH2_USERINFO_URL`
   - optionnelle mais recommandee
 - `OAUTH2_SCOPE`
@@ -369,8 +330,6 @@ Quand une procedure change :
 Avant de considerer une modification comme terminee, verifier :
 - l'accueil s'affiche correctement apres connexion
 - la page `/auth/` fonctionne
-- l'envoi du code OTP fonctionne
-- le code a 6 chiffres est bien verifie
 - le bouton SSO ouvre bien le fournisseur OAuth2 si active
 - le callback OAuth2 ouvre bien une session pour un compte autorise
 - une session est bien creee apres verification
@@ -395,11 +354,10 @@ Le site est maintenant prevu pour Vercel avec pages statiques + fonctions `api/`
 A faire cote projet Vercel :
 1. connecter le depot GitHub au projet Vercel
 2. definir les variables d'environnement listees plus haut
-3. verifier que le relais SMTP accepte les emails emis depuis Vercel
-4. renseigner `CAPB_CONTACTS_JSON`
-5. si OAuth2 est active, configurer aussi les URLs et identifiants du fournisseur
-6. redeployer en production
-7. tester `/auth/`, puis l'acces a `/`, `/pshtbt/`, `/psbt/`, `/psii/` et `/pi/`
+3. renseigner `CAPB_CONTACTS_JSON`
+4. configurer les URLs et identifiants du fournisseur OAuth2
+5. redeployer en production
+6. tester `/auth/`, puis l'acces a `/`, `/pshtbt/`, `/psbt/`, `/psii/` et `/pi/`
 
 ## Philosophie de maintenance
 Le site doit rester :
